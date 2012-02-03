@@ -1,0 +1,76 @@
+/*
+ * Widget for 2 3 states display
+ */
+._23states input[type="radio"]{
+  -webkit-appearance:none;
+  display:none;
+}
+
+._23states input[type="radio"]+label{ 
+  background-color:#dae2e8;
+  float: left;
+  display: block;
+  padding:0;
+  width : 25px;
+  height: 23px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #c3ccd1;
+} 
+
+._23states input[type="radio"]+label span{
+  display: block;
+  line-height:22px;
+}          
+._23states input[type="radio"] {
+  color: #666;
+  cursor: pointer;  
+  text-transform: capitalize;
+  text-decoration: none;
+}
+._23states input[type="radio"]+label.true {
+  border-right: none;
+  -moz-border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px;
+}
+._23states input[type="radio"]+label.false {
+  border-left: none;
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0;
+}
+._23states input[type="radio"]+label.nil {
+  border-left: none;
+  border-right: none;
+}
+._23states input[type="radio"]:checked+label.true {
+  color: #333;
+  border: 1px solid #9eba61;
+  -moz-border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px;
+  background-image: linear-gradient(-90deg, rgb(162, 204, 89), rgb(201, 225, 132));
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(rgb(162, 204, 89)), to(rgb(201, 225, 132)));
+  background-image: -moz-linear-gradient(-90deg, rgb(162, 204, 89), rgb(201, 225, 132));
+  text-shadow: 0 1px 0 white;
+}
+._23states input[type="radio"]:checked+label.false{
+  color: #333;
+  border: 1px solid #ce6632;
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0;
+  background-image: linear-gradient(-90deg, #d67747, #da855a);
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#d67747), to(#da855a));
+  background-image: -moz-linear-gradient(-90deg, #d67747, #da855a);
+  text-shadow: 0 1px 0 white;
+}
+._23states input[type="radio"]:checked+label.nil {
+  color: #333;
+  border: 1px solid #c3ccd1;
+  background-image: linear-gradient(-90deg, #e8e8e8, white);
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, from(#e8e8e8), to(white));
+  background-image: -moz-linear-gradient(-90deg, #e8e8e8, white);
+  text-shadow: 0 1px 0 white;
+}

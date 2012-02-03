@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jasmine Spec Runner</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.1.0/jasmine_favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="css/popcorn.css">
+    <link rel="stylesheet" type="text/css" href="css/23states.css">
+    <style type="text/css" media="screen">
+        body{font: 12px/14px "Segoe UI", "Lucida Grande", Arial, sans-serif; height: 900px}
+    </style>
+    <script type="text/javascript" src="lib/jquery-1.7.1.min.js"></script>
+
+    <!-- include spec files here... -->
+    <script type="text/javascript" src="lib/popcorn.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+		  $('.fppc').fatpopcorn({modelName:'modelName', modelId :1, token : 'TOKEN', current_user:1, watching:true});
+	  });
+	  </script>
+</head>
+
+<body>
+    <div style="float: left;">
+        <label for="indirizzo">Indirizzo</label>&nbsp;<input type="text" name="indirizzo" value="Via Mazzini 33" id="indirizzo1" class="fppc">
+	</div>
+    <div style="width: 70%; float: right;">
+        <label for="indirizzo">Indirizzo</label>&nbsp;<input type="text" name="indirizzo" value="Via Mazzini 33" id="indirizzo2" class="fppc">
+	</div>
+    <div style="float: right;">
+        <label for="indirizzo">Indirizzo</label>&nbsp;<input type="text" name="indirizzo" value="Via Mazzini 33" id="indirizzo3" class="fppc">
+	</div>
+	<div style="float: left; margin-top: 100px">
+		<label for="addr_two">Indirizzo</label>&nbsp;<input type="text" name="indirizzo" value="Via Mazzini 33" id="indirizzo4" class="fppc">
+	</div>
+	
+			
+        <!-- <div class="next_element_two fatpopcorn">
+            <div class="popcorn-body">
+                <div class="header">
+                    <ul>
+                        <li class="stream-tab active">
+                            <div>stream</div>
+                        </li>
+                        <li class="edit-tab">
+                            <div>edit</div>
+                        </li>
+                        <li class="history-tab">
+                            <div>history</div>
+                        </li>
+                    </ul>
+                </div>
+
+                    <div class="stream">
+						<div class="content">
+	                        <span class="line"></span><span class="time">Oggi</span>
+	                        <div class="attachment">
+	                            <h1><a href="#">esito_tecnico_2.pdf</a></h1>
+	                            <p>Matteo De Vecchi ha allegato un file alle 12:34 del 04/06/2011</p>
+	                        </div>
+	                        <div class="note">
+	                            <h1>La data è stata posticipata di 10 giorni per cause di forza maggiore.</h1>
+	                            <p>Emanuele Rosti ha redatto la nota alle 12:34 del 04/06/2011
+	                            </p>
+	                        </div>
+	                        <span class="line"></span><span class="time">Ieri</span>
+	                        <div class="attachment">
+	                            <h1><a href="#">esito_tecnico_2.pdf</a></h1>
+	                            <p>Matteo De Vecchi ha allegato un file alle 12:34 del 04/06/2011</p>
+	                        </div>
+	                        <div class="note">
+	                            <h1>La data è stata posticipata di 10 giorni per cause di forza maggiore.</h1>
+	                            <p>Emanuele Rosti ha redatto la nota alle 12:34 del 04/06/2011.</p>
+	                        </div>
+	                        <span class="line"></span><span class="time">10 Gennaio</span>
+	                        <div class="attachment">
+	                            <h1><a href="#">esito_tecnico_2.pdf</a></h1>
+	                            <p>Matteo De Vecchi ha allegato un file alle 12:34 del 04/06/2011</p>
+	                        </div>
+	                        <div class="note">
+	                            <h1>La data è stata posticipata di 10 giorni per cause di forza maggiore.</h1>
+	                            <p>Emanuele Rosti ha redatto la nota alle 12:34 del 04/06/2011.</p>
+	                        </div>
+	                        <div class="note">
+	                            <h1>La data è stata posticipata di 10 giorni per cause di forza maggiore.</h1>
+	                            <p>Emanuele Rosti ha redatto la nota alle 12:34 del 04/06/2011.</p>
+	                        </div>
+	                        <div class="note">
+	                            <h1>La data è stata posticipata di 10 giorni per cause di forza maggiore.</h1>
+	                            <p>Emanuele Rosti ha redatto la nota alle 12:34 del 04/06/2011.</p>
+	                        </div>
+						</div>
+					</div>
+					<div class="history">
+						<div class="content">
+		                    <div class="note">
+		                        <h1><em>20/12/2011 12:34</em> - Notificare l'ufficio tecnico...</h1>
+		                        <p>Emanuele Rosti ha creato una nota il 20/12/2011 alle 12:34</p>
+		                    </div>
+		                    <div class="save">
+		                        <h1><em>20/12/2011 12:34</em> - 10/02/2012</h1>
+		                        <p>Emanuele Rosti ha salvato un nuovo valore</p>
+		                    </div>
+		                    <div class="attachment">
+		                        <h1><em>20/12/2011 12:34</em> - esito_tecnico.pdf</h1>
+		                        <p>Emanuele Rosti ha aggiunto un allegato</p>
+		                    </div>
+		                    <div class="note">
+		                        <h1><em>20/12/2011 12:34</em> - vecchia nota sbagliata</h1>
+		                        <p>Emanuele Rosti ha eliminato una nota </p>
+		                    </div>
+		                    <div class="note">
+		                        <h1><em>20/12/2011 12:34</em> - Notificare l'ufficio tecnico...</h1>
+		                        <p>Emanuele Rosti ha creato una nota il 20/12/2011 alle 12:34</p>
+		                    </div>
+		                    <div class="save">
+		                        <h1><em>20/12/2011 12:34</em> - 10/02/2012</h1>
+		                        <p>Emanuele Rosti ha salvato un nuovo valore</p>
+		                    </div>
+		                    <div class="attachment">
+		                        <h1><em>20/12/2011 12:34</em> - esito_tecnico.pdf</h1>
+		                        <p>Emanuele Rosti ha aggiunto un allegato</p>
+		                    </div>
+		                    <div class="note">
+		                        <h1><em>20/12/2011 12:34</em> - vecchia nota sbagliata</h1>
+		                        <p>Emanuele Rosti ha eliminato una nota </p>
+		                    </div>
+		                    <div class="note">
+		                        <h1><em>20/12/2011 12:34</em> - vecchia nota sbagliata</h1>
+		                        <p>Emanuele Rosti ha eliminato una nota </p>
+		                    </div>
+	                    </div>							
+	                </div>
+	                <div class="edit">
+	                    <div class="watchlist ">
+	                        <h1>Watchlist</h1>
+	                        <div class="on-off _23states">
+	                        <input type="radio" name="on" value="on" id="on"><label for="on" class="true"><span class="true">On</span></label>
+	                        <input type="radio" name="off" value="off" id="off"><label for="off" class="false"><span class="false">Off</span></label>
+	                        </div>
+	                    </div>
+	                    <hr/>
+	                    <div class="note">
+	                        <h1>Nota</h1>
+	                        <textarea name="note" rows="4"></textarea>
+	                        <a href="#">Inserisci</a>
+	                    </div>
+	                    <hr/>
+	                    <div class="attachment">
+	                        <h1>Allegati</h1>
+	                        <a href="#">Inserisci</a>
+	                    </div>
+	                    <div class="info">
+	                        <h1>Info</h1>
+	                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation...</p>
+	                    </div>
+	                </div>
+                </div>
+				<div class="popcorn-tail arrow-center" style="left: 71px;"></div>
+            </div> 
+        </div>-->
+</body>
+</html>

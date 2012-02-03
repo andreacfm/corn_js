@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jasmine Spec Runner</title>
+
+  <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.1.0/jasmine_favicon.png">
+
+  <link rel="stylesheet" type="text/css" href="css/popcorn.css">
+  <script type="text/javascript" src="lib/jquery-1.7.1.min.js"></script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="lib/popcorn.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		$(function() {
+			$(".open_popcorn").popcorn();
+		})
+	</script>
+  <style type="text/css">  
+	  body {
+		background:#999
+		}
+      .open_popcorn {
+          left: 200px;
+          width: 100px;
+      }
+      .next_element_one {
+          width: 200px;
+      }
+  </style>
+</head>
+
+<body>
+	<div style="float: left">
+	    <a class="open_popcorn">one</a>
+	    <div class="next_element_one">Popcorn One</div>
+	</div>
+	<div style="float: right">
+	    <a class="open_popcorn">three</a>
+	    <div class="next_element_three">Popcorn Three</div>
+	</div>
+	<div style="width: 50%; float: right; margin-bottom:100px" >
+		<a class="open_popcorn">two</a>
+	    <div class="next_element_two">Popcorn Two</div>
+	</div>
+</body>
+</html>
