@@ -7,7 +7,7 @@ gemspec
 
 # jquery-rails is used by the dummy application
 gem "jquery-rails"
-gem 'jasmine'
+gem 'jasmine', :git => "https://github.com/pivotal/jasmine-gem.git", :branch => "fix_json_and_rails_30"
 gem "rspec-rails"
 
 # Declare any dependencies that are still in development here instead of in
