@@ -7,13 +7,13 @@ require "corn_js/version"
 Gem::Specification.new do |s|
   s.name        = "corn_js"
   s.version     = CornJs::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of CornJs."
-  s.description = "TODO: Description of CornJs."
+  s.authors     = ["Gian Carlo Pace"]
+  s.email       = ["giancarlo.pace@gmail.com"]
+  s.homepage    = "http://www.fractalgarden.com"
+  s.summary     = "A javascript popup menu plugin"
+  s.description = "It's possible to use the generic popcorn and the app specific fat popcorn plugin"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "README.md"]
 
   s.add_dependency "rails", "~> 3.2.1"
   s.add_dependency "jquery-rails"
