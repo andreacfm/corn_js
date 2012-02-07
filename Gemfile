@@ -9,6 +9,11 @@ gemspec
 gem "jquery-rails"
 gem 'jasmine', :git => "https://github.com/pivotal/jasmine-gem.git", :branch => "fix_json_and_rails_30"
 gem "rspec-rails"
+gem 'jasmine-headless-webkit'
+
+group :assets do
+  gem 'uglifier', '>= 1.0.3'
+end
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

@@ -1,1 +1,1 @@
-//= require corn_js/corn.js
+//= require_tree .
