@@ -190,9 +190,9 @@ describe("Popcorn", function() {
           // 	mock.verify();
           // 	mock.restore();
           // });
+		  
           it("should manage the notes form action when view is opened", function() {
             $('.fatpopcorn_grip').first().click();
-            $('.fatpopcorn').attr('data-label', 'my_label');
             expect($('.fatpopcorn #notes_form').attr('action')).toEqual("/active_metadata/modelName/1/my_label/notes");
           });
           it("should verify that form notes has been added with the provided token",function(){
@@ -360,7 +360,7 @@ describe("Popcorn", function() {
                   it("should place the tail in the true center of the element", function() {
                     $centerElement.offset({top: 400, left: 400});
                     $centerElement.click();
-                    expect(tooltipTailOf($centerElement).offset().left).toEqual(149);
+                    expect(tooltipTailOf($centerElement).offset().left).toEqual(146);
                   });
 
                   it("should place the tail in the true right corner when is stick to right", function() {
