@@ -10,7 +10,7 @@ stylesheets:
   - "app/**/*.css"
 
 helpers:
-  - "helpers/**/*.{js,coffee}"
+  - "helpers/**/*.{js,coffee,html}"
 
 spec_files:
   - "**/*[Ss]pec.{js,coffee}"

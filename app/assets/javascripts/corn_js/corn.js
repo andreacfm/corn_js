@@ -190,7 +190,10 @@ FatPopcorn.decorateContainerWithHtml = function() {
   FatPopcorn.container().hide();
 }
 FatPopcorn.prototype.addGripToElement = function($element) {
-  return $element.wrap('<span class="fatpopcorn_grip"/>');
+  if (!$element.parent().is('span.fatpopcorn_grip')) {
+    $element.wrap('<span class="fatpopcorn_grip"/>')
+  }
+  return $element.parent();
 };
 FatPopcorn.prototype.gripOf = function($element) {
   return $element.parent();
@@ -252,7 +255,7 @@ FatPopcorn.prototype.newNoteSuccess = function() { $('.stream-tab').click(); };
     FatPopcorn.decorateContainerWithHtml();
     FatPopcorn.activateTheClickedTab();
     FatPopcorn.bindRemoteEvents();
-		
+
     function _setUpElement() {
       var $element = $(this), fatpopcorn = new FatPopcorn($element, defaults);
       fatpopcorn.addGripToElement($element);
