@@ -190,7 +190,7 @@ FatPopcorn.decorateContainerWithHtml = function() {
   FatPopcorn.container().hide();
 }
 FatPopcorn.prototype.addGripToElement = function($element) {
-  if (!$element.parent().is('span.fatpopcorn_grip')) {
+  if (!$element.parent().is('span.fatpopcorn_grip') && this.defaults.autoWrap) {
     $element.wrap('<span class="fatpopcorn_grip"/>')
   }
   return $element.parent();

@@ -5,7 +5,8 @@ describe("Popcorn", function() {
   var mock_defaults = {
     marginBorder: 4,
     arrowWidth: 19,
-    marginArrow: 10
+    marginArrow: 10,
+    autoWrap: true
   };
 
   describe("framwork", function() {
@@ -18,7 +19,7 @@ describe("Popcorn", function() {
 
     beforeEach(function() {
       loadFixtures('fatpopcorn-fixture.html');
-      $elements = $('.open_popcorn').fatpopcorn({modelName:'modelName', modelId :1, token : 'TOKEN', current_user:1, watching:true});
+      $elements = $('.open_popcorn').fatpopcorn({modelName:'modelName', modelId :1, token : 'TOKEN', current_user:1, watching:true, autoWrap: true});
       $first = $elements.first();
       $last = $elements.last();
       jasmine.Ajax.useMock();
