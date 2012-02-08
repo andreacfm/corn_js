@@ -16,7 +16,7 @@ a:hover {
   width: 160px;
   min-height:20px;
   overflow: visible;
-  position: fixed;
+  position: absolute;
   z-index: 9000;
   margin-top: 4px;
 }
