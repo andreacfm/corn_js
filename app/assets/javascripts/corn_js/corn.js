@@ -259,8 +259,14 @@ FatPopcorn.prototype.newNoteSuccess = function() { $('.stream-tab').click(); };
     function _setUpElement() {
       var $element = $(this), fatpopcorn = new FatPopcorn($element, defaults);
       fatpopcorn.addGripToElement($element);
-        	
+        
+      fatpopcorn.gripOf($element).children().click(function(e) {
+        $(e.target).data('elementMatched', true);        
+      });
+
       fatpopcorn.gripOf($element).click(function(e) {
+        if ($(e.target).data('elementMatched')) return;
+        
         e.stopPropagation();
         e.preventDefault();
         fatpopcorn.initEdit();

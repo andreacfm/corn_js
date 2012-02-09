@@ -1,6 +1,14 @@
 /*
  * Widget for 2 3 states display
  */
+div._23states  {
+  display: block;
+  width: 160px;
+  height: 32px;
+}
+._23states div {
+  display: block;
+}
 ._23states input[type="radio"]{
   -webkit-appearance:none;
   display:none;

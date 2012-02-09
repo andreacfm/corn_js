@@ -17,7 +17,7 @@ a:hover {
   min-height:20px;
   overflow: visible;
   position: absolute;
-  z-index: 9000;
+  z-index: 800;
   margin-top: 4px;
 }
 .popcorn .popcorn-body {
@@ -36,10 +36,10 @@ a:hover {
 /* ----------------*/
 /* grip */
 .fatpopcorn_grip {
-  display: block;
+  display: inline-block  ;
   position: relative;
-  z-index: 9000;
-  height: 30px;
+  z-index: 800;
+  /*height: 30px;*/
   width: 160px;
   margin-top: 4px;
 }
@@ -276,5 +276,5 @@ a:hover {
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 10000;
+  z-index: 810;
 }
