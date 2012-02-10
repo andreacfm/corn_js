@@ -211,6 +211,7 @@ describe("Popcorn", function() {
 
       describe("ajax checks", function() {
         beforeEach(function() {
+          jasmine.Ajax.useMock();
           function _htmlStream() {
             return '<div class="stream"><div class="content"><span class="line"></span><span class="time">Oggi</span><div class="attachment">' +
                     '<h1><a href="#">esito_tecnico_2.pdf</a></h1><p>Matteo De Vecchi ha allegato un file</p></div></div></div>';
@@ -222,19 +223,28 @@ describe("Popcorn", function() {
           };          
         });
 
-        // it("should request for stream when clicking on stream-tab", function() {
-        //   spyOnEvent($('.loader'), 'ajaxSend');
-        //   $('.fatpopcorn_grip').first().click();
-        //   $('stream-tab').click();
-        //   var request = mostRecentAjaxRequest();
-        //   request.response(this.success_response.recv_stream.success);
-        //   expect('ajaxSend').toHaveBeenTriggeredOn($('.loader'));
-          
-        // });
+        it("streamEvent should make an ajax call to the stream url", function() {
+          spyOn($, 'ajax').andCallThrough();
+          $('.fatpopcorn_grip').first().click();          
+          $('.stream-tab').click();
+          var request = mostRecentAjaxRequest();
+          request.response(this.success_response.recv_stream.success);
+          expect($.ajax).toHaveBeenCalled();
+          expect(request.url).toBe("/active_metadata/modelName/1/my_label/stream");
+          expect(request.method).toBe("GET");
+        });
+        it("historyEvent should make an ajax call to the history url", function() {
+          spyOn($, 'ajax').andCallThrough();
+          $('.fatpopcorn_grip').first().click();          
+          $('.history-tab').click();
+          var request = mostRecentAjaxRequest();
+          request.response(this.success_response.recv_stream.success);
+          expect($.ajax).toHaveBeenCalled();
+          expect(request.url).toBe("/active_metadata/modelName/1/my_label/history");
+          expect(request.method).toBe("GET");
+        });
 
         it("should call streamEvent when clicking on stream-tab", function() {
-          var stub = jasmine.createSpy('');
-
           spyOn(FatPopcorn, 'streamEvent');
 
           $('.fatpopcorn_grip').first().click();          
@@ -242,6 +252,15 @@ describe("Popcorn", function() {
           
           expect(FatPopcorn.streamEvent).toHaveBeenCalled()
           FatPopcorn.streamEvent.reset();
+        });
+        it("should call historyEvent when clicking on history-tab", function() {
+          spyOn(FatPopcorn, 'historyEvent');
+
+          $('.fatpopcorn_grip').first().click();          
+          $('.history-tab').click();
+          
+          expect(FatPopcorn.historyEvent).toHaveBeenCalled()
+          FatPopcorn.historyEvent.reset();
         });
 
         it("should call ajaxSend on the loader when making an ajax request", function() {

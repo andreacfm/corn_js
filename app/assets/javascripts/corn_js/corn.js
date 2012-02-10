@@ -129,18 +129,32 @@ FatPopcorn.prototype = new Popcorn();
 FatPopcorn.prototype.init = function() {
   this.setupFormAction();
   this.setupFormToken();
+  this.setupStreamUrl();
+  this.setupHistoryUrl();
   if (this.hasStream()) {
-    console.log("stream clicked");
     $('.fatpopcorn .stream-tab').click();
   }
   else {
-    console.log("edit - clicked");
     $('.fatpopcorn .edit-tab').click();
   }
 };	
-
+FatPopcorn.prototype.setupStreamUrl = function() {  
+  $('.fatpopcorn .stream').attr('data-url', this.streamUrl());
+};
+FatPopcorn.prototype.setupHistoryUrl = function() {  
+  $('.fatpopcorn .history').attr('data-url', this.historyUrl());
+};
+FatPopcorn.prototype.urlPrefix = function() {
+  return '/active_metadata/' + this.get('modelName') + '/' + this.get('modelId') + '/' + this.currentLabel();
+};
 FatPopcorn.prototype.actionUrl = function() {
-  return '/active_metadata/' + this.get('modelName') + '/' + this.get('modelId') + '/' + this.currentLabel() + '/notes';
+  return this.urlPrefix() + '/notes';
+};
+FatPopcorn.prototype.streamUrl = function() {
+  return this.urlPrefix() + '/stream';
+};
+FatPopcorn.prototype.historyUrl = function() {
+  return this.urlPrefix() + '/history';
 };
 FatPopcorn.prototype.setupFormAction = function() {
   $('.fatpopcorn #notes_form').attr('action', this.actionUrl());
@@ -152,8 +166,6 @@ FatPopcorn.prototype.currentLabel = function() {
   return this.$element.attr('data-label');
 };
 FatPopcorn.prototype.hasStream = function() {
-  console.log(this.$element.attr('data-stream'));
-  console.log(this.$element.attr('data-stream') === 'true');
   return this.$element.attr('data-stream') === 'true';
 };
 FatPopcorn.hideContainer = function() {
@@ -216,17 +228,17 @@ FatPopcorn.activateTheClickedTab = function() {
 
     $(this).addClass('active');
 
-    FatPopcorn[_currentTabMethod()]();
+    FatPopcorn[_currentTabMethod()].call();
   });
 };
 FatPopcorn.streamEvent = function() {
-  console.log("stream event called");
+  $.ajax($('.fatpopcorn .stream').attr('data-url'));
 };
 FatPopcorn.editEvent = function() {
-  // console.log("edit event called");
+  // should do something?
 };
 FatPopcorn.historyEvent = function() {
-  // console.log("history event called");
+  $.ajax($('.fatpopcorn .history').attr('data-url'));
 };
 FatPopcorn.containerVisible = function () {
   return FatPopcorn.container().is(':visible');
