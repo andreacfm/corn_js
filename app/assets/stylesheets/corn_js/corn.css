@@ -148,6 +148,7 @@ a:hover {
 /* stream classes */
 .fatpopcorn .stream {
   padding: 10px 0px 10px 10px;
+  display: none;
 }
 .fatpopcorn .stream .content {
   max-height: 400px;

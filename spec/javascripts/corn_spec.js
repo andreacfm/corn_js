@@ -28,7 +28,6 @@ describe("Popcorn", function() {
     it("should generate an hidden html with class fatpopcorn", function() {
       expect($('.fatpopcorn').first()).toBeHidden();
     });
-
     it("should generate the html only once", function() {
       expect($('.fatpopcorn').size()).toBe(1);
     });
@@ -86,12 +85,15 @@ describe("Popcorn", function() {
         $('.other_element').click();
         expect($('.fatpopcorn')).not.toBeVisible();
       });     
-      it("should set stream tab selected by default", function() {
-        expect($('.header .stream-tab.active')).toExist();
-      });
       it("should set stream body visible by default", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.popcorn-body .stream')).toBeVisible();
+      });
+      it("should set edit body visible by default if data-stream is false", function() {
+        $first.attr('data-stream', 'false');
+        $('.fatpopcorn_grip').first().click();
+        expect($('.popcorn-body .edit')).toBeVisible();
+        $first.removeAttr('data-stream');
       });
       it("should set edit not visible by default", function() {
         $('.fatpopcorn_grip').first().click();
@@ -181,8 +183,7 @@ describe("Popcorn", function() {
         expect($('.history')).toBeVisible();        
         expect($('.edit')).not.toBeVisible();       
         expect($('.stream')).not.toBeVisible();
-      });
-      
+      });      
       it("should manage the notes form action when view is opened", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.fatpopcorn #notes_form').attr('action')).toEqual("/active_metadata/modelName/1/my_label/notes");
@@ -207,8 +208,8 @@ describe("Popcorn", function() {
         $.post.reset();
       });
 
-      describe("ajax checks", function() {
 
+      describe("ajax checks", function() {
         beforeEach(function() {
           function _htmlStream() {
             return '<div class="stream"><div class="content"><span class="line"></span><span class="time">Oggi</span><div class="attachment">' +

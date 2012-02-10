@@ -126,10 +126,19 @@ var FatPopcorn = function($element, defaults) {
 };
 FatPopcorn.prototype = new Popcorn();
 	
-FatPopcorn.prototype.initEdit = function() {
+FatPopcorn.prototype.init = function() {
   this.setupFormAction();
   this.setupFormToken();
+  if (this.hasStream()) {
+    console.log("stream clicked");
+    $('.fatpopcorn .stream-tab').click();
+  }
+  else {
+    console.log("edit - clicked");
+    $('.fatpopcorn .edit-tab').click();
+  }
 };	
+
 FatPopcorn.prototype.actionUrl = function() {
   return '/active_metadata/' + this.get('modelName') + '/' + this.get('modelId') + '/' + this.currentLabel() + '/notes';
 };
@@ -141,6 +150,11 @@ FatPopcorn.prototype.setupFormToken = function() {
 };
 FatPopcorn.prototype.currentLabel = function() {
   return this.$element.attr('data-label');
+};
+FatPopcorn.prototype.hasStream = function() {
+  console.log(this.$element.attr('data-stream'));
+  console.log(this.$element.attr('data-stream') === 'true');
+  return this.$element.attr('data-stream') === 'true';
 };
 FatPopcorn.hideContainer = function() {
   $(window).off('resize');
@@ -156,7 +170,7 @@ FatPopcorn.prototype.containerOf = function() {
 FatPopcorn.decorateContainerWithHtml = function() {
   var self = this;
   function _html() {
-    return '<div class="fatpopcorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab active"><div>stream</div></li>' +
+    return '<div class="fatpopcorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
     '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
     '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
     '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input type="radio" ' +
@@ -272,7 +286,7 @@ FatPopcorn.prototype.newNoteSuccess = function() { $('.stream-tab').click(); };
         
         e.stopPropagation();
         e.preventDefault();
-        fatpopcorn.initEdit();
+        fatpopcorn.init();
 				
         if (FatPopcorn.containerVisible()) {
           FatPopcorn.hideContainer();
