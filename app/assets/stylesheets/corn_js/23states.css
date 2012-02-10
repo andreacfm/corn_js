@@ -6,14 +6,10 @@ div._23states  {
   width: 160px;
   height: 32px;
 }
-._23states div {
-  display: block;
-}
 ._23states input[type="radio"]{
   -webkit-appearance:none;
   display:none;
 }
-
 ._23states input[type="radio"]+label{ 
   background-color:#dae2e8;
   float: left;
@@ -24,8 +20,7 @@ div._23states  {
   text-align: center;
   font-weight: bold;
   border: 1px solid #c3ccd1;
-} 
-
+}
 ._23states input[type="radio"]+label span{
   display: block;
   line-height:22px;
@@ -37,18 +32,21 @@ div._23states  {
   text-decoration: none;
 }
 ._23states input[type="radio"]+label.true {
+  color: #888;
   border-right: none;
   -moz-border-radius: 3px 0 0 3px;
   -webkit-border-radius: 3px 0 0 3px;
   border-radius: 3px 0 0 3px;
 }
 ._23states input[type="radio"]+label.false {
+  color: #888;
   border-left: none;
   -moz-border-radius: 0 3px 3px 0;
   -webkit-border-radius: 0 3px 3px 0;
   border-radius: 0 3px 3px 0;
 }
 ._23states input[type="radio"]+label.nil {
+  color: #888;
   border-left: none;
   border-right: none;
 }

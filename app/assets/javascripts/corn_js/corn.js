@@ -125,28 +125,10 @@ var FatPopcorn = function($element, defaults) {
   }
 };
 FatPopcorn.prototype = new Popcorn();
-
-// // all'inizializzazione dello stream fa una richiesta e mostra la rotella di caricamento
-// // all'arrivo della risposta toglie la rotella di caricamento e mostra lo stream arrivato
-// FatPopcorn.prototype.initStream = function() {
-// 	this.requestStream(onArrivedStream);
-// 	this.showSpinner();
-// };
-// FatPopcorn.prototype.onArrivedStream = function() {
-// 	this.hideSpinner();
-// 	this.showStream();
-// };
-// FatPopcorn.prototype.initEdit = function() {
-// 	
-// };
-// FatPopcorn.prototype.initHistory = function() {
-// 	
-// };
 	
 FatPopcorn.prototype.initEdit = function() {
   this.setupFormAction();
   this.setupFormToken();
-	
 };	
 FatPopcorn.prototype.actionUrl = function() {
   return '/active_metadata/' + this.get('modelName') + '/' + this.get('modelId') + '/' + this.currentLabel() + '/notes';
@@ -200,17 +182,38 @@ FatPopcorn.prototype.gripOf = function($element) {
 };
 
 FatPopcorn.activateTheClickedTab = function() {
-  function _tabBodyName(tabName) {	return '.' + tabName.split('-')[0].trim(); }
+
+
   $('.fatpopcorn .header > ul > li').click(function(e){
+    var self = this;
+
+    function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); };
+    function _currentTabName() { return _tabBodyName($(self).attr('class')); };
+    function _currentTab() { return $('.' + _currentTabName()); };
+    function _currentTabMethod() { return _currentTabName() + "Event"; }
+
     e.stopPropagation();
     e.preventDefault();
+
     $('.fatpopcorn .active').removeClass('active');
     $('.fatpopcorn .popcorn-body > div:not(.header)').hide();
-    $(_tabBodyName($(this).attr('class'))).show();
-    $(this).addClass('active');
-  });				
-};
+    
+    _currentTab().show();    
 
+    $(this).addClass('active');
+
+    FatPopcorn[_currentTabMethod()]();
+  });
+};
+FatPopcorn.streamEvent = function() {
+  console.log("stream event called");
+};
+FatPopcorn.editEvent = function() {
+  // console.log("edit event called");
+};
+FatPopcorn.historyEvent = function() {
+  // console.log("history event called");
+};
 FatPopcorn.containerVisible = function () {
   return FatPopcorn.container().is(':visible');
 };
@@ -219,7 +222,7 @@ FatPopcorn.bindRemoteEvents = function() {
   $('.fatpopcorn').on('click', function(e) {
     e.stopPropagation();
     e.preventDefault();
-  });			
+  });
   $('#send_note').on('click',function() {
     $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize())
     .success(FatPopcorn.newNoteSuccess);
@@ -280,7 +283,6 @@ FatPopcorn.prototype.newNoteSuccess = function() { $('.stream-tab').click(); };
         fatpopcorn.setContainerPosition();
         fatpopcorn.decorateContainerWithArrow();
         fatpopcorn.containerOf().show();
-				
 				
         $(window).on('resize',function() {
           if (FatPopcorn.containerVisible()) fatpopcorn.setContainerPosition();
