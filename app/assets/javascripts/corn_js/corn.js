@@ -232,7 +232,8 @@ FatPopcorn.activateTheClickedTab = function() {
   });
 };
 FatPopcorn.streamEvent = function() {
-  $.ajax($('.fatpopcorn .stream').attr('data-url'));
+  $.ajax($('.fatpopcorn .stream').attr('data-url'))
+    .success(FatPopcorn.getStreamSuccess);
 };
 FatPopcorn.editEvent = function() {
   // should do something?
@@ -261,7 +262,17 @@ FatPopcorn.bindRemoteEvents = function() {
   });
 };
 
-FatPopcorn.prototype.newNoteSuccess = function() { $('.stream-tab').click(); };
+FatPopcorn.prototype.newNoteSuccess = function() { 
+  console.log("New note created");
+  $('.stream-tab').click(); 
+};
+
+FatPopcorn.getStreamSuccess = function(data) { 
+  console.log("GET stream success");
+  console.log('data: ' + data);
+  $('.fatpopcorn .stream .content').append(data);
+};
+
 
 (function($) {
   $.fn.fatpopcorn = function(options) {

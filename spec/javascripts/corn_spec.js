@@ -213,14 +213,16 @@ describe("Popcorn", function() {
         beforeEach(function() {
           jasmine.Ajax.useMock();
           function _htmlStream() {
-            return '<div class="stream"><div class="content"><span class="line"></span><span class="time">Oggi</span><div class="attachment">' +
-                    '<h1><a href="#">esito_tecnico_2.pdf</a></h1><p>Matteo De Vecchi ha allegato un file</p></div></div></div>';
+            return '<span class="line"></span><span class="time">Oggi</span><div class="attachment">' +
+                    '<h1><a href="#">esito_tecnico_2.pdf</a></h1><p>Matteo De Vecchi ha allegato un file</p></div>';
           };
 
           this.success_response = {
             send_note: {success: {status: 200,responseText: '<body></body>'}},
             recv_stream: {success: {status: 200,responseText: _htmlStream()}}
-          };          
+          };   
+          onSuccess = jasmine.createSpy('onSuccess');
+          onFailure = jasmine.createSpy('onFailure');
         });
 
         it("streamEvent should make an ajax call to the stream url", function() {
@@ -261,6 +263,14 @@ describe("Popcorn", function() {
           
           expect(FatPopcorn.historyEvent).toHaveBeenCalled()
           FatPopcorn.historyEvent.reset();
+        });
+
+        it("should append the stream result after a GET has being made", function() {
+          $('.fatpopcorn_grip').first().click();
+          $('.stream-tab').click();
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+          console.log($('.fatpopcorn').html());
+          expect($('.fatpopcorn .stream .content .time')).toExist();          
         });
 
         it("should call ajaxSend on the loader when making an ajax request", function() {
