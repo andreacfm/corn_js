@@ -208,6 +208,12 @@ describe("Popcorn", function() {
         $.post.reset();
       });
 
+      it("should reset the textarea of the send_note after a successful post", function() {
+        $('.fatpopcorn_grip').first().click();        
+        $('textarea#note_text').val('prova uno due tre');
+        FatPopcorn.newNoteSuccess('');        
+        expect($('textarea#note_text').val()).toBe('');
+      });
 
       describe("ajax checks", function() {
         beforeEach(function() {
@@ -268,9 +274,15 @@ describe("Popcorn", function() {
         it("should append the stream result after a GET has being made", function() {
           $('.fatpopcorn_grip').first().click();
           $('.stream-tab').click();
-          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
-          console.log($('.fatpopcorn').html());
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);          
           expect($('.fatpopcorn .stream .content .time')).toExist();          
+        });
+        it("should append the stream result after a GET has being made clearing the previous output", function() {
+          $('.fatpopcorn_grip').first().click();
+          $('.stream-tab').click();
+          $('.fatpopcorn .stream .content').append("<h3>pippo</h3>");
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+          expect($('.fatpopcorn .stream .content h3')).not.toExist();
         });
 
         it("should call ajaxSend on the loader when making an ajax request", function() {

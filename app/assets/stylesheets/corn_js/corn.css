@@ -57,6 +57,8 @@ a:hover {
   position: absolute;
 }
 .fatpopcorn h1 {
+  font: bold 12px/14px "Segoe UI","Lucida Grande",Arial,sans-serif;
+
   margin: 12px 0 4px 0;
   padding-left: 15px;
   font-size: 12px;

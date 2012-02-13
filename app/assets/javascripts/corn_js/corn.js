@@ -188,7 +188,7 @@ FatPopcorn.decorateContainerWithHtml = function() {
     '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input type="radio" ' +
     'name="on" value="on" id="on"><label for="on" class="true"><span class="true">On</span></label><input type="radio" name="off" value="off" id="off"><label for="off" class="false">' +
     '<span class="false">Off</span></label></div></div><hr/><div class="note"><h1>Nota</h1><form form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
-    '<textarea name="note" rows="4"></textarea><a id="send_note" href="#">Inserisci</a></form></div><hr/>' +
+    '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note" href="#">Inserisci</a></form></div><hr/>' +
     '<div class="attachment"><h1>Allegati</h1><a href="#">Inserisci</a></div><div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
   };
 	
@@ -250,26 +250,21 @@ FatPopcorn.bindRemoteEvents = function() {
     e.stopPropagation();
     e.preventDefault();
   });
-  $('#send_note').on('click',function() {
-    $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize())
-    .success(FatPopcorn.newNoteSuccess);
+  // TODO non sono riuscito a fare il binding con il success
+  $('#send_note').click(function() {
+    $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize()).success('success.rails', FatPopcorn.newNoteSuccess);
   });
-  $('.loader').ajaxSend(function(e) {
-    $(this).show();		
-  });
-  $('.loader').ajaxComplete(function() {
-    $(this).hide();
-  });
+  $('.loader').ajaxSend(function(e) { $(this).show(); });
+  $('.loader').ajaxComplete(function() { $(this).hide(); });
 };
 
-FatPopcorn.prototype.newNoteSuccess = function() { 
-  console.log("New note created");
-  $('.stream-tab').click(); 
+FatPopcorn.newNoteSuccess = function(data) {   
+  $('.fatpopcorn textarea#note_text').val('');
+  $('.fatpopcorn .stream-tab').click();
 };
 
 FatPopcorn.getStreamSuccess = function(data) { 
-  console.log("GET stream success");
-  console.log('data: ' + data);
+  $('.fatpopcorn .stream .content').empty();
   $('.fatpopcorn .stream .content').append(data);
 };
 
