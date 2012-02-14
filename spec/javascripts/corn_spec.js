@@ -23,6 +23,7 @@ describe("Popcorn", function() {
       $first = $elements.first();
       $last = $elements.last();
       jasmine.Ajax.useMock();
+      $('head').append('<meta content="authenticity_token" name="csrf-param" /><meta content="TOKEN" name="csrf-token" />');
     });
 
     it("should generate an hidden html with class fatpopcorn", function() {
@@ -45,7 +46,7 @@ describe("Popcorn", function() {
       it("should create a fileuploader object", function() {
         expect(FatPopcorn.uploader).toBeDefined();
       });
-      
+
       it("should require modelName", function() {
         var options = {};
         expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelName], [modelId], [token], [current_user] are required'));  
@@ -192,7 +193,12 @@ describe("Popcorn", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.fatpopcorn #notes_form').attr('action')).toEqual("/active_metadata/modelName/1/my_label/notes");
       });
+      it("should set the attachment edit[data-url] when initializing the corn", function() {
+        $('.fatpopcorn_grip').first().click();
+        expect($('.fatpopcorn .edit').attr('data-url')).toEqual("/active_metadata/modelName/1/my_label/attachments");
+      });
       it("should verify that form notes has been added with the provided token",function(){
+        $('.fatpopcorn_grip').first().click();
         expect($('form#notes_form')).toContain('input[name="authenticity_token"]');
         expect($('input[name="authenticity_token"]')).toHaveValue('TOKEN');
       });
@@ -228,11 +234,14 @@ describe("Popcorn", function() {
           };
 
           this.success_response = {
+            attach: {success: {status: 200,responseText: ''}},
             send_note: {success: {status: 200,responseText: '<body></body>'}},
             recv_stream: {success: {status: 200,responseText: _htmlStream()}}
           };   
           onSuccess = jasmine.createSpy('onSuccess');
           onFailure = jasmine.createSpy('onFailure');
+          clearAjaxRequests();
+                $('head').append('<meta content="authenticity_token" name="csrf-param" /><meta content="TOKEN" name="csrf-token" />');
         });
 
         it("streamEvent should make an ajax call to the stream url", function() {
@@ -244,7 +253,19 @@ describe("Popcorn", function() {
           expect($.ajax).toHaveBeenCalled();
           expect(request.url).toBe("/active_metadata/modelName/1/my_label/stream");
           expect(request.method).toBe("GET");
+          
         });
+        it("action of the attachments url should be set correctly", function() {
+          $('.fatpopcorn_grip').first().click();
+          expect(FatPopcorn.uploader._options.action).toEqual('/active_metadata/modelName/1/my_label/attachments');
+        });
+        it("should open the stream tab after uploading a file", function() {
+          $('.fatpopcorn_grip').first().click();
+          $('.edit-tab').click();
+          FatPopcorn.onUploadComplete()
+          expect($('.stream')).toBeVisible();
+        });
+
         it("historyEvent should make an ajax call to the history url", function() {
           spyOn($, 'ajax').andCallThrough();
           $('.fatpopcorn_grip').first().click();          
