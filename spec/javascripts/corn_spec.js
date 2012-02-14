@@ -42,6 +42,10 @@ describe("Popcorn", function() {
         var options = {modelName:'modelName', modelId :1, token : 'TOKEN', current_user:1, watching:true}; 
         am = new FatPopcorn($element, options);
       });
+      it("should create a fileuploader object", function() {
+        expect(FatPopcorn.uploader).toBeDefined();
+      });
+      
       it("should require modelName", function() {
         var options = {};
         expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelName], [modelId], [token], [current_user] are required'));  

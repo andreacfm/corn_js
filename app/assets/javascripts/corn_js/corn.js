@@ -131,6 +131,7 @@ FatPopcorn.prototype.init = function() {
   this.setupFormToken();
   this.setupStreamUrl();
   this.setupHistoryUrl();
+  this.setupAttachmentsUrl();
   if (this.hasStream()) {
     $('.fatpopcorn .stream-tab').click();
   }
@@ -140,6 +141,11 @@ FatPopcorn.prototype.init = function() {
 };	
 FatPopcorn.prototype.setupStreamUrl = function() {  
   $('.fatpopcorn .stream').attr('data-url', this.streamUrl());
+};
+FatPopcorn.prototype.setupAttachmentsUrl = function() {
+  // console.log(FatPopcorn.uploader);
+  $('.fatpopcorn .edit').attr('data-url', this.attachmentsUrl());
+  // FatPopcorn.uploader.action = this.attachmentsUrl();
 };
 FatPopcorn.prototype.setupHistoryUrl = function() {  
   $('.fatpopcorn .history').attr('data-url', this.historyUrl());
@@ -152,6 +158,9 @@ FatPopcorn.prototype.actionUrl = function() {
 };
 FatPopcorn.prototype.streamUrl = function() {
   return this.urlPrefix() + '/stream';
+};
+FatPopcorn.prototype.attachmentsUrl = function() {
+  return this.urlPrefix() + '/attachments';
 };
 FatPopcorn.prototype.historyUrl = function() {
   return this.urlPrefix() + '/history';
@@ -189,7 +198,8 @@ FatPopcorn.decorateContainerWithHtml = function() {
     'name="on" value="on" id="on"><label for="on" class="true"><span class="true">On</span></label><input type="radio" name="off" value="off" id="off"><label for="off" class="false">' +
     '<span class="false">Off</span></label></div></div><hr/><div class="note"><h1>Nota</h1><form form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
     '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note" href="#">Inserisci</a></form></div><hr/>' +
-    '<div class="attachment"><h1>Allegati</h1><a href="#">Inserisci</a></div><div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
+    '<div class="attachment"><h1>Allegati</h1><div id="fatpopcorn_attach"></div><div id="attach_output"></div></div>' +
+    '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
   };
 	
   if (FatPopcorn.container().size() == 0) {
@@ -197,6 +207,21 @@ FatPopcorn.decorateContainerWithHtml = function() {
   }
   FatPopcorn.container().hide();
 }
+
+FatPopcorn.onComplete = function(id, fileName, responseJSON, qq, target){    
+    console.log(this.arguments.join('/'));
+
+    // if(qq.getQueue().length == 1){
+    //     $('.qq-upload-list').empty();
+    //     K.message.notfineice('Caricamento completato');
+    //     K.ajax.loadDiv(target,true);
+    // }
+
+    // if(!responseJSON.success){
+    //     K.message.error(K.message.buildListOfErrors(responseJSON.errors));
+    // }
+}
+
 FatPopcorn.prototype.addGripToElement = function($element) {
   if (!$element.parent().is('span.fatpopcorn_grip') && this.defaults.autoWrap) {
     $element.wrap('<span class="fatpopcorn_grip"/>')
@@ -208,15 +233,13 @@ FatPopcorn.prototype.gripOf = function($element) {
 };
 
 FatPopcorn.activateTheClickedTab = function() {
-
-
   $('.fatpopcorn .header > ul > li').click(function(e){
     var self = this;
 
     function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); };
     function _currentTabName() { return _tabBodyName($(self).attr('class')); };
     function _currentTab() { return $('.' + _currentTabName()); };
-    function _currentTabMethod() { return _currentTabName() + "Event"; }
+    function _currentTabMethod() { return _currentTabName() + "Event"; }    
 
     e.stopPropagation();
     e.preventDefault();
@@ -244,13 +267,24 @@ FatPopcorn.historyEvent = function() {
 FatPopcorn.containerVisible = function () {
   return FatPopcorn.container().is(':visible');
 };
+FatPopcorn.createAttachmentButton = function() {
+  FatPopcorn.uploader = new qq.FileUploader({
+     element: document.getElementById('fatpopcorn_attach'),
+     allowedExtensions: [],
+     params: {"authenticity_token":$('meta[name="csrf-token"]').attr('content'),
+     "target":"attach_output"},
+     action: $('.fatpopcorn .edit').attr('data-url'),
+     uploadButtonText: 'Inserisci',
+     multiple: false,
+     onComplete: function(id, fileName, responseJSON, qq){ console.log('attach complete'); }
+   });  
+};
 
 FatPopcorn.bindRemoteEvents = function() {
   $('.fatpopcorn').on('click', function(e) {
-    e.stopPropagation();
-    e.preventDefault();
+    console.log(e);
+    e.stopPropagation();    
   });
-  // TODO non sono riuscito a fare il binding con il success
   $('#send_note').click(function() {
     $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize()).success('success.rails', FatPopcorn.newNoteSuccess);
   });
@@ -290,18 +324,19 @@ FatPopcorn.getStreamSuccess = function(data) {
     FatPopcorn.decorateContainerWithHtml();
     FatPopcorn.activateTheClickedTab();
     FatPopcorn.bindRemoteEvents();
+    FatPopcorn.createAttachmentButton();
 
     function _setUpElement() {
       var $element = $(this), fatpopcorn = new FatPopcorn($element, defaults);
       fatpopcorn.addGripToElement($element);
         
       fatpopcorn.gripOf($element).children().click(function(e) {
-        $(e.target).data('elementMatched', true);        
+        $(e.target).data('elementMatched', true);   
       });
 
       fatpopcorn.gripOf($element).click(function(e) {
         if ($(e.target).data('elementMatched')) return;
-        
+
         e.stopPropagation();
         e.preventDefault();
         fatpopcorn.init();
