@@ -64,6 +64,10 @@ a:hover {
   font-size: 12px;
   color: #303030;
 }
+.fatpopcorn .watchlist h1 {
+  background: transparent url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAbZJREFUeNpMUjtrmmEUfj4/b4NQlA8cFAshqAiKDkqgVTInCJkSCIE0m0sG/0RA+hccajKGLtKukkI2RSoFL4ilRRfxMqigeM1zXiJ4lpdze87znPNq6XQa7+ba7XaXi8XifLVafaa/tVqtrzab7Yemad/pj6VIe2842mw233RdT8ZiMQQCAYXQarVQrVax3W5/MfeFoX/SYKzX62en03mayWQQj8fBJAaDARhHu91GPp/HZDL5yfi17vf7bzjyPpvNIplMwmw2I5fLwW63g3F4vV643W6Uy2U//d+m0Wh0EQ6HkUgk9loUsslkAmliOBzC5/MhEolguVxemQuFwicKU8iHZrFYQNHgItQ0wzAEIKyqZPShiYZGowGHw6EaXC6XmqpylUrldDweH6dSKVUoNDganU4H0+lUxGI+n6PX6wm9Fz0ajX7o9/tnFA+Px4Nut6vohUIhBINBiD7qRKlUEsCvOnf+n6gn9Xr9o3AV27+z2Qy1Wg3FYhE86AsX8bA/3DGbnoh8IsiyRuHOyWg2m+DlX4l+y7q/2sHXMFh0R/6XbA7J1yDAH27rmUt5pD+SojcBBgBCW8Ar7p88wQAAAABJRU5ErkJggg==") no-repeat scroll 0 2px;
+}
+
 .fatpopcorn .attachment h1 {
   background: transparent url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABh0RVh0Q3JlYXRpb24gVGltZQAxMS0wMS0yMDEytcl2IgAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAADESURBVCiRfdAhcgJBEAXQtywCVHIEZGQcOLhByA1WEscRkMjIyI1DIpEcYeMikUjiggJBDzW1lc2vmprpqf/7/+5CN5aY4QE/OGDV6yDXuGCPIu66S1CjwWt0nWEUZ1q2yO844glbbOJ/gm8Mcocq8o6yCMnxhBU+i4w8beXN483dltCUGfkLA6yDvIx6jkUIpRnOGOMtcxxjGHPsUu4+HvESW/kv3h2HECU8B6lqE/NIDX7jvY764y9B6rgN+73bkJ24AvtdK0qIEWRDAAAAAElFTkSuQmCC") no-repeat scroll 0 2px;
 }
@@ -226,6 +230,7 @@ a:hover {
 .fatpopcorn .edit .watchlist .on-off {
   display: inline;
   float: right;
+  width: auto !important;
 }
 .fatpopcorn .qq-upload-button {
   font-style: italic;
@@ -297,26 +302,34 @@ a:hover {
     position:absolute; 
     top:0; 
     left:0; 
-    width:100%; 
-    height:100%; 
-    min-height: 70px; 
+    width:100%;
+    height:100%;
+    max-height: 100px;
+    min-height: 50px;
     z-index:802;
     background:#ffffff; 
     text-align:center; 
     border: 2px dashed #566476;
     border-radius: 4px;
-    background-color:#E4EDF5;
+    background:#ffffff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.5);
 }
 .fatpopcorn .qq-upload-drop-area span {
-    display:none; 
+    display:block; 
     position:absolute; 
     top: 50%; 
     width:100%; 
     margin-top:-8px; 
     font-size:16px;
-    color: #566476;
-    /*text-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0;*/
+    color: #ccc;
+    background:transparent;
+    text-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0;
+}
+.fatpopcorn .qq-upload-drop-area-active span {
+  color: #566476;
 }
 .fatpopcorn .qq-upload-drop-area-active {
-  background-color:#E4EDF5;
+  color: #566476;
+  background:#E4EDF5;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.5);
 }

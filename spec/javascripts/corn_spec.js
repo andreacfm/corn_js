@@ -193,9 +193,9 @@ describe("Popcorn", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.fatpopcorn #notes_form').attr('action')).toEqual("/active_metadata/modelName/1/my_label/notes");
       });
-      it("should set the attachment edit[data-url] when initializing the corn", function() {
+      it("should set the watchlist edit[data-url] when initializing the corn", function() {
         $('.fatpopcorn_grip').first().click();
-        expect($('.fatpopcorn .edit').attr('data-url')).toEqual("/active_metadata/modelName/1/my_label/attachments");
+        expect($('.fatpopcorn .edit').attr('data-url')).toEqual("/active_metadata/modelName/1/my_label/watchers/1");
       });
       it("should verify that form notes has been added with the provided token",function(){
         $('.fatpopcorn_grip').first().click();
@@ -262,7 +262,7 @@ describe("Popcorn", function() {
         it("should open the stream tab after uploading a file", function() {
           $('.fatpopcorn_grip').first().click();
           $('.edit-tab').click();
-          FatPopcorn.onUploadComplete()
+          FatPopcorn.onCompleteUpload(0, "pippo.js", {success: true}, {getQueue: function(){return 0}});
           expect($('.stream')).toBeVisible();
         });
 
@@ -326,6 +326,37 @@ describe("Popcorn", function() {
           request.response(this.success_response.send_note.success);
           expect('ajaxComplete').toHaveBeenTriggeredOn($('.loader'));
         });
+        it("should avoid sending notes when textarea is blank", function() {
+          $('.fatpopcorn_grip').first().click();
+          $('.edit-tab').click();
+          $('#send_note').click();
+          expect($('.edit')).toBeVisible();
+        });
+        
+        it("watchlist labels/input should handle click", function() {
+          $('.fatpopcorn_grip').first().click();
+          $('.edit-tab').click();
+          expect($('#watchlist_false')).toHandle('click');
+          expect($('#watchlist_true')).toHandle('click');
+        });
+
+        it("should trigger an ajax request when clicking on watchlist", function() {
+          spyOn($, 'ajax').andCallThrough();
+          
+          $('.fatpopcorn_grip').first().click();          
+          $('.edit-tab').click();
+          $('#watchlist_true').click();
+          var request = mostRecentAjaxRequest();
+
+          request.response(this.success_response.recv_stream.success);
+          
+          expect(request.url).toBe("/active_metadata/modelName/1/my_label/watchers/1");
+          expect(request.method).toBe("POST");
+        });
+
+        it("should load true or false in watchlist input accordingly to data-watcher")
+
+
       });
     });
   });

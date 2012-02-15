@@ -132,6 +132,7 @@
     this.setupStreamUrl();
     this.setupHistoryUrl();
     this.setupAttachmentsUrl();
+    this.setupWatchlistUrl();
     if (this.hasStream()) {
       $('.fatpopcorn .stream-tab').click();
     }
@@ -144,7 +145,9 @@
   };
   FatPopcorn.prototype.setupAttachmentsUrl = function() {
     FatPopcorn.createAttachmentButton(this.attachmentsUrl());
-    $('.fatpopcorn .edit').attr('data-url', this.attachmentsUrl());
+  };
+  FatPopcorn.prototype.setupWatchlistUrl = function() {
+    $('.fatpopcorn .edit').attr('data-url', this.watchlistUrl());
   };
   FatPopcorn.prototype.setupHistoryUrl = function() {  
     $('.fatpopcorn .history').attr('data-url', this.historyUrl());
@@ -163,6 +166,9 @@
   };
   FatPopcorn.prototype.attachmentsUrl = function() {
     return this.urlPrefix() + '/attachments';
+  };
+  FatPopcorn.prototype.watchlistUrl = function() {
+    return this.urlPrefix() + '/watchers/' + this.defaults.current_user;
   };
   FatPopcorn.prototype.historyUrl = function() {
     return this.urlPrefix() + '/history';
@@ -186,19 +192,25 @@
   FatPopcorn.prototype.containerOf = function() {
     return $('.fatpopcorn').first();
   }
-  FatPopcorn.onUploadComplete = function(id, fileName, responseJSON, qq) {
-    $('.stream-tab').click();
-  }
+  FatPopcorn.onCompleteUpload = function(id, fileName, response, qq) {
+      if(qq.getQueue().length == 1) {
+          $('.qq-upload-list').empty();                    
+      }
+      if(!response.success){        
+          K.message.error(K.message.buildListOfErrors(response.errors));
+          return;
+      }
 
+      $('.stream-tab').click();
+  }
   FatPopcorn.decorateContainerWithHtml = function() {
     var self = this;
     function _html() {
       return '<div class="fatpopcorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
       '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
       '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
-      '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input type="radio" ' +
-      'name="on" value="on" id="on"><label for="on" class="true"><span class="true">On</span></label><input type="radio" name="off" value="off" id="off"><label for="off" class="false">' +
-      '<span class="false">Off</span></label></div></div><hr/><div class="note"><h1>Nota</h1><form form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
+      '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' + 
+      '<div class="note"><h1>Nota</h1><form form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
       '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note" href="#">Inserisci</a></form></div><hr/>' +
       '<div class="attachment"><h1>Allegati</h1><div id="fatpopcorn_attach"></div><div id="attach_output"></div></div>' +
       '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
@@ -208,20 +220,6 @@
       $('body').append(_html());
     }
     FatPopcorn.container().hide();
-  }
-
-  FatPopcorn.onComplete = function(id, fileName, responseJSON, qq, target){    
-      console.log(this.arguments.join('/'));
-
-      // if(qq.getQueue().length == 1){
-      //     $('.qq-upload-list').empty();
-      //     K.message.notfineice('Caricamento completato');
-      //     K.ajax.loadDiv(target,true);
-      // }
-
-      // if(!responseJSON.success){
-      //     K.message.error(K.message.buildListOfErrors(responseJSON.errors));
-      // }
   }
 
   FatPopcorn.prototype.addGripToElement = function($element) {
@@ -275,22 +273,45 @@
   FatPopcorn.createAttachmentButton = function(actionUrl) {
     delete FatPopcorn.uploader;
     FatPopcorn.uploader = new qq.FileUploader({
-       element: document.getElementById('fatpopcorn_attach'),
-       allowedExtensions: [],
-       params: { authenticity_token: FatPopcorn.formToken(), target: "attach_output"},
-       uploadButtonText: 'Inserisci',
-       action: actionUrl,
-       multiple: false,
-       onComplete: FatPopcorn.onUploadComplete
-      
+      element: document.getElementById('fatpopcorn_attach'),
+      allowedExtensions: [],
+      params: { authenticity_token: FatPopcorn.formToken(), target: "attach_output"},
+      uploadButtonText: 'Inserisci',
+      action: actionUrl,
+      multiple: true,
+      onComplete: FatPopcorn.onCompleteUpload
      });  
   };
 
-  FatPopcorn.bindRemoteEvents = function() {
-    $('.fatpopcorn').on('click', function(e) {      
-      e.stopPropagation();    
+
+  FatPopcorn.bindRemoteEvents = function() {    
+
+    function _startWatching() {      
+      _callWatchlistService({authenticity_token: FatPopcorn.formToken() });
+    };
+    function _stopWatching() {
+      _callWatchlistService({_method: 'delete', authenticity_token: FatPopcorn.formToken() });
+    };
+    function _callWatchlistService(data) {      
+      console.log($('.edit').attr('data-url'));
+      $.post($('.fatpopcorn .edit').attr('data-url'), data).success(function() {console.log("watchlist success")});
+    };
+    
+    $('.fatpopcorn').on('click', function(e) {
+      e.stopPropagation();
     });
+    $('.fatpopcorn #watchlist_true').click(function() {
+      console.log('true');
+      _startWatching()
+    });
+    $('.fatpopcorn #watchlist_false').click(function() {
+      console.log('false');
+      _stopWatching();
+    });
+
     $('#send_note').click(function() {
+      if ($('#note_text').val() == '') return false;
+
       $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize()).success('success.rails', FatPopcorn.newNoteSuccess);
     });
     $('.loader').ajaxSend(function(e) { $(this).show(); });
