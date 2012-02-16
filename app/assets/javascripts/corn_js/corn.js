@@ -335,12 +335,15 @@
   FatPopcorn.deleteAttachment = function(e) {
     FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
   };
-  FatPopcorn.deleteNote = function(e) {    
+  FatPopcorn.deleteNote = function(e) {
     FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
   };
-  FatPopcorn.deleteStream = function(e, urlPrefix) {    
-    var url = urlPrefix + '/' + $(e.target).parent().attr('data-id');    
-    $.post(url, {_method: 'delete'}).    
+  FatPopcorn.deleteStream = function(e, urlPrefix) {
+    function _url() {
+      return urlPrefix + '/' + $(e.target).parent().attr('data-id');    
+    }
+
+    $.post(_url(), {_method: 'delete'}).    
       success('success.rails', FatPopcorn.deleteSuccess).
       fail(FatPopcorn.deleteFailure);
   };
