@@ -360,17 +360,26 @@ describe("Popcorn", function() {
 
         it("should load true or false in watchlist input accordingly to data-watcher")
 
-        it("should handle click on the delete span", function() {        
+        it("should handle click on the delete note span", function() {        
           spyOn($, 'ajax').andCallThrough();
           
           $('.fatpopcorn_grip').first().click();          
                     
           FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
 
-          expect($('.fatpopcorn .stream span.delete')).toHandle('click');
+          expect($('.fatpopcorn .stream .note span.delete')).toHandle('click');
+        });
+        it("should handle click on the delete attachment span", function() {        
+          spyOn($, 'ajax').andCallThrough();
+          
+          $('.fatpopcorn_grip').first().click();          
+                    
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+
+          expect($('.fatpopcorn .stream .attachment span.delete')).toHandle('click');
         });
 
-        it("should delete an attachment note when clicking on delete note link", function() {
+        it("should delete an attachment when clicking on delete note link", function() {
           spyOn($, 'ajax').andCallThrough();          
           $('.fatpopcorn_grip').first().click();
           FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
@@ -380,6 +389,20 @@ describe("Popcorn", function() {
           request.response(this.success_response.attach.success);
           
           expect(request.url).toBe("/active_metadata/modelName/1/my_label/attachments/1");
+          expect(request.params).toContain("_method=delete");
+          expect(request.method).toBe("POST");
+        });
+
+        it("should delete a note when clicking on delete note link", function() {
+          spyOn($, 'ajax').andCallThrough();          
+          $('.fatpopcorn_grip').first().click();
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+          $('.fatpopcorn .stream .note span.delete').click();
+
+          var request = mostRecentAjaxRequest();
+          request.response(this.success_response.attach.success);
+          
+          expect(request.url).toBe("/active_metadata/modelName/1/my_label/notes/1");
           expect(request.params).toContain("_method=delete");
           expect(request.method).toBe("POST");
         });

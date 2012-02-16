@@ -149,7 +149,7 @@
   };
   FatPopcorn.prototype.setupAttachmentsUrl = function() {
     FatPopcorn.createAttachmentButton(this.attachmentsUrl());
-    $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());
+    $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());    
   };
   FatPopcorn.prototype.setupWatchlistUrl = function() {
     $('.fatpopcorn .edit').attr('data-url', this.watchlistUrl());
@@ -159,6 +159,7 @@
   };
   FatPopcorn.prototype.setupFormAction = function() {
     $('.fatpopcorn #notes_form').attr('action', this.actionUrl());
+    $('.fatpopcorn .edit').attr('data-note-url', this.actionUrl());
   };
   FatPopcorn.prototype.setupFormToken = function() {
     $('.fatpopcorn #notes_form input[name="authenticity_token"]').val(FatPopcorn.formToken());
@@ -329,27 +330,27 @@
     $('.fatpopcorn .stream .content').empty();
     $('.fatpopcorn .stream .content').append(data);    
     $('.fatpopcorn .stream .attachment span.delete').click(FatPopcorn.deleteAttachment);
+    $('.fatpopcorn .stream .note span.delete').click(FatPopcorn.deleteNote);
   };
-
   FatPopcorn.deleteAttachment = function(e) {
-    console.log($(e.target).parent());
-    var id = $(e.target).parent().attr('data-id');
-    var url = $('.fatpopcorn .edit').attr('data-attach-url') + '/' + id;
-    
-    $.post(url, {_method: 'delete'}).    
-      success('success.rails', FatPopcorn.deleteAttachSuccess).
-      fail(FatPopcorn.deleteAttachFailure);
+    FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
   };
-
-  FatPopcorn.deleteAttachSuccess = function() {
+  FatPopcorn.deleteNote = function(e) {    
+    FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
+  };
+  FatPopcorn.deleteStream = function(e, urlPrefix) {    
+    var url = urlPrefix + '/' + $(e.target).parent().attr('data-id');    
+    $.post(url, {_method: 'delete'}).    
+      success('success.rails', FatPopcorn.deleteSuccess).
+      fail(FatPopcorn.deleteFailure);
+  };
+  FatPopcorn.deleteSuccess = function() {
     $('.fatpopcorn .stream-tab').click();
     console.log('deleted attach success');
   };
-
-  FatPopcorn.deleteAttachFailure = function() {
+  FatPopcorn.deleteFailure = function() {
     console.log('deleted attach failure');
   };
-
   FatPopcorn.getHistorySuccess = function(data) { 
     $('.fatpopcorn .history .content').empty();
     $('.fatpopcorn .history .content').append(data);
