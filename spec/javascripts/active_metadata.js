@@ -359,7 +359,7 @@ ActiveMetadata.prototype = {
         html.push('<div id="attachments" data-loaded="false"><h6>Attachments</h6><div id="active_metadata_uploader"></div><div id="attachments_target"></div></div>');
         //watchlist
         html.push('<div id="watchlist" data-loaded="false"><h6>Watchlist</h6>');
-        html.push('<input type="checkbox" name="watching" class="watching_switch"/> Aggiungi il campo alla mia watchlist');
+        html.push('<input type="checkbox" name="watching_switch" class="watching_switch"/> Aggiungi il campo alla mia watchlist');
         html.push('<div class="clear dashed"><img src="/images/active_metadata/dashed.png" /></div>');
        	html.push('<div id="watchlist_target"></div>');
 		html.push('</div>');

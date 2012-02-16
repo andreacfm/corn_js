@@ -224,8 +224,11 @@ describe("Popcorn", function() {
         beforeEach(function() {
           jasmine.Ajax.useMock();
           function _htmlStream() {
-            return '<span class="line"></span><span class="time">Oggi</span><div class="attachment">' +
-                    '<h1><a href="#">esito_tecnico_2.pdf</a></h1><p>Matteo De Vecchi ha allegato un file</p></div>';
+            return '<span class="line"></span><span class="time">Oggi</span>' + 
+              '<div class="attachment"><h1 data-id="1"><a href="#">esito_tecnico_2.pdf<span class="star">*</span><span class="delete">x</span></a></h1>' + 
+              '<p>Matteo De Vecchi ha allegato un file</p></div>' +
+              '<div class="note"><h1 data-id="1">nota bene!<span class="star">*</span><span class="delete">x</span></a></h1>' + 
+              '<p>Matteo De Vecchi ha creato una nota un file</p></div>';
           };
 
           this.success_response = {
@@ -357,6 +360,29 @@ describe("Popcorn", function() {
 
         it("should load true or false in watchlist input accordingly to data-watcher")
 
+        it("should handle click on the delete span", function() {        
+          spyOn($, 'ajax').andCallThrough();
+          
+          $('.fatpopcorn_grip').first().click();          
+                    
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+
+          expect($('.fatpopcorn .stream span.delete')).toHandle('click');
+        });
+
+        it("should delete an attachment note when clicking on delete note link", function() {
+          spyOn($, 'ajax').andCallThrough();          
+          $('.fatpopcorn_grip').first().click();
+          FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+          $('.fatpopcorn .stream .attachment span.delete').click();
+
+          var request = mostRecentAjaxRequest();
+          request.response(this.success_response.attach.success);
+          
+          expect(request.url).toBe("/active_metadata/modelName/1/my_label/attachments/1");
+          expect(request.params).toContain("_method=delete");
+          expect(request.method).toBe("POST");
+        });
 
       });
     });

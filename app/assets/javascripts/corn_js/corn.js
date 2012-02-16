@@ -119,7 +119,7 @@
     this.get = function(option) {
       return self.defaults[option];
     }
-    
+
     self.defaults['modelName'] = self.$element.attr('data-model');
 
     if (_checkOptions(self.defaults)){
@@ -135,18 +135,21 @@
     this.setupHistoryUrl();
     this.setupAttachmentsUrl();
     this.setupWatchlistUrl();
+    
     if (this.hasStream()) {
       $('.fatpopcorn .stream-tab').click();
     }
     else {
       $('.fatpopcorn .edit-tab').click();
     }
-  };	
-  FatPopcorn.prototype.setupStreamUrl = function() {  
+  };
+  	
+  FatPopcorn.prototype.setupStreamUrl = function() {
     $('.fatpopcorn .stream').attr('data-url', this.streamUrl());
   };
   FatPopcorn.prototype.setupAttachmentsUrl = function() {
     FatPopcorn.createAttachmentButton(this.attachmentsUrl());
+    $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());
   };
   FatPopcorn.prototype.setupWatchlistUrl = function() {
     $('.fatpopcorn .edit').attr('data-url', this.watchlistUrl());
@@ -286,7 +289,6 @@
      });  
   };
 
-
   FatPopcorn.bindRemoteEvents = function() {    
 
     function _startWatching() {      
@@ -325,8 +327,28 @@
 
   FatPopcorn.getStreamSuccess = function(data) { 
     $('.fatpopcorn .stream .content').empty();
-    $('.fatpopcorn .stream .content').append(data);
+    $('.fatpopcorn .stream .content').append(data);    
+    $('.fatpopcorn .stream .attachment span.delete').click(FatPopcorn.deleteAttachment);
   };
+
+  FatPopcorn.deleteAttachment = function(e) {
+    console.log($(e.target).parent());
+    var id = $(e.target).parent().attr('data-id');
+    var url = $('.fatpopcorn .edit').attr('data-attach-url') + '/' + id;
+    
+    $.post(url, {_method: 'delete'}).    
+      success('success.rails', FatPopcorn.deleteAttachSuccess).
+      fail(FatPopcorn.deleteAttachFailure);
+  };
+
+  FatPopcorn.deleteAttachSuccess = function() {
+    console.log('deleted attach success');
+  };
+
+  FatPopcorn.deleteAttachFailure = function() {
+    console.log('deleted attach failure');
+  };
+
   FatPopcorn.getHistorySuccess = function(data) { 
     $('.fatpopcorn .history .content').empty();
     $('.fatpopcorn .history .content').append(data);

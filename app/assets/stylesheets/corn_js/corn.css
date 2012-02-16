@@ -178,7 +178,19 @@ a:hover {
   vertical-align: bottom;
   white-space: nowrap;
 }
-
+.fatpopcorn .stream .content > div.note:hover, .fatpopcorn .stream .content > div.attachment:hover {
+  -webkit-box-shadow: 0px 2px 4px rgba(50, 50, 50, 0.35);
+  -moz-box-shadow:    0px 2px 4px rgba(50, 50, 50, 0.35);
+  box-shadow:         0px 2px 4px rgba(50, 50, 50, 0.35);  
+}
+div > h1 > span.star, div > h1 > span.delete {
+  display: block;
+  width: 12px;
+  height: 12px; 
+  background-color: red;
+  float: right;
+  margin-left: 2px;
+}
 /* history classes*/
 .fatpopcorn .history {
   padding-bottom: 10px;
@@ -217,7 +229,6 @@ a:hover {
 .fatpopcorn .edit .watchlist { 
   margin: 10px 10px 16px 10px;
 }
-
 .fatpopcorn .edit .note {
   margin: 10px 10px 26px 10px;
 }
@@ -287,6 +298,14 @@ a:hover {
   font-size: 12px;
   text-align: right;
   float: right;
+}
+.fatpopcorn .content .no-content {
+  position:absolute;
+  top:50%;
+  font-size: 20px;
+  color: #ccc;
+  background:transparent;
+  text-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0;
 }
 .fatpopcorn .loader {
   display: none;
