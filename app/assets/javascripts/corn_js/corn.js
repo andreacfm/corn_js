@@ -342,6 +342,7 @@
   };
 
   FatPopcorn.deleteAttachSuccess = function() {
+    $('.fatpopcorn .stream-tab').click();
     console.log('deleted attach success');
   };
 

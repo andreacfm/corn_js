@@ -225,7 +225,7 @@ describe("Popcorn", function() {
           jasmine.Ajax.useMock();
           function _htmlStream() {
             return '<span class="line"></span><span class="time">Oggi</span>' + 
-              '<div class="attachment"><h1 data-id="1"><a href="#">esito_tecnico_2.pdf<span class="star">*</span><span class="delete">x</span></a></h1>' + 
+              '<div class="attachment"><h1 data-id="1"><a href="#">esito_tecnico_2.pdf</a><span class="star">*</span><span class="delete">x</span></h1>' + 
               '<p>Matteo De Vecchi ha allegato un file</p></div>' +
               '<div class="note"><h1 data-id="1">nota bene!<span class="star">*</span><span class="delete">x</span></a></h1>' + 
               '<p>Matteo De Vecchi ha creato una nota un file</p></div>';
