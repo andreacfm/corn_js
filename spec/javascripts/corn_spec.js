@@ -39,8 +39,8 @@ describe("Popcorn", function() {
 
     describe("initialization", function() {
       beforeEach(function() {
-        $element = $('.one').first();
-        var options = {modelName:'modelName', modelId :1, token : 'TOKEN', current_user:1, watching:true}; 
+        $element = $first;
+        var options = {modelId :1, token : 'TOKEN', current_user:1};
         am = new FatPopcorn($element, options);
       });
       it("should create a fileuploader object", function() {
@@ -49,31 +49,31 @@ describe("Popcorn", function() {
 
       it("should require modelName", function() {
         var options = {};
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelName], [modelId], [token], [current_user] are required'));  
+        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
       });
       it("should require modelId", function() {
         var options = {modelName:'modelName'}; 
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelName], [modelId], [token], [current_user] are required'));  
+        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
       });
       it("should require form token", function() {
         var options = {modelName:'modelName', modelId :1}; 
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelName], [modelId], [token], [current_user] are required'));  
+        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
       });
       it("should require current_user", function() {
         var options = {modelName:'modelName', modelId :1, token : 'TOKEN'}; 
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelName], [modelId], [token], [current_user] are required'));  
+        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
       });
       it("should correctly configure modelName", function() {
-        expect(am.get("modelName")).toBeTruthy('modelName');
+        expect(am.get("modelName")).toEqual('modelName');
       });
       it("should correctly configure modelId", function() {
-        expect(am.get("modelId")).toBeTruthy(1);
+        expect(am.get("modelId")).toEqual(1);
       });
       it("should correctly configure token", function() {
-        expect(am.get("token")).toBeTruthy('TOKEN');
+        expect(am.get("token")).toEqual('TOKEN');
       });
       it("should correctly configure current_user", function() {
-        expect(am.get("current_user")).toBeTruthy(1);
+        expect(am.get("current_user")).toEqual(1);
       });   
       it("should verify that layer contains the form for creating new notes", function() {
         expect($('.fatpopcorn')).toContain('form#notes_form');
@@ -159,11 +159,6 @@ describe("Popcorn", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.fatpopcorn')).not.toBeVisible();
       });
-      // it("should add an event handler to resize when fatpopcorn is visible", function() {
-      //  $('.fatpopcorn_grip').first().click();
-      //  console.log($(window).data('events'))
-      //  expect($(window)).toHandle('resize');
-      // });
       it("should position the control at the correct height under the element", function () {
         $('.fatpopcorn_grip').last().click();
         expect($('.fatpopcorn').offset().top).toBeGreaterThan($last.offset().top + 26);
@@ -273,7 +268,7 @@ describe("Popcorn", function() {
           var request = mostRecentAjaxRequest();
           request.response(this.success_response.recv_stream.success);
           expect($.ajax).toHaveBeenCalled();
-          expect(request.url).toBe("/active_metadata/modelName/1/my_label/history");
+          expect(request.url).toBe("/active_metadata/modelName/1/my_label/histories");
           expect(request.method).toBe("GET");
         });
 
@@ -308,6 +303,12 @@ describe("Popcorn", function() {
           $('.fatpopcorn .stream .content').append("<h3>pippo</h3>");
           FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
           expect($('.fatpopcorn .stream .content h3')).not.toExist();
+        });
+        it("should append the history result after a GET has being made", function() {
+          $('.fatpopcorn_grip').first().click();
+          $('.history-tab').click();
+          FatPopcorn.getHistorySuccess(this.success_response.recv_stream.success.responseText);          
+          expect($('.fatpopcorn .history .content .time')).toExist();          
         });
 
         it("should call ajaxSend on the loader when making an ajax request", function() {

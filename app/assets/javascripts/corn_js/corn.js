@@ -106,22 +106,24 @@
 
   var FatPopcorn = function($element, defaults) {		
     function _checkOptions(options) {
-      return typeof options.modelName === undefined || 
-      options.modelId === undefined || 
+      return typeof options.modelId === undefined || 
       options.token === undefined || 
       options.current_user === undefined;
     };
     var self = this;
 
     self.$element = $element;
+
     self.defaults = defaults;
     self.attributes = defaults;
     this.get = function(option) {
       return self.defaults[option];
     }
-  	
+    
+    self.defaults['modelName'] = self.$element.attr('data-model');
+
     if (_checkOptions(self.defaults)){
-      throw("parameters [modelName], [modelId], [token], [current_user] are required");
+      throw("parameters [modelId], [token], [current_user] are required");
     }
   };
   FatPopcorn.prototype = new Popcorn();
@@ -171,7 +173,7 @@
     return this.urlPrefix() + '/watchers/' + this.defaults.current_user;
   };
   FatPopcorn.prototype.historyUrl = function() {
-    return this.urlPrefix() + '/history';
+    return this.urlPrefix() + '/histories';
   };
   FatPopcorn.prototype.urlPrefix = function() {
     return '/active_metadata/' + this.get('modelName') + '/' + this.get('modelId') + '/' + this.currentLabel();
@@ -262,7 +264,8 @@
     // should do something?
   };
   FatPopcorn.historyEvent = function() {
-    $.ajax($('.fatpopcorn .history').attr('data-url'));
+    $.ajax($('.fatpopcorn .history').attr('data-url'))
+      .success(FatPopcorn.getHistorySuccess);
   };
   FatPopcorn.containerVisible = function () {
     return FatPopcorn.container().is(':visible');
@@ -293,7 +296,6 @@
       _callWatchlistService({_method: 'delete', authenticity_token: FatPopcorn.formToken() });
     };
     function _callWatchlistService(data) {      
-      console.log($('.edit').attr('data-url'));
       $.post($('.fatpopcorn .edit').attr('data-url'), data).success(function() {console.log("watchlist success")});
     };
     
@@ -301,11 +303,9 @@
       e.stopPropagation();
     });
     $('.fatpopcorn #watchlist_true').click(function() {
-      console.log('true');
       _startWatching()
     });
     $('.fatpopcorn #watchlist_false').click(function() {
-      console.log('false');
       _stopWatching();
     });
 
@@ -326,6 +326,10 @@
   FatPopcorn.getStreamSuccess = function(data) { 
     $('.fatpopcorn .stream .content').empty();
     $('.fatpopcorn .stream .content').append(data);
+  };
+  FatPopcorn.getHistorySuccess = function(data) { 
+    $('.fatpopcorn .history .content').empty();
+    $('.fatpopcorn .history .content').append(data);
   };
 (function($) {
   $.fn.fatpopcorn = function(options) {
