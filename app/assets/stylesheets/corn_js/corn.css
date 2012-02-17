@@ -242,7 +242,7 @@ div > h1 > span.delete:hover {
   font-style: italic;
   color: #303030;
   white-space: nowrap;
-  margin 0;
+  margin: 0;
   font-weight: normal;
 }
 .fatpopcorn .edit .watchlist { 
