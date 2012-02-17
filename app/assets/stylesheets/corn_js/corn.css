@@ -178,19 +178,38 @@ a:hover {
   vertical-align: bottom;
   white-space: nowrap;
 }
-.fatpopcorn .stream .content > div.note:hover, .fatpopcorn .stream .content > div.attachment:hover {
-  -webkit-box-shadow: 0px 2px 4px rgba(50, 50, 50, 0.35);
-  -moz-box-shadow:    0px 2px 4px rgba(50, 50, 50, 0.35);
-  box-shadow:         0px 2px 4px rgba(50, 50, 50, 0.35);  
+.fatpopcorn .stream .content > div {
+  padding: 1px;
+  margin-top: 4px;
 }
-div > h1 > span.star, div > h1 > span.delete {
+.fatpopcorn .stream .content > div.note:hover, .fatpopcorn .stream .content > div.attachment:hover {
+  -webkit-box-shadow: 0px 0px 4px rgba(50, 50, 50, 0.50);
+  -moz-box-shadow:    0px 0px 4px rgba(50, 50, 50, 0.50);
+  box-shadow:         0px 0px 4px rgba(50, 50, 50, 0.50);  
+}
+
+.fatpopcorn .stream div > h1 {
+  margin-top: 4px;
+}
+
+.fatpopcorn .stream div > h1 > span.star, .fatpopcorn .stream div > h1 > span.delete {  
   display: block;
   width: 12px;
   height: 12px; 
-  background-color: red;
+  color: transparent;
   float: right;
   margin-left: 2px;
 }
+
+div > h1 > span.delete {
+  background: url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAYCAYAAADOMhxqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2tJREFUeNqUVF1IU2EYfs/Ojtv82ZSxWju0ZCsRSoVExEYZWOEQcRFEQbjqVgi6CIJuuulGhNON0EXlVdEP/TGsQd3ovFEswWwrFRRpZlrOn83N7Zzz9XwfBN32wnd+3vP+Pc/7cCTGGP2PSZqm2ZB0b3d3t6tUKq1WVVWp8HdJkuQ1TbO/rKwsuLW1lXY4HCn4z1hxuZnP53tcLldNIBDwTE5OEpI+oEDKMIxgfX09pdNpNZfLqSj8mCdcl2XZ1dvbywNF2/HxcQduTY2NjdTa2koVFRU0ODhIiLvAE3J2u921uLhIDQ0NFA6HCaOQ1WqVOzo6CKNRKpWi7e1tqqys/CZ3dnbOIenizMyMCKytraW6ujryeDxUXl5O09PTNDw8TE6n8/Pa2toA7xBDldf4GBkbG6OWlhYxAjCRrusUi8VEF/gzNpttiCccBDv5nZ0dampqIjwTp5oHYSzy+/3CDzwhTHCEJ/QXCoWzzc3N1NbWRtXV1ZRMJimTyVAoFKJoNCqIKBaLcjwef8UTegBagOVVJyYmaGRkhLLZrOjAWUIwjY6O0sLCwkEO+gToCqysrBB4p0QiQRgvD4qV2dlZwtw0NTXFqdZR8C3fNN/sGCp6VVW1r6+v66isAUcSZwjJv7BtN2LmFEWJSnFVtZmQxoZpdmVNc9WvKEIaMpG3xFi/02IJLuh62iPLQhoWLo2fhtFTqyie7pMnDy+VStXwfciY5i2cYPDYMWq22VQUOAX/Y0KHjSdeLystLTFuP86fZ4N79vCjf29vZ7tfvjBjY4PFfD72XlUZ75BzyzLlsCBu3qdP6Syqnjt9WvbF46QcOkTZZ8/oO5ZYYOwb79CNw4b27mWrfX3srxXn58U9o2nsESZA9ek7bvcVDpow3ysAjCyD1uinT2T1+UQ3VijQ/QMHyIL9RK5eHbXU1LQLaYCdPIBT99GjxCARLISgZZKw0DNcV9eukauvLwTdHOEjvXyIcZYjEQGQ2+aDB2ztxg32rxmbmywdDs/xBOMNGDCLRcZ0nf2+fZu92LeP3fV4xPPf4JXLlwVL8iWn84RNkgL2d++IQTMfNY1WDSO/32pVpqArfy5HmYEBep5I6KD0LQctpLGs697jDof9a7Go2yVJw78kqUMawPYL23bjfa7SYolK//ub+SPAAGX01NPxCvd+AAAAAElFTkSuQmCC") no-repeat scroll transparent;
+}
+
+div > h1 > span.delete:hover {
+  background-position: left bottom;
+  cursor: pointer;
+}
+
 /* history classes*/
 .fatpopcorn .history {
   padding-bottom: 10px;
@@ -231,6 +250,9 @@ div > h1 > span.star, div > h1 > span.delete {
 }
 .fatpopcorn .edit .note {
   margin: 10px 10px 26px 10px;
+}
+.fatpopcorn .edit #send_note {
+  padding-right: 6px;
 }
 .fatpopcorn .edit .attachment {
   margin: 10px 10px 26px 10px;
