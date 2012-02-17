@@ -1,5 +1,6 @@
   var Popcorn = function($element, defaults) {
     this.$element = $element;
+    this.$anchor = null;
     this.defaults =  defaults;
   };
 
@@ -14,9 +15,13 @@
 
   Popcorn.prototype.inferPositionType = function() {
     var self = this;
+    self.$anchor = self.$element;
 
     function _createPositionType(defaults) {
-      if (self.collideLeft()) { return new LeftPosition(self); } 
+      if(self.$element.offset().left < 1){
+          self.$anchor = self.$element.parent();
+      }
+      if (self.collideLeft()) { return new LeftPosition(self); }
       else if (self.collideRight()) { return new RightPosition(self); }
       return new CenterPosition(self);
     }
@@ -35,22 +40,22 @@
     // this.leftOffset = function() {return popcorn.$element.offset().left + (popcorn.$element.width() - popcorn.defaults.arrowWidth) / 2; }
     this.leftOffset = function() {	return popcorn.defaults.marginArrow; }
     this.left = function() { return popcorn.defaults.marginBorder; }
-    this.top = function() { return popcorn.$element.offset().top + popcorn.defaults.verticalOffsetFromElement };
+    this.top = function() { return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement };
   };
 
   var RightPosition = function(popcorn) {
     this.leftOffset = function() { return popcorn.containerOf().width() - (popcorn.defaults.arrowWidth + popcorn.defaults.marginArrow);	}
     this.left = function() { return $('html').width() - popcorn.defaults.marginBorder - popcorn.containerOf().width(); }
-    this.top = function() { return popcorn.$element.offset().top + popcorn.defaults.verticalOffsetFromElement };
+    this.top = function() { return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement };
   };
 
   var CenterPosition = function(popcorn) {
     this.leftOffset = function() { return popcorn.containerOf().width() / 2 - Math.floor(popcorn.defaults.arrowWidth / 2); }
     this.left = function() {                                                                  
-      var middleOfElement = Popcorn.calculateMiddle(popcorn.$element.offset().left, popcorn.$element.width());
+      var middleOfElement = Popcorn.calculateMiddle(popcorn.$anchor.offset().left, popcorn.$anchor.width());
       return Popcorn.calculateLeftOffset(middleOfElement, popcorn.containerOf().width());
     }
-    this.top = function() { return popcorn.$element.offset().top + popcorn.defaults.verticalOffsetFromElement };
+    this.top = function() { return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement };
   };
 
   Popcorn.containerOf = function($element) {
@@ -67,7 +72,7 @@
   }
 
   Popcorn.prototype.collideRight = function() {
-    var middleOfElement = Popcorn.calculateMiddle(this.$element.offset().left, this.$element.width());
+    var middleOfElement = Popcorn.calculateMiddle(this.$anchor.offset().left, this.$anchor.width());
     var rightOffset = middleOfElement + this.containerOf().width() / 2;
     return ($('html').width() - (rightOffset + this.defaults.marginBorder)) < 0;
   }
@@ -77,7 +82,7 @@
   }
 
   Popcorn.prototype.middleOf = function() {
-    return Popcorn.calculateMiddle(this.$element.offset().left, this.$element.width());
+    return Popcorn.calculateMiddle(this.$anchor.offset().left, this.$anchor.width());
   }
 
   Popcorn.calculateMiddle = function(left, width) {

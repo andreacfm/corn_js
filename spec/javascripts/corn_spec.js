@@ -74,7 +74,15 @@ describe("Popcorn", function() {
       });
       it("should correctly configure current_user", function() {
         expect(am.get("current_user")).toEqual(1);
-      });   
+      }); 
+      it("should verify that if element left offset is 0 the popcorn $element becomes the popcorn span wrapper", function(){
+          $first.css("margin-left",-9000)
+          var options = {modelId :1, token : 'TOKEN', current_user:1};
+          var am = new FatPopcorn($first, options);
+          $('.fatpopcorn_grip').first().click();
+          console.log(am)
+      });
+        
       it("should verify that layer contains the form for creating new notes", function() {
         expect($('.fatpopcorn')).toContain('form#notes_form');
       });
