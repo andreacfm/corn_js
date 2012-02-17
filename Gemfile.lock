@@ -12,7 +12,7 @@ GIT
 PATH
   remote: .
   specs:
-    corn_js (0.0.3)
+    corn_js (0.0.4)
       jquery-rails
       rails (~> 3.2.1)
 
