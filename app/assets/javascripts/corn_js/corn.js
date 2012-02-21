@@ -1,6 +1,6 @@
   var Popcorn = function($element, defaults) {
     this.$element = $element;
-    this.$anchor = null;
+    this.$anchor = this.$element;
     this.defaults =  defaults;
   };
 
@@ -15,12 +15,14 @@
 
   Popcorn.prototype.inferPositionType = function() {
     var self = this;
-    self.$anchor = self.$element;
-
+    this.$anchor = this.$element;
+    
     function _createPositionType(defaults) {
-      if(self.$element.offset().left < 1){
+
+      if(self.$element.offset().left < 1) {
           self.$anchor = self.$element.parent();
       }
+
       if (self.collideLeft()) { return new LeftPosition(self); }
       else if (self.collideRight()) { return new RightPosition(self); }
       return new CenterPosition(self);
