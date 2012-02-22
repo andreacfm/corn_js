@@ -19,7 +19,7 @@ describe("Popcorn", function() {
 
     beforeEach(function() {
       loadFixtures('fatpopcorn-fixture.html');
-      $elements = $('.open_popcorn').fatpopcorn({modelName:'modelName', modelId :1, token : 'TOKEN', current_user:1, watching:true, autoWrap: true});
+      $elements = $('.open_popcorn').fatpopcorn({token : 'TOKEN', current_user:1, autoWrap: true});
       $first = $elements.first();
       $last = $elements.last();
       jasmine.Ajax.useMock();
@@ -40,47 +40,32 @@ describe("Popcorn", function() {
     describe("initialization", function() {
       beforeEach(function() {
         $element = $first;
-        var options = {modelId :1, token : 'TOKEN', current_user:1};
-        am = new FatPopcorn($element, options);
+        var options = {token : 'TOKEN', current_user:1};
+        $fatpopcorn = new FatPopcorn($element, options);
       });
       it("should create a fileuploader object", function() {
         expect(FatPopcorn.uploader).toBeDefined();
       });
 
-      it("should require modelName", function() {
+      it("should require some options", function() {
         var options = {};
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
-      });
-      it("should require modelId", function() {
-        var options = {modelName:'modelName'}; 
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
-      });
-      it("should require form token", function() {
-        var options = {modelName:'modelName', modelId :1}; 
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
+        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [token], [current_user] are required'));  
       });
       it("should require current_user", function() {
-        var options = {modelName:'modelName', modelId :1, token : 'TOKEN'}; 
-        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [modelId], [token], [current_user] are required'));  
-      });
-      it("should correctly configure modelName", function() {
-        expect(am.get("modelName")).toEqual('modelName');
-      });
-      it("should correctly configure modelId", function() {
-        expect(am.get("modelId")).toEqual(1);
+        var options = {token : 'TOKEN'}; 
+        expect(function(){new FatPopcorn($element, options)}).toThrow(new Error('parameters [token], [current_user] are required'));  
       });
       it("should correctly configure token", function() {
-        expect(am.get("token")).toEqual('TOKEN');
+        expect($fatpopcorn.defaults.token).toEqual('TOKEN');
       });
       it("should correctly configure current_user", function() {
-        expect(am.get("current_user")).toEqual(1);
+        expect($fatpopcorn.defaults.current_user).toEqual(1);
       }); 
       it("should verify that if element left offset is 0 the popcorn $element becomes the popcorn span wrapper", function(){
           $first.css("margin-left",-9000)
-          var options = {modelId :1, token : 'TOKEN', current_user:1};
+          var options = {token : 'TOKEN', current_user:1};
           var am = new FatPopcorn($first, options);
           $('.fatpopcorn_grip').first().click();
-          console.log(am)
       });
         
       it("should verify that layer contains the form for creating new notes", function() {
@@ -227,6 +212,19 @@ describe("Popcorn", function() {
         FatPopcorn.newNoteSuccess('');        
         expect($('textarea#note_text').val()).toBe('');
       });
+
+      describe("data-stream", function() {
+        beforeEach(function(){
+          $testElementGrip = $('.three .fatpopcorn_grip');
+        });
+
+        it("should change the data-stream url", function() {
+          $testElementGrip.click();
+          expect($('.fatpopcorn .stream').attr('data-url')).toEqual("/active_metadata/anotherModelName/2/my_label/stream");
+          $
+        });
+      });
+
 
       describe("ajax checks", function() {
         beforeEach(function() {
@@ -548,7 +546,6 @@ describe("Popcorn", function() {
       it("should wrap the content of the container with a div", function() {
         expect($leftElement.next().children().select(":firt-child")).toBe("div.popcorn-body");
       });
-
     });
   });
 });

@@ -119,19 +119,11 @@
     };
     var self = this;
 
+    if (_checkOptions(defaults)) throw("parameters [token], [current_user] are required");
+
     self.$element = $element;
-
-    self.defaults = defaults;
-    self.attributes = defaults;
-    this.get = function(option) {
-      return self.defaults[option];
-    }
-
-    self.defaults['modelName'] = self.$element.attr('data-model');
-
-    if (_checkOptions(self.defaults)){
-      throw("parameters [modelId], [token], [current_user] are required");
-    }
+    self.defaults = defaults;    
+    self.defaults.modelName = "#"
   };
   FatPopcorn.prototype = new Popcorn();
   	
@@ -187,7 +179,7 @@
     return this.urlPrefix() + '/histories';
   };
   FatPopcorn.prototype.urlPrefix = function() {
-    return '/active_metadata/' + this.get('modelName') + '/' + this.get('modelId') + '/' + this.currentLabel();
+    return '/active_metadata/' + this.$element.attr('data-model') + '/' + this.$element.attr('data-model-id') + '/' + this.$element.attr('data-label');
   };
   FatPopcorn.prototype.currentLabel = function() {
     return this.$element.attr('data-label');
