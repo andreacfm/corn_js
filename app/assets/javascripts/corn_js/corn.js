@@ -113,7 +113,7 @@
 
   var FatPopcorn = function($element, defaults) {		
     function _checkOptions(options) {
-      if (!options.autoWrap) options.autoWrap = true;
+      if (!options.autoWrap) options.autoWrap = false;
 
       return typeof options.modelId === undefined || 
       options.token === undefined || 
@@ -136,7 +136,7 @@
     this.setupFormToken();
     this.setupStreamUrl();
     this.setupHistoryUrl();
-    this.setupAttachmentsUrl();
+    this.setupEditForm();
     this.setupWatchlistUrl();
     
     if (this.hasStream()) {
@@ -150,9 +150,10 @@
   FatPopcorn.prototype.setupStreamUrl = function() {
     $('.fatpopcorn .stream').attr('data-url', this.streamUrl());
   };
-  FatPopcorn.prototype.setupAttachmentsUrl = function() {
+  FatPopcorn.prototype.setupEditForm = function() {
     FatPopcorn.createAttachmentButton(this.attachmentsUrl());
     $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());    
+    $('.on-off label.' + this.$element.attr('data-watching')).click();
   };
   FatPopcorn.prototype.setupWatchlistUrl = function() {
     $('.fatpopcorn .edit').attr('data-url', this.watchlistUrl());

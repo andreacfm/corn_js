@@ -5,7 +5,8 @@ describe("Popcorn", function() {
   var mock_defaults = {
     marginBorder: 4,
     arrowWidth: 19,
-    marginArrow: 10
+    marginArrow: 10,
+    autoWrap: true
   };
 
   describe("framwork", function() {
@@ -18,7 +19,7 @@ describe("Popcorn", function() {
 
     beforeEach(function() {
       loadFixtures('fatpopcorn-fixture.html');
-      $elements = $('.open_popcorn').fatpopcorn({token : 'TOKEN', current_user:1});
+      $elements = $('.open_popcorn').fatpopcorn({token : 'TOKEN', current_user:1, autoWrap: true});
       $first = $elements.first();
       $last = $elements.last();
       jasmine.Ajax.useMock();
@@ -94,10 +95,6 @@ describe("Popcorn", function() {
         expect($('.popcorn-body .edit')).toBeVisible();
         $first.removeAttr('data-stream');
       });
-      // it("should set edit not visible by default", function() {
-      //   $('.fatpopcorn_grip').first().click();
-      //   expect($('.popcorn-body .edit')).not.toBeVisible();
-      // });
       it("should set history not visible by default", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.popcorn-body .history')).not.toBeVisible();
@@ -183,9 +180,17 @@ describe("Popcorn", function() {
         $('.fatpopcorn').click();
         expect($('.fatpopcorn')).toBeVisible();
       });
+
+      it("should show ON in the watchlist field when data-watching attr is true", function() {
+        $first.attr('data-watching', 'true');
+        $('.fatpopcorn_grip').first().click();        
+        $('.fatpopcorn .edit-tab').click();
+        expect($('#watchlist_true')).toBeChecked();
+      });
+
     });
 
-    describe("fatpopcorn notes creation", function() {
+    describe("fatpopcorn notes", function() {
       it("should verify that layer contains the form for creating new notes", function() {
         expect($('.fatpopcorn')).toContain('form#notes_form');
       });
@@ -220,7 +225,7 @@ describe("Popcorn", function() {
       });
     });
 
-    describe("data-stream", function() {
+    describe("stream", function() {
       beforeEach(function(){
         $testElementGrip = $('.three .fatpopcorn_grip');
       });
