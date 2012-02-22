@@ -9,7 +9,7 @@ gemspec
 gem "jquery-rails"
 gem 'jasmine', :git => "https://github.com/pivotal/jasmine-gem.git", :branch => "fix_json_and_rails_30"
 gem "rspec-rails"
-gem 'jasmine-headless-webkit'
+gem 'jasmine-headless-webkit', :git => 'https://github.com/johnbintz/jasmine-headless-webkit.git'
 
 group :assets do
   gem 'uglifier', '>= 1.0.3'
