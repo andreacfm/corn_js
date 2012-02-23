@@ -393,7 +393,11 @@
         $(e.target).data('elementMatched', true);   
       });
 
-      fatpopcorn.gripOf($element).click(function(e) {
+      $('.fatpopcorn_grip .stream-items-count').click(function(e) {
+        $(e.target).data('elementMatched', false);
+      });
+
+      fatpopcorn.gripOf($element).click(function(e) {        
         if ($(e.target).data('elementMatched')) return;
 
         e.stopPropagation();
