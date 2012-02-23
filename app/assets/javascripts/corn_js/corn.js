@@ -203,15 +203,16 @@
     return $('.fatpopcorn').first();
   }
   FatPopcorn.onCompleteUpload = function(id, fileName, response, qq) {
+      console.log('FatPopcorn.onCompleteUpload');
       if(qq.getQueue().length == 1) {
           $('.qq-upload-list').empty();                    
       }
-      if(!response.success){        
+      if(!response.success){
+        console.log(response);
           K.message.error(K.message.buildListOfErrors(response.errors));
           return;
       }
-
-      $('.stream-tab').click();
+      FatPopcorn.newNoteSuccess(response);
   }
   FatPopcorn.decorateContainerWithHtml = function() {
     var self = this;
@@ -325,14 +326,19 @@
     $('.loader').ajaxComplete(function() { $(this).hide(); });
   };
 
-  FatPopcorn.newNoteSuccess = function(data) {   
+  FatPopcorn.newNoteSuccess = function(data) {
+    console.log('FatPopcorn.newNoteSuccess');
+    $(data.fieldId).attr('data-stream', data.streamItemsCount);
     $('.fatpopcorn textarea#note_text').val('');
-    $('.fatpopcorn .stream-tab').click();
+    $('.fatpopcorn .active').removeClass('active');
+    $('.fatpopcorn .popcorn-body > div:not(.header)').hide();
+    $(".fatpopcorn .stream").show();    
+    $(".fatpopcorn .stream-tab").addClass('active');
+    FatPopcorn.getStreamSuccess(data.streamBody);
   };
 
-  FatPopcorn.getStreamSuccess = function(data) { 
-    $('.fatpopcorn .stream .content').empty();
-    $('.fatpopcorn .stream .content').append(data);    
+  FatPopcorn.getStreamSuccess = function(data) {
+    $('.fatpopcorn .stream .content').html(data);
     $('.fatpopcorn .stream .attachment span.delete').click(FatPopcorn.deleteAttachment);
     $('.fatpopcorn .stream .note span.delete').click(FatPopcorn.deleteNote);
   };
