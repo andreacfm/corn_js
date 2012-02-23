@@ -75,6 +75,9 @@ describe("Popcorn", function() {
       it("should attach click events to any fatpopcorn_grip element", function() {
         expect($('.fatpopcorn_grip')).toHandle('click');
       });
+      it("should attach click events to stream-items-count class inside fatpopcorn_grip", function() {
+        expect($('.stream-items-count').first()).toHandle('click');
+      });
       it("should be visible when fatpopcorn_grip element is clicked", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.fatpopcorn')).toBeVisible();
@@ -223,6 +226,7 @@ describe("Popcorn", function() {
         FatPopcorn.newNoteSuccess('');        
         expect($('textarea#note_text').val()).toBe('');
       });
+
     });
 
     describe("stream", function() {
