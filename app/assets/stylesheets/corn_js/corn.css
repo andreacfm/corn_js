@@ -54,6 +54,16 @@ a:hover {
 .fatpopcorn_grip.has-stream:hover {
   background: transparent url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAdJJREFUeNpi/P//PwMMfCsVAVEGQBwCxLZAbA3E/4D4CBAfBuKVXN1vrjEgASYQ8aPPDoyBYA4QnwfiaiAGCTADMSsQOwJxHRBf/XN8/gkg7QFVz8AIcgGI8+/5tY1Avh8jCxsDs3kcA4u+PwOToiVY0d87hxn+XlzPwMgtwsDqUQV0099/DEzMIFeuZwAZ8LVEeCYQ///WrPP/78Mz/////PIfA4DE/vwCM/99fP7/x3TfySC9jECNWiCnMTCzMHBkb2dgkjVkIAR+dJoy/Htz/x2QqQcKg1iQIItpFAOjqAoDMYBJBhTODEIgvUzQ0GZgMQ5nYOTgJcoAZqMwGNMWZIA6ODT5JRmIBYwC0jCmGhMDhQBkwG0Q4/+nl0Rr+v/hKYx5iwmayhj+XFhPtAF/L2+CMQ+DDFgJFjyxgOHfixsENf97eJrhz7nVMO4aJmDaPgtkzAUmEoZfC6IZ/r+5h1sz0IKfi5OAtv0BcWcB8R1wUgZmIpBLtoLSOCMHDwOLTToDi1k0A6OgHMTPr+8w/Dm9jOHPkVkM/3//AAltYpLU8gcmf5S8wAE1NZaALxYANSeCXQQzAC072wNxMhDbALEiVOomNLDnAvFxZNMAAgwACr3G5lMadUAAAAAASUVORK5CYII=") no-repeat scroll 100% 4px;  
 }
+.fatpopcorn_grip .stream-items-count {
+  font: 8px Verdana, Arial, sans-serif;
+  color: #f56a00;
+  float: right;
+  font-size: 8px;    
+  margin-right: 5px;
+  margin-top: 6px;
+  font-weight: bold;
+}
+
 /* generic classes */
 .fatpopcorn {
   width: 360px;
