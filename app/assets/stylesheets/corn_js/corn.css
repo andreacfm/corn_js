@@ -342,10 +342,11 @@ div > h1 > span.delete:hover {
 }
 .fatpopcorn .content .no-content {
   position:absolute;
-  top:50%;
-  font-size: 20px;
+  top:46%;
+  left: 10px;
+  font-size: 22px;
   color: #ccc;
-  background:transparent;
+  background-color: #ffffff !important;
   text-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0;
 }
 .fatpopcorn .loader {
