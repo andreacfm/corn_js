@@ -212,7 +212,7 @@
           K.message.error(K.message.buildListOfErrors(response.errors));
           return;
       }
-      FatPopcorn.newNoteSuccess(response);
+      FatPopcorn.newNoteOrAttachmentSuccess(response);
   }
   FatPopcorn.decorateContainerWithHtml = function() {
     var self = this;
@@ -320,14 +320,13 @@
     $('#send_note').click(function() {
       if ($('#note_text').val() == '') return false;
 
-      $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize()).success('success.rails', FatPopcorn.newNoteSuccess);
+      $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize()).success('success.rails', FatPopcorn.newNoteOrAttachmentSuccess);
     });
     $('.loader').ajaxSend(function(e) { $(this).show(); });
     $('.loader').ajaxComplete(function() { $(this).hide(); });
   };
 
-  FatPopcorn.newNoteSuccess = function(data) {
-    console.log('FatPopcorn.newNoteSuccess');
+  FatPopcorn.newNoteOrAttachmentSuccess = function(data) {
     $(data.fieldId).attr('data-stream', data.streamItemsCount);
     $('.fatpopcorn textarea#note_text').val('');
     $('.fatpopcorn .active').removeClass('active');

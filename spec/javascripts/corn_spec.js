@@ -223,7 +223,7 @@ describe("Popcorn", function() {
       it("should reset the textarea of the send_note after a successful post", function() {
         $('.fatpopcorn_grip').first().click();        
         $('textarea#note_text').val('prova uno due tre');
-        FatPopcorn.newNoteSuccess('');        
+        FatPopcorn.newNoteOrAttachmentSuccess('');        
         expect($('textarea#note_text').val()).toBe('');
       });
 
