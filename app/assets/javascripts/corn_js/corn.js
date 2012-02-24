@@ -346,7 +346,15 @@
   FatPopcorn.newNoteOrAttachmentSuccess = function(dataString) {
     var data = eval(dataString)
     $(data.fieldId).attr('data-stream', data.streamItemsCount);
-    $('#pratiche_progettazione_previsione_sopralluogo_tecnico').siblings('.stream-items-count').text(data.streamItemsCount);
+    
+    if (data.streamItemsCount > 0) {
+      console.log('pippo');
+      $(data.fieldId).parent().addClass('has-stream');
+      $(data.fieldId).siblings('.stream-items-count').text(data.streamItemsCount);
+    } else {
+      $(data.fieldId).parent().removeClass('has-stream');
+      $(data.fieldId).siblings('.stream-items-count').empty();
+    }
     $('.fatpopcorn textarea#note_text').val('');
     $('.fatpopcorn .active').removeClass('active');
     $('.fatpopcorn .popcorn-body > div:not(.header)').hide();

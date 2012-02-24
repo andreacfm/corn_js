@@ -44,11 +44,9 @@ describe("Popcorn", function() {
       beforeEach(function() {      
         $fatpopcorn = new FatPopcorn($first, {token : 'TOKEN', current_user:1});
       });
-
       it("should create a fileuploader object", function() {
         expect(FatPopcorn.uploader).toBeDefined();
       });
-
       it("should require some options", function() {
         var options = {};
         expect(function(){new FatPopcorn($first, options)}).toThrow(new Error('parameters [token], [current_user] are required'));  
@@ -71,7 +69,6 @@ describe("Popcorn", function() {
           new FatPopcorn($first, {token : 'TOKEN', current_user:1});
           $('.fatpopcorn_grip').first().click();
       });
-
       it("should attach click events to any fatpopcorn_grip element", function() {
         expect($('.fatpopcorn_grip')).toHandle('click');
       });
@@ -98,6 +95,23 @@ describe("Popcorn", function() {
         expect($('.popcorn-body .edit')).toBeVisible();
         $first.removeAttr('data-stream');
       });
+      it("should add a class has-stream to the grip data-stream is > 0", function() {
+        $('.fatpopcorn_grip').first().click();        
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemsCount: 10, streamBody: 'fake body'})");
+        expect($('#addr_two').parent()).toHaveClass('has-stream');
+      });
+      it("should add a class has-stream to the grip data-stream is = 0", function() {
+        $('#addr_two').parent().addClass('has-stream');
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body'})");
+        expect($('#addr_two').parent()).not.toHaveClass('has-stream');
+      });
+      it("should remove number of elements when data-stream is = 0", function() {
+        
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body'})");
+        
+        expect($('#stream-items-count-test').text()).toBe('');
+      });
+
       it("should set history not visible by default", function() {
         $('.fatpopcorn_grip').first().click();
         expect($('.popcorn-body .history')).not.toBeVisible();
