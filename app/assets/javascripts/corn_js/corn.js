@@ -351,6 +351,10 @@
       console.log('pippo');
       $(data.fieldId).parent().addClass('has-stream');
       $(data.fieldId).siblings('.stream-items-count').text(data.streamItemsCount);
+      if (data.streamItemsCount>9)
+        $(data.fieldId).siblings('.stream-items-count').addClass('two-digits')
+      else
+        $(data.fieldId).siblings('.stream-items-count').removeClass('two-digits')
     } else {
       $(data.fieldId).parent().removeClass('has-stream');
       $(data.fieldId).siblings('.stream-items-count').empty();
@@ -381,15 +385,13 @@
     }
 
     $.post(_url(), {_method: 'delete'}).    
-      success('success.rails', FatPopcorn.deleteSuccess).
+      success('success.rails', FatPopcorn.newNoteOrAttachmentSuccess).
       fail(FatPopcorn.deleteFailure);
   };
   FatPopcorn.deleteSuccess = function() {
     $('.fatpopcorn .stream-tab').click();
-    console.log('deleted attach success');
   };
   FatPopcorn.deleteFailure = function() {
-    console.log('deleted attach failure');
   };
   FatPopcorn.getHistorySuccess = function(data) { 
     $('.fatpopcorn .history .content').empty();
