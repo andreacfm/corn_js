@@ -97,17 +97,17 @@ describe("Popcorn", function() {
       });
       it("should add a class has-stream to the grip data-stream is > 0", function() {
         $('.fatpopcorn_grip').first().click();        
-        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemsCount: 10, streamBody: 'fake body'})");
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemsCount: 10, streamBody: 'fake body', modelName: 'modelName', fieldName: 'my_label2'})");
         expect($('#addr_two').parent()).toHaveClass('has-stream');
       });
       it("should add a class has-stream to the grip data-stream is = 0", function() {
         $('#addr_two').parent().addClass('has-stream');
-        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body'})");
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body', modelName: 'modelName', fieldName: 'my_label2'})");
         expect($('#addr_two').parent()).not.toHaveClass('has-stream');
       });
       it("should remove number of elements when data-stream is = 0", function() {
         
-        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body'})");
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body', modelName: 'modelName', fieldName: 'my_label2'})");
         
         expect($('#stream-items-count-test').text()).toBe('');
       });
@@ -237,12 +237,12 @@ describe("Popcorn", function() {
       it("should reset the textarea of the send_note after a successful post", function() {
         $('.fatpopcorn_grip').first().click();        
         $('textarea#note_text').val('prova uno due tre');
-        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#id', streamItemCount: 10, streamBody: 'pippo'})");
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#id', streamItemCount: 10, streamBody: 'pippo', modelName: 'modelName', fieldName: 'my_label2'})");
         expect($('textarea#note_text').val()).toBe('');
       });
       it("should set the data-watching accordingly to the ajax call", function() {
-        FatPopcorn.watchingServiceSuccess({ fieldId: '#addr_one', watching: false});
-        expect($('#addr_one')).toHaveAttr('data-watching', 'false');
+        FatPopcorn.watchingServiceSuccess({ fieldId: '#addr_two', modelName: 'modelName', fieldName: 'my_label2', watching: false});
+        expect($('#addr_two')).toHaveAttr('data-watching', 'false');
       });
     });
 
@@ -269,7 +269,7 @@ describe("Popcorn", function() {
         };
 
         this.success_response = {
-          attach: {success: {status: 200,responseText: ''}},
+          attach: {success: {status: 200,responseText: {modelName: 'modelName', fieldName: 'my_label2'}}},
           send_note: {success: {status: 200,responseText: '<body></body>'}},
           recv_stream: {success: {status: 200,responseText: _htmlStream()}}
         };   
@@ -425,7 +425,6 @@ describe("Popcorn", function() {
         $('.fatpopcorn .stream .attachment span.delete').click();
 
         var request = mostRecentAjaxRequest();
-        request.response(this.success_response.attach.success);
         
         expect(request.url).toBe("/active_metadata/modelName/1/my_label/attachments/1");
         expect(request.params).toContain("_method=delete");
@@ -439,7 +438,6 @@ describe("Popcorn", function() {
         $('.fatpopcorn .stream .note span.delete').click();
 
         var request = mostRecentAjaxRequest();
-        request.response(this.success_response.attach.success);
         
         expect(request.url).toBe("/active_metadata/modelName/1/my_label/notes/1");
         expect(request.params).toContain("_method=delete");

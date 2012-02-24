@@ -332,7 +332,7 @@
   /* ajax callbacks */
   FatPopcorn.watchingServiceSuccess = function(jqxhr) {    
     var data = eval(jqxhr);
-    $(data.fieldId).attr('data-watching', data.watching);
+    FatPopcorn.item(data).attr('data-watching', data.watching);
   }
   FatPopcorn.watchingServiceFail = function(data) {
     console.log('Watchlist service request failed');
@@ -343,21 +343,25 @@
     
   }
 
+  FatPopcorn.item = function(data) {
+    return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
+  }
+
   FatPopcorn.newNoteOrAttachmentSuccess = function(dataString) {
+
     var data = eval(dataString)
-    $(data.fieldId).attr('data-stream', data.streamItemsCount);
+    FatPopcorn.item(data).attr('data-stream', data.streamItemsCount);
     
     if (data.streamItemsCount > 0) {
-      console.log('pippo');
-      $(data.fieldId).parent().addClass('has-stream');
-      $(data.fieldId).siblings('.stream-items-count').text(data.streamItemsCount);
-      if (data.streamItemsCount>9)
-        $(data.fieldId).siblings('.stream-items-count').addClass('two-digits')
+      FatPopcorn.item(data).parents('.fatpopcorn_grip').addClass('has-stream');
+      FatPopcorn.item(data).siblings('.stream-items-count').text(data.streamItemsCount);
+      if (data.streamItemsCount > 9)
+        FatPopcorn.item(data).siblings('.stream-items-count').addClass('two-digits')
       else
-        $(data.fieldId).siblings('.stream-items-count').removeClass('two-digits')
+        FatPopcorn.item(data).siblings('.stream-items-count').removeClass('two-digits')
     } else {
-      $(data.fieldId).parent().removeClass('has-stream');
-      $(data.fieldId).siblings('.stream-items-count').empty();
+      FatPopcorn.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
+      FatPopcorn.item(data).siblings('.stream-items-count').empty();
     }
     $('.fatpopcorn textarea#note_text').val('');
     $('.fatpopcorn .active').removeClass('active');
