@@ -348,7 +348,6 @@
   }
 
   FatPopcorn.newNoteOrAttachmentSuccess = function(dataString) {
-
     var data = eval(dataString)
     FatPopcorn.item(data).attr('data-stream', data.streamItemsCount);
     
