@@ -226,7 +226,10 @@ describe("Popcorn", function() {
         FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#id', streamItemCount: 10, streamBody: 'pippo'})");
         expect($('textarea#note_text').val()).toBe('');
       });
-
+      it("should set the data-watching accordingly to the ajax call", function() {
+        FatPopcorn.watchingServiceSuccess({ fieldId: '#addr_one', watching: false});
+        expect($('#addr_one')).toHaveAttr('data-watching', 'false');
+      });
     });
 
     describe("stream", function() {

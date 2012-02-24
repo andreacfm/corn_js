@@ -303,10 +303,11 @@
     function _stopWatching() {
       _callWatchlistService({_method: 'delete', authenticity_token: FatPopcorn.formToken() });
     };
-    function _callWatchlistService(data) {      
-      $.post($('.fatpopcorn .edit').attr('data-url'), data).success(function() {console.log("watchlist success")});
+    function _callWatchlistService(data) {
+      var url = $('.fatpopcorn .edit').attr('data-url');
+
+      $.post(url, data, {dataType: 'script'}).done(FatPopcorn.watchingServiceSuccess).error(FatPopcorn.watchingServiceFail);
     };
-    
     $('.fatpopcorn').on('click', function(e) {
       e.stopPropagation();
     });
@@ -328,10 +329,22 @@
     $('.loader').ajaxComplete(function() { $(this).hide(); });
   };
 
+  /* ajax callbacks */
+  FatPopcorn.watchingServiceSuccess = function(jqxhr) {    
+    var data = eval(jqxhr);
+    $(data.fieldId).attr('data-watching', data.watching);
+  }
+  FatPopcorn.watchingServiceFail = function(data) {
+    console.log('Watchlist service request failed');
+    console.log(data);
+    console.log(data.state());
+    console.log(data.statusCode());
+    console.log(data.getAllResponseHeaders());
+    
+  }
+
   FatPopcorn.newNoteOrAttachmentSuccess = function(dataString) {
     var data = eval(dataString)
-    console.log(data.fieldId);
-    console.log(data.streamItemsCount);
     $(data.fieldId).attr('data-stream', data.streamItemsCount);
     $('#pratiche_progettazione_previsione_sopralluogo_tecnico').siblings('.stream-items-count').text(data.streamItemsCount);
     $('.fatpopcorn textarea#note_text').val('');
