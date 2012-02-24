@@ -320,20 +320,27 @@
     $('#send_note').click(function() {
       if ($('#note_text').val() == '') return false;
 
-      $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize()).success('success.rails', FatPopcorn.newNoteOrAttachmentSuccess);
+      $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize())
+        .success('success.rails', FatPopcorn.newNoteOrAttachmentSuccess)
+        .fail(function(e){console.log('request failed')});
     });
     $('.loader').ajaxSend(function(e) { $(this).show(); });
     $('.loader').ajaxComplete(function() { $(this).hide(); });
   };
 
-  FatPopcorn.newNoteOrAttachmentSuccess = function(data) {
+  FatPopcorn.newNoteOrAttachmentSuccess = function(dataString) {
+    var data = eval(dataString)
+    console.log(data.fieldId);
+    console.log(data.streamItemsCount);
     $(data.fieldId).attr('data-stream', data.streamItemsCount);
+    $('#pratiche_progettazione_previsione_sopralluogo_tecnico').siblings('.stream-items-count').text(data.streamItemsCount);
     $('.fatpopcorn textarea#note_text').val('');
     $('.fatpopcorn .active').removeClass('active');
     $('.fatpopcorn .popcorn-body > div:not(.header)').hide();
-    $(".fatpopcorn .stream").show();    
+    $(".fatpopcorn .stream").show();
     $(".fatpopcorn .stream-tab").addClass('active');
     FatPopcorn.getStreamSuccess(data.streamBody);
+
   };
 
   FatPopcorn.getStreamSuccess = function(data) {

@@ -223,7 +223,7 @@ describe("Popcorn", function() {
       it("should reset the textarea of the send_note after a successful post", function() {
         $('.fatpopcorn_grip').first().click();        
         $('textarea#note_text').val('prova uno due tre');
-        FatPopcorn.newNoteOrAttachmentSuccess('');        
+        FatPopcorn.newNoteOrAttachmentSuccess("({fieldId:'#id', streamItemCount: 10, streamBody: 'pippo'})");
         expect($('textarea#note_text').val()).toBe('');
       });
 
