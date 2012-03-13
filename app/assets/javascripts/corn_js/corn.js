@@ -308,17 +308,17 @@
 
       $.post(url, data, {dataType: 'script'}).done(FatPopcorn.watchingServiceSuccess).error(FatPopcorn.watchingServiceFail);
     };
-    $('.fatpopcorn').on('click', function(e) {
+    $('.fatpopcorn').unbind('click').click(function(e) {
       e.stopPropagation();
     });
-    $('.fatpopcorn #watchlist_true').click(function() {
+    $('.fatpopcorn #watchlist_true').unbind('click').click(function() {
       _startWatching()
     });
-    $('.fatpopcorn #watchlist_false').click(function() {
+    $('.fatpopcorn #watchlist_false').unbind('click').click(function() {
       _stopWatching();
     });
 
-    $('#send_note').click(function() {
+    $('#send_note').unbind('click').click(function() {
       if ($('#note_text').val() == '') return false;
 
       $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize())
@@ -477,7 +477,7 @@
       $.extend(delfaults, options);
     }
 
-    $(window).click(function() { Popcorn.hideAllContainers(elements); });
+    $(window).unbind('click').click(function() { Popcorn.hideAllContainers(elements); });
 
     function _setUpElement(){
       var $element = $(this), popcorn = new Popcorn($element, defaults);
