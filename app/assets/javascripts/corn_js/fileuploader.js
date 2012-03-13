@@ -599,7 +599,7 @@ qq.extend(qq.FileUploader.prototype, {
             },
             onDrop: function(e){
                 dropArea.style.display = 'none';
-                qq.removeClass(dropArea, self._classes.dropActive);
+                jQuery('.' + self._classes.drop).hide();
                 self._uploadFileList(e.dataTransfer.files);
             }
         });
