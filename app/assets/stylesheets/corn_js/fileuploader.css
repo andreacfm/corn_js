@@ -3,14 +3,20 @@
 .qq-uploader input[file]{width: 200000px;}
 
 .qq-upload-button {
+    font-family: "Segoe UI","Lucida Grande",Arial,sans-serif;
     display:block; /* or inline-block */
     width: 65px; padding:0; text-align:center;
-    background:transparent; color:#0066CC;
+    background:transparent; color:#0066FF;
     font-weight: bold;
     font-style: italic;
-    font-size: 10px;
+    font-size: 11px;
+    text-decoration: none;
+	text-shadow: 0 1px 1px #8FA2B4;
 }
-.qq-upload-button-hover {background:transparent;}
+.qq-upload-button-hover {
+	background:transparent;
+	color: #f56a00;
+}
 .qq-upload-button-focus {outline:1px dotted black;}
 
 .qq-upload-drop-area {
