@@ -15,6 +15,20 @@ describe("Popcorn", function() {
     });
   });
 
+    describe("basic html", function() {
+        beforeEach(function() {
+            loadFixtures('fixture.html');
+            $elements = $('.open_popcorn').popcorn();
+            $first = $elements.first();
+        });
+
+        it("should not be added twice", function() {
+            $('.open_popcorn').popcorn();
+            console.log(Popcorn.containerOf($first).find('.popcorn-body'));
+            expect($(Popcorn.containerOf($first)).find('.popcorn-body').length).toBe(1);
+        });
+    });
+
   describe("default fat behaviour", function() {
 
     beforeEach(function() {

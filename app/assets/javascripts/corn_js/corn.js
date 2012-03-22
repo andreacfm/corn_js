@@ -9,7 +9,9 @@
       throw "inferPositionType must be called after decorateContainerWithHtml";
     }
     this.containerOf().hide().addClass('popcorn');
-    this.containerOf().contents().wrap("<div class='popcorn-body'/>");
+    if(!this.containerOf().find('.popcorn-body').length){
+        this.containerOf().contents().wrap("<div class='popcorn-body'/>");
+    }
     this.containerOf().append("<div class='popcorn-tail'></div>");
   };
 
