@@ -377,7 +377,7 @@
     $('.fatpopcorn .stream .content').html(data);
     $('.fatpopcorn .stream .attachment span.delete').click(FatPopcorn.deleteAttachment);
     $('.fatpopcorn .stream .note span.delete').click(FatPopcorn.deleteNote);
-    $('.fatpopcorn .stream .note span.star').click(FatPopcorn.starUnstar);
+    $('.fatpopcorn .stream span.star').click(FatPopcorn.starUnstar);
   };
   FatPopcorn.deleteAttachment = function(e) {
     FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
@@ -396,7 +396,6 @@
   };
   FatPopcorn.starUnstar = function(e, urlPrefix) {
       var url = $(e.target).attr('data-url');
-      console.log(url);
       $.post(url, {_method: 'put'}).
           success('success.rails', function(data){
               FatPopcorn.getStreamSuccess(data.streamBody)

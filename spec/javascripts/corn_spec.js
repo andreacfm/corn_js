@@ -268,7 +268,7 @@ describe("Popcorn", function () {
                 jasmine.Ajax.useMock();
                 function _htmlStream() {
                     return '<span class="line"></span><span class="time">Oggi</span>' +
-                        '<div class="attachment"><h1 data-id="1"><a href="#">esito_tecnico_2.pdf</a><span class="star">*</span><span class="delete">x</span></h1>' +
+                        '<div class="attachment"><h1 data-id="1"><a href="#">esito_tecnico_2.pdf</a><span class="star" data-url="/active_metadata/modelName/1/my_label/attachments/1/star">*</span><span class="delete">x</span></h1>' +
                         '<p>Matteo De Vecchi ha allegato un file</p></div>' +
                         '<div class="note"><h1 data-id="1">nota bene!<span class="star" data-url="/active_metadata/modelName/1/my_label/notes/1/star">*</span><span class="delete">x</span></a></h1>' +
                         '<p>Matteo De Vecchi ha creato una nota un file</p></div>';
@@ -456,14 +456,21 @@ describe("Popcorn", function () {
 
             describe("star/unstar", function () {
 
-                it("should handle click on the star span", function () {
+                it("should handle click on the note star span", function () {
                     spyOn($, 'ajax').andCallThrough();
                     $('.fatpopcorn_grip').first().click();
                     FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
                     expect($('.fatpopcorn .stream .note span.star')).toHandle('click');
                 });
 
-                it("should star a note when clicking on an star icon", function () {
+                it("should handle click on the attachment star span", function () {
+                    spyOn($, 'ajax').andCallThrough();
+                    $('.fatpopcorn_grip').first().click();
+                    FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+                    expect($('.fatpopcorn .stream .attachment span.star')).toHandle('click');
+                });
+
+                it("should star a note when clicking on a note star icon", function () {
                     spyOn($, 'ajax').andCallThrough();
                     $('.fatpopcorn_grip').first().click();
                     FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
@@ -472,6 +479,19 @@ describe("Popcorn", function () {
                     var request = mostRecentAjaxRequest();
 
                     expect(request.url).toBe("/active_metadata/modelName/1/my_label/notes/1/star");
+                    expect(request.params).toContain("_method=put");
+                    expect(request.method).toBe("POST");
+                });
+
+                it("should star an attachment when clicking on an attachment star icon", function () {
+                    spyOn($, 'ajax').andCallThrough();
+                    $('.fatpopcorn_grip').first().click();
+                    FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+                    $('.fatpopcorn .stream .attachment span.star').click();
+
+                    var request = mostRecentAjaxRequest();
+
+                    expect(request.url).toBe("/active_metadata/modelName/1/my_label/attachments/1/star");
                     expect(request.params).toContain("_method=put");
                     expect(request.method).toBe("POST");
                 });
