@@ -246,7 +246,7 @@
   };
 
   FatPopcorn.activateTheClickedTab = function() {
-    $('.fatpopcorn .header > ul > li').click(function(e){
+    $('.fatpopcorn .header > ul > li').unbind('click').click(function(e){
       var self = this;
 
       function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); };
@@ -447,7 +447,7 @@
         $(e.target).data('elementMatched', false);
       });
 
-      fatpopcorn.gripOf($element).click(function(e) {        
+      fatpopcorn.gripOf($element).click(function(e) {
         if ($(e.target).data('elementMatched')) return;
 
         e.stopPropagation();
