@@ -454,6 +454,14 @@ describe("Popcorn", function () {
                 expect(request.method).toBe("POST");
             });
 
+            describe("error handling", function(){
+
+                it("should display error message when create note return a failure", function(){
+
+                })
+
+            });
+
             describe("star/unstar", function () {
 
                 it("should handle click on the note star span", function () {
@@ -497,6 +505,90 @@ describe("Popcorn", function () {
                 });
 
             })
+
+            describe("notifier", function () {
+
+                it("should generate and display a message inside a notice element", function(){
+                    FatPopcorn.notifier.notify("notice","message");
+                    expect($('.fatpopcorn .info p.notice')).toHaveText("message");
+                });
+
+                it("should generate and display a message inside an error element", function(){
+                    FatPopcorn.notifier.notify("error","message");
+                    expect($('.fatpopcorn .info p.error')).toHaveText("message");
+                });
+
+                it("should verify that the message box handle click", function(){
+                    FatPopcorn.notifier.notify("error","message");
+                    expect($('.fatpopcorn .info p.error')).toHandle('click');
+                });
+
+                it("should verify that clicking the message box destroy the element", function(){
+                    FatPopcorn.notifier.notify("error","message");
+                    $('.fatpopcorn .info p.error').click();
+                    expect($('.fatpopcorn .info p.error')).not.toExist();
+                });
+
+                it("should verify that message box ise not displayed twice, second notify must override", function(){
+                    FatPopcorn.notifier.notify("error","message");
+                    FatPopcorn.notifier.notify("error","message");
+                    expect($('.fatpopcorn .info p.messageBox').length).toBe(1);
+                });
+
+                it("should verify that closing the FatPopcorn window destroy the element", function(){
+                    $('.fatpopcorn_grip').first().click();
+                    FatPopcorn.notifier.notice("notice");
+                    FatPopcorn.notifier.error("error");
+                    $(window).click();
+                    expect($('.fatpopcorn .info p.notice')).not.toExist();
+                    expect($('.fatpopcorn .info p.error')).not.toExist();
+                });
+
+                describe("notice", function(){
+
+                    it("should display the notice message", function(){
+                        spyOn(FatPopcorn.notifier, "notify").andCallThrough();
+                        FatPopcorn.notifier.notice("notice message");
+                        expect(FatPopcorn.notifier.notify).toHaveBeenCalledWith("notice","notice message");
+                    })
+
+                });
+
+                describe("error", function(){
+
+                    it("should display the error message", function(){
+                        spyOn(FatPopcorn.notifier, "notify").andCallThrough();
+                        FatPopcorn.notifier.error("error message");
+                        expect(FatPopcorn.notifier.notify).toHaveBeenCalledWith("error","error message");
+                    })
+
+                });
+
+                describe("removeBox", function(){
+
+                    it("should remove the message box", function(){
+                        FatPopcorn.notifier.error("error message");
+                        FatPopcorn.notifier.notice("notice message");
+                        FatPopcorn.notifier.removeBox();
+                        expect($('.fatpopcorn .info p.notice')).not.toExist();
+                        expect($('.fatpopcorn .info p.error')).not.toExist();
+                    })
+
+                });
+
+            });
+
+            describe("displayFailure", function(){
+
+                it("should display the error message",function(){
+                    spyOn(FatPopcorn.notifier, "notify").andCallThrough();
+                    $('.fatpopcorn_grip').first().click();
+                    FatPopcorn.displayFailure("error message");
+                    expect(FatPopcorn.notifier.notify).toHaveBeenCalledWith("error","error message");
+
+                });
+
+            });
 
         });
     });

@@ -281,6 +281,7 @@ div > h1 > span.delete:hover {
 }
 .fatpopcorn .edit #send_note {
   padding-right: 6px;
+  cursor: pointer;
 }
 .fatpopcorn .edit .attachment {
   margin: 10px 10px 26px 10px;
@@ -322,11 +323,14 @@ div > h1 > span.delete:hover {
 }
 .fatpopcorn .edit .info p {
   color: #626262;
-  display: table-cell;
   padding-left: 10px;
   /*    overflow: hidden; TODO Controllare cosa succede quando il testo va in overflow
   text-overflow: ellipsis;*/
 }
+.fatpopcorn .edit .info p.error {
+    color: red;
+}
+
 .fatpopcorn .edit textarea {
   width: 98%;
   margin-left: 2px;
