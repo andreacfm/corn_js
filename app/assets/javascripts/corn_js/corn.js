@@ -474,11 +474,15 @@ FatPopcorn.getStreamSuccess = function (data) {
 };
 
 FatPopcorn.deleteAttachment = function (e) {
-    FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
+    if(confirm("Sei sicuro?")){
+        FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
+    }
 };
 
 FatPopcorn.deleteNote = function (e) {
-    FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
+    if(confirm("Sei sicuro?")){
+        FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
+    }
 };
 
 FatPopcorn.deleteStream = function (e, urlPrefix) {

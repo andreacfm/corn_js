@@ -430,6 +430,7 @@ describe("Popcorn", function () {
 
             it("should delete an attachment when clicking on delete note link", function () {
                 spyOn($, 'ajax').andCallThrough();
+                spyOn(window, 'confirm').andReturn(true);
                 $('.fatpopcorn_grip').first().click();
                 FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
                 $('.fatpopcorn .stream .attachment span.delete').click();
@@ -443,6 +444,7 @@ describe("Popcorn", function () {
 
             it("should delete a note when clicking on delete note link", function () {
                 spyOn($, 'ajax').andCallThrough();
+                spyOn(window, 'confirm').andReturn(true);
                 $('.fatpopcorn_grip').first().click();
                 FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
                 $('.fatpopcorn .stream .note span.delete').click();
