@@ -177,9 +177,12 @@ FatPopcorn.prototype.setupStreamUrl = function () {
     $('.fatpopcorn .stream').attr('data-url', this.streamUrl());
 };
 FatPopcorn.prototype.setupEditForm = function () {
+    console.log("YEAHHHH!")
     FatPopcorn.createAttachmentButton(this.attachmentsUrl());
     $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());
+    console.log($('.on-off label.' + this.$element.attr('data-watching')));
     $('.on-off label.' + this.$element.attr('data-watching')).click();
+    $('.on-off input#watchlist_' + this.$element.attr('data-watching')).click();
 };
 FatPopcorn.prototype.setupWatchlistUrl = function () {
     $('.fatpopcorn .edit').attr('data-url', this.watchlistUrl());
