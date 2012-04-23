@@ -1,6 +1,8 @@
 describe("Popcorn", function () {
     var $first;
     var $last;
+    var FatPopcorn = exports.FatPopcorn;
+    var Popcorn = exports.Popcorn;
 
     var mock_defaults = {
         marginBorder:4,

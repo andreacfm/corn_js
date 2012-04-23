@@ -9,7 +9,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-gem 'jasmine'
+gem 'jasmine', :git=> "https://github.com/pivotal/jasmine-gem.git"
 gem 'jasmine-headless-webkit'
 
 
