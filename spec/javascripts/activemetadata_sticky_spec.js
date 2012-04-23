@@ -10,7 +10,7 @@ describe("how stickycorn", function () {
     };
 
     beforeEach(function () {
-        loadFixtures('stickycorn-fixture.html');
+        loadFixtures('activemetadata-sticky-fixture.html');
         $stickycorn = $('.stickycorn_holder').stickycorn({current_user:1}).first();        
         jasmine.Ajax.useMock();
         $('head').append('<meta content="authenticity_token" name="csrf-param" /><meta content="TOKEN" name="csrf-token" />');

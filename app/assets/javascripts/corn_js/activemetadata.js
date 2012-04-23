@@ -17,8 +17,6 @@ var exports = (function (exports) {
 
         self.$element = $element;
         self.defaults = defaults;
-
-
         self.defaults.modelName = "#"
     };
     FatPopcorn.prototype = new Popcorn();
