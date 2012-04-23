@@ -1,13 +1,4 @@
 describe("how stickycorn", function () {
-    var $first;
-    var $last;
-
-    var mock_defaults = {
-        marginBorder:4,
-        arrowWidth:19,
-        marginArrow:10,
-        autoWrap:true
-    };
 
     beforeEach(function () {
         loadFixtures('activemetadata-sticky-fixture.html');

@@ -1,17 +1,18 @@
-var exports = (function (exports) {
+var exports = window.exports || {};
+
+(function (exports) {
 
     var Popcorn = exports.Popcorn;
 
-    var FatPopcorn = exports.FatPopcorn = function ($element, defaults) {
+    var FP = exports.FatPopcorn = function ($element, defaults) {
+        var self = this;
 
         function _checkOptions(options) {
             if (!options.autoWrap) options.autoWrap = false;
-            return typeof options.modelId === undefined ||
-                    options.token === undefined ||
-                    options.current_user === undefined;
+
+            return typeof options.modelId === undefined || options.token === undefined || options.current_user === undefined;
         }
 
-        var self = this;
 
         if (_checkOptions(defaults)) throw("parameters [token], [current_user] are required");
 
@@ -19,9 +20,12 @@ var exports = (function (exports) {
         self.defaults = defaults;
         self.defaults.modelName = "#"
     };
-    FatPopcorn.prototype = new Popcorn();
 
-    FatPopcorn.prototype.init = function () {
+    FP.prototype = new Popcorn();
+
+    FP.baseCssClass = function() { return '.fatpopcorn'; };
+
+    FP.prototype.init = function () {
         this.setupFormAction();
         this.setupFormToken();
         this.setupStreamUrl();
@@ -29,79 +33,72 @@ var exports = (function (exports) {
         this.setupEditForm();
         this.setupWatchlistUrl();
 
-        if (this.hasStream()) {
-            $('.fatpopcorn .stream-tab').click();
-        }
-        else {
-            $('.fatpopcorn .edit-tab').click();
-        }
+        if (this.hasStream()) { $(FP.baseCssClass() + ' .stream-tab').click(); }
+        else { $(FP.baseCssClass() + ' .edit-tab').click(); }
     };
 
-    FatPopcorn.prototype.setupStreamUrl = function () {
-        $('.fatpopcorn .stream').attr('data-url', this.streamUrl());
+    FP.prototype.setupStreamUrl = function () {
+        $(FP.baseCssClass() + ' .stream').attr('data-url', this.streamUrl());
     };
-    FatPopcorn.prototype.setupEditForm = function () {
-        FatPopcorn.createAttachmentButton(this.attachmentsUrl());
-        $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());
-        $('.on-off label.' + this.$element.attr('data-watching')).click();
-        $('.on-off input#watchlist_' + this.$element.attr('data-watching')).click();
+    FP.prototype.setupEditForm = function () {
+        FP.createAttachmentButton(this.attachmentsUrl());
+        $(FP.baseCssClass() + ' .edit').attr('data-attach-url', this.attachmentsUrl());
+        $(FP.baseCssClass() + ' .on-off label.' + this.$element.attr('data-watching')).click();
+        $(FP.baseCssClass() + ' .on-off input#watchlist_' + this.$element.attr('data-watching')).click();
     };
-    FatPopcorn.prototype.setupWatchlistUrl = function () {
-        $('.fatpopcorn .edit').attr('data-url', this.watchlistUrl());
+    FP.prototype.setupWatchlistUrl = function () {
+        $(FP.baseCssClass() + ' .edit').attr('data-url', this.watchlistUrl());
     };
-    FatPopcorn.prototype.setupHistoryUrl = function () {
-        $('.fatpopcorn .history').attr('data-url', this.historyUrl());
+    FP.prototype.setupHistoryUrl = function () {
+        $(FP.baseCssClass() + ' .history').attr('data-url', this.historyUrl());
     };
-    FatPopcorn.prototype.setupFormAction = function () {
-        $('.fatpopcorn #notes_form').attr('action', this.actionUrl());
-        $('.fatpopcorn .edit').attr('data-note-url', this.actionUrl());
+    FP.prototype.setupFormAction = function () {
+        $(FP.baseCssClass() + ' #notes_form').attr('action', this.actionUrl());
+        $(FP.baseCssClass() + ' .edit').attr('data-note-url', this.actionUrl());
     };
-    FatPopcorn.prototype.setupFormToken = function () {
-        $('.fatpopcorn #notes_form input[name="authenticity_token"]').val(FatPopcorn.formToken());
+    FP.prototype.setupFormToken = function () {
+        $(FP.baseCssClass() + ' #notes_form input[name="authenticity_token"]').val(FP.formToken());
     };
-    FatPopcorn.prototype.actionUrl = function () {
+    FP.prototype.actionUrl = function () {
         return this.urlPrefix() + '/notes';
     };
-    FatPopcorn.prototype.streamUrl = function () {
+    FP.prototype.streamUrl = function () {
         return this.urlPrefix() + '/stream';
     };
-    FatPopcorn.prototype.attachmentsUrl = function () {
+    FP.prototype.attachmentsUrl = function () {
         return this.urlPrefix() + '/attachments';
     };
-    FatPopcorn.prototype.watchlistUrl = function () {
+    FP.prototype.watchlistUrl = function () {
         return this.urlPrefix() + '/watchers/' + this.defaults.current_user;
     };
-    FatPopcorn.prototype.historyUrl = function () {
+    FP.prototype.historyUrl = function () {
         return this.urlPrefix() + '/histories';
     };
-    FatPopcorn.prototype.urlPrefix = function () {
+    FP.prototype.urlPrefix = function () {
         return '/active_metadata/' + this.$element.attr('data-model') + '/' + this.$element.attr('data-model-id') + '/' + this.$element.attr('data-label');
     };
-    FatPopcorn.prototype.hasStream = function () {
+    FP.prototype.hasStream = function () {
         return parseInt(this.$element.attr('data-stream')) > 0;
     };
-    FatPopcorn.hideContainer = function () {
+    FP.hideContainer = function () {
         $(window).off('resize');
-        return FatPopcorn.container().hide();
+        return FP.container().hide();
     };
-    FatPopcorn.container = function () {
-        return $('.fatpopcorn').first();
-    };
-    FatPopcorn.prototype.containerOf = function () {
-        return $('.fatpopcorn').first();
-    };
-    FatPopcorn.onCompleteUpload = function (id, fileName, response, qq) {
+    FP.container = function () { return $(FP.baseCssClass()).first(); };
+    FP.prototype.containerOf = function () { return FP.container(); };
+
+    FP.onCompleteUpload = function (id, fileName, response, qq) {
         if (qq.getQueue().length == 1) {
             $('.qq-upload-list').empty();
         }
         if (!response.success) {
-            FatPopcorn.displayFailure("Si è verificato un errore.");
+            FP.displayFailure("Si è verificato un errore.");
             return;
         }
-        FatPopcorn.newNoteOrAttachmentSuccess(response);
+        FP.newNoteOrAttachmentSuccess(response);
     };
 
-    FatPopcorn.decorateContainerWithHtml = function () {
+    FP.decorateContainerWithHtml = function () {
         var self = this;
 
         function _html() {
@@ -116,23 +113,22 @@ var exports = (function (exports) {
         }
 
 
-        if (FatPopcorn.container().size() == 0) {
-            $('body').append(_html());
-        }
-        FatPopcorn.container().hide();
+        if (FP.container().size() == 0) { $('body').append(_html()); }
+
+        FP.container().hide();
     };
 
-    FatPopcorn.prototype.addGripToElement = function ($element) {
+    FP.prototype.addGripToElement = function ($element) {
         if (!$element.parent().is('span.fatpopcorn_grip') && this.defaults.autoWrap) {
             $element.wrap('<span class="fatpopcorn_grip"/>')
         }
         return $element.parent();
     };
-    FatPopcorn.prototype.gripOf = function ($element) {
+    FP.prototype.gripOf = function ($element) {
         return $element.parent();
     };
 
-    FatPopcorn.activateTheClickedTab = function () {
+    FP.activateTheClickedTab = function () {
         activateTheClickedTab('.fatpopcorn');
     };
 
@@ -166,53 +162,45 @@ var exports = (function (exports) {
 
             $(this).addClass('active');
 
-            FatPopcorn[_currentTabMethod()].call();
+            FP[_currentTabMethod()].call();
         });
     }
 
-    FatPopcorn.streamEvent = function () {
-        $.ajax($('.fatpopcorn .stream').attr('data-url'))
-                .success(FatPopcorn.getStreamSuccess);
+    FP.streamEvent = function () {
+        $.ajax($('.fatpopcorn .stream').attr('data-url')).success(FP.getStreamSuccess);
     };
-    FatPopcorn.editEvent = function () {
+    FP.editEvent = function () {
         // should do something?
     };
-    FatPopcorn.historyEvent = function () {
-        $.ajax($('.fatpopcorn .history').attr('data-url'))
-                .success(FatPopcorn.getHistorySuccess);
+    FP.historyEvent = function () {
+        $.ajax($('.fatpopcorn .history').attr('data-url')).success(FP.getHistorySuccess);
     };
-    FatPopcorn.containerVisible = function () {
-        return FatPopcorn.container().is(':visible');
+    FP.containerVisible = function () {
+        return FP.container().is(':visible');
     };
-    FatPopcorn.formToken = function () {
-        return $('meta[name="csrf-token"]').attr('content');
-    };
-    FatPopcorn.createAttachmentButton = function (actionUrl) {
-        delete FatPopcorn.uploader;
-        FatPopcorn.uploader = new qq.FileUploader({
+    FP.formToken = function () { return $('meta[name="csrf-token"]').attr('content'); };
+
+    FP.createAttachmentButton = function (actionUrl) {
+        delete FP.uploader;
+        FP.uploader = new qq.FileUploader({
             element:document.getElementById('fatpopcorn_attach'),
             allowedExtensions:[],
-            params:{ authenticity_token:FatPopcorn.formToken(), target:"attach_output"},
+            params:{ authenticity_token:FP.formToken(), target:"attach_output"},
             uploadButtonText:'Inserisci',
             action:actionUrl,
             multiple:true,
-            onComplete:FatPopcorn.onCompleteUpload
+            onComplete:FP.onCompleteUpload
         });
     };
 
-    FatPopcorn.bindRemoteEvents = function () {
+    FP.bindRemoteEvents = function () {
+        function _startWatching() { _callWatchlistService({authenticity_token:FP.formToken() }); }
 
-        function _startWatching() {
-            _callWatchlistService({authenticity_token:FatPopcorn.formToken() });
-        }
-
-        function _stopWatching() {
-            _callWatchlistService({_method:'delete', authenticity_token:FatPopcorn.formToken() });
-        }
+        function _stopWatching() { _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() }); }
 
         function _callWatchlistService(data) {
             var url = $('.fatpopcorn .edit').attr('data-url');
-            $.post(url, data, {dataType:'script'}).done(FatPopcorn.watchingServiceSuccess).error(FatPopcorn.watchingServiceFail);
+            $.post(url, data, {dataType:'script'}).done(FP.watchingServiceSuccess).error(FP.watchingServiceFail);
         }
 
         $('.fatpopcorn').unbind('click').click(function (e) {
@@ -229,9 +217,9 @@ var exports = (function (exports) {
             if ($('#note_text').val() == '') return false;
 
             $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize())
-                    .success('success.rails', FatPopcorn.newNoteOrAttachmentSuccess)
+                    .success('success.rails', FP.newNoteOrAttachmentSuccess)
                     .fail(function () {
-                        FatPopcorn.displayFailure("Si è verificato un errore.")
+                        FP.displayFailure("Si è verificato un errore.")
                     });
         });
         $('.loader').ajaxSend(function () {
@@ -245,7 +233,7 @@ var exports = (function (exports) {
     /********
      Notifier
      ********/
-    FatPopcorn.notifier = {
+    FP.notifier = {
         notify:function (type, message) {
             type = type || "notice";
             this.removeBox();
@@ -272,19 +260,19 @@ var exports = (function (exports) {
     /****************
      * Error Handling
      ****************/
-    FatPopcorn.displayFailure = function (message) {
-        FatPopcorn.notifier.error(message);
+    FP.displayFailure = function (message) {
+        FP.notifier.error(message);
     };
 
     /* ajax callbacks */
-    FatPopcorn.watchingServiceSuccess = function (jqxhr) {
+    FP.watchingServiceSuccess = function (jqxhr) {
         var data = eval(jqxhr);
         //remove the error/notice messageBox
-        FatPopcorn.notifier.removeBox();
-        FatPopcorn.item(data).attr('data-watching', data.watching);
+        FP.notifier.removeBox();
+        FP.item(data).attr('data-watching', data.watching);
     };
-    FatPopcorn.watchingServiceFail = function (data) {
-        FatPopcorn.displayFailure("Si è verificato un errore.");
+    FP.watchingServiceFail = function (data) {
+        FP.displayFailure("Si è verificato un errore.");
         console.log('Watchlist service request failed');
         console.log(data);
         console.log(data.state());
@@ -293,83 +281,83 @@ var exports = (function (exports) {
 
     };
 
-    FatPopcorn.item = function (data) {
+    FP.item = function (data) {
         return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
     };
 
-    FatPopcorn.newNoteOrAttachmentSuccess = function (dataString) {
+    FP.newNoteOrAttachmentSuccess = function (dataString) {
         var data = eval(dataString);
         //remove the error/notice messageBox
-        FatPopcorn.notifier.removeBox();
-        FatPopcorn.item(data).attr('data-stream', data.streamItemsCount);
+        FP.notifier.removeBox();
+        FP.item(data).attr('data-stream', data.streamItemsCount);
 
         if (data.streamItemsCount > 0) {
-            FatPopcorn.item(data).parents('.fatpopcorn_grip').addClass('has-stream');
-            FatPopcorn.item(data).siblings('.stream-items-count').text(data.streamItemsCount);
+            FP.item(data).parents('.fatpopcorn_grip').addClass('has-stream');
+            FP.item(data).siblings('.stream-items-count').text(data.streamItemsCount);
             if (data.streamItemsCount > 9)
-                FatPopcorn.item(data).siblings('.stream-items-count').addClass('two-digits');
+                FP.item(data).siblings('.stream-items-count').addClass('two-digits');
             else
-                FatPopcorn.item(data).siblings('.stream-items-count').removeClass('two-digits');
+                FP.item(data).siblings('.stream-items-count').removeClass('two-digits');
         } else {
-            FatPopcorn.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
-            FatPopcorn.item(data).siblings('.stream-items-count').empty();
+            FP.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
+            FP.item(data).siblings('.stream-items-count').empty();
         }
         $('.fatpopcorn textarea#note_text').val('');
         $('.fatpopcorn .active').removeClass('active');
         $('.fatpopcorn .popcorn-body > div:not(.header)').hide();
         $(".fatpopcorn .stream").show();
         $(".fatpopcorn .stream-tab").addClass('active');
-        FatPopcorn.getStreamSuccess(data.streamBody);
+        FP.getStreamSuccess(data.streamBody);
 
     };
 
-    FatPopcorn.getStreamSuccess = function (data) {
+    FP.getStreamSuccess = function (data) {
         $('.fatpopcorn .stream .content').html(data);
-        $('.fatpopcorn .stream .attachment span.delete').click(FatPopcorn.deleteAttachment);
-        $('.fatpopcorn .stream .note span.delete').click(FatPopcorn.deleteNote);
-        $('.fatpopcorn .stream span.star').click(FatPopcorn.starUnstar);
+        $('.fatpopcorn .stream .attachment span.delete').click(FP.deleteAttachment);
+        $('.fatpopcorn .stream .note span.delete').click(FP.deleteNote);
+        $('.fatpopcorn .stream span.star').click(FP.starUnstar);
     };
 
-    FatPopcorn.deleteAttachment = function (e) {
+    FP.deleteAttachment = function (e) {
         if (confirm("Sei sicuro?")) {
-            FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
+            FP.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
         }
     };
 
-    FatPopcorn.deleteNote = function (e) {
+    FP.deleteNote = function (e) {
         if (confirm("Sei sicuro?")) {
-            FatPopcorn.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
+            FP.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
         }
     };
 
-    FatPopcorn.deleteStream = function (e, urlPrefix) {
+    FP.deleteStream = function (e, urlPrefix) {
         function _url() {
             return urlPrefix + '/' + $(e.target).parent().attr('data-id');
         }
 
         $.post(_url(), {_method:'delete'}).
-                success('success.rails', FatPopcorn.newNoteOrAttachmentSuccess).
-                fail(FatPopcorn.deleteFailure);
+                success('success.rails', FP.newNoteOrAttachmentSuccess).
+                fail(FP.deleteFailure);
     };
 
-    FatPopcorn.starUnstar = function (e, urlPrefix) {
+    FP.starUnstar = function (e, urlPrefix) {
         var url = $(e.target).attr('data-url');
         $.post(url, {_method:'put'}).
                 success('success.rails',
                 function (data) {
-                    FatPopcorn.getStreamSuccess(data.streamBody)
+                    FP.getStreamSuccess(data.streamBody)
                 }).
-                fail(FatPopcorn.deleteFailure);
+                fail(FP.deleteFailure);
     };
 
-    FatPopcorn.deleteSuccess = function () {
+    FP.deleteSuccess = function () {
         $('.fatpopcorn .stream-tab').click();
     };
 
-    FatPopcorn.deleteFailure = function () {
+    FP.deleteFailure = function () {
     };
 
-    FatPopcorn.getHistorySuccess = function (data) {
+    FP.getHistorySuccess = function (data) {
         $('.fatpopcorn .history .content').empty();
         $('.fatpopcorn .history .content').append(data);
     };
@@ -401,7 +389,7 @@ var exports = (function (exports) {
 
     return exports;
 
-})(exports || {});
+})(window.exports);
 
 (function ($, FatPopcorn, StickyCorn) {
     console.log("test!");
@@ -476,7 +464,7 @@ var exports = (function (exports) {
                 fatpopcorn.inferPositionType();
                 fatpopcorn.setContainerPosition();
                 fatpopcorn.decorateContainerWithArrow();
-                fatpopcorn.containerOf().show();
+                FatPopcorn.container().show();
 
                 $(window).on('resize', function () {
                     if (FatPopcorn.containerVisible()) fatpopcorn.setContainerPosition();

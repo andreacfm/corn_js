@@ -1,9 +1,12 @@
-var exports = (function (exports) {
+var exports = {};
+
+(function (exports) {
 
     var Popcorn = exports.Popcorn = function ($element, defaults) {
         this.$element = $element;
         this.$anchor = this.$element;
         this.defaults = defaults;
+
     };
 
     Popcorn.prototype.decorateContainerWithHtml = function () {
@@ -16,48 +19,35 @@ var exports = (function (exports) {
         }
         this.containerOf().append("<div class='popcorn-tail'></div>");
     };
+
     Popcorn.prototype.inferPositionType = function () {
         var self = this;
         this.$anchor = this.$element;
 
-        function _createPositionType(defaults) {
+        function _createPositionType() {
+            if (self.$element.offset().left < 1) { self.$anchor = self.$element.parent(); }
 
-            if (self.$element.offset().left < 1) {
-                self.$anchor = self.$element.parent();
-            }
-
-            if (self.collideLeft()) {
-                return new LeftPosition(self);
-            }
-            else if (self.collideRight()) {
-                return new RightPosition(self);
-            }
+            if (self.collideLeft()) { return new LeftPosition(self);  }
+            else if (self.collideRight()) { return new RightPosition(self); }
             return new CenterPosition(self);
         }
 
-        self.positionType = _createPositionType(self.defaults);
+        self.positionType = _createPositionType();
     };
 
     Popcorn.prototype.decorateContainerWithArrow = function () {
         if (this.positionType == undefined) {
             throw "inferPositionType must be called in order to set up the arrows";
         }
-
         this.containerOf().find('.popcorn-tail').css('left', this.positionType.leftOffset());
     };
 
     var LeftPosition = function (popcorn) {
         // TODO centrare la freccia sull'elemento puntato da fatpopcorn
         // this.leftOffset = function() {return popcorn.$element.offset().left + (popcorn.$element.width() - popcorn.defaults.arrowWidth) / 2; }
-        this.leftOffset = function () {
-            return popcorn.defaults.marginArrow;
-        };
-        this.left = function () {
-            return popcorn.defaults.marginBorder;
-        };
-        this.top = function () {
-            return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement
-        };
+        this.leftOffset = function () { return popcorn.defaults.marginArrow; };
+        this.left = function () { return popcorn.defaults.marginBorder; };
+        this.top = function () { return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement; };
     };
 
     var RightPosition = function (popcorn) {
@@ -135,7 +125,7 @@ var exports = (function (exports) {
         });
     };
     return exports;
-})({});
+})(window.exports);
 
 (function ($, exports) {
     var Popcorn = exports.Popcorn;
