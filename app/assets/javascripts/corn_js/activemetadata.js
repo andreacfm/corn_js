@@ -129,11 +129,7 @@ var exports = window.exports || {};
     };
 
     FP.activateTheClickedTab = function () {
-        activateTheClickedTab('.fatpopcorn');
-    };
-
-    function activateTheClickedTab(className) {
-        $(className + ' .header > ul > li').unbind('click').click(function (e) {
+        $(FP.baseCssClass() + ' .header > ul > li').unbind('click').click(function (e) {
             var self = this;
 
             function _tabBodyName(tabName) {
@@ -155,8 +151,8 @@ var exports = window.exports || {};
             e.stopPropagation();
             e.preventDefault();
 
-            $(className + ' .active').removeClass('active');
-            $(className + ' .popcorn-body > div:not(.header)').hide();
+            $(FP.baseCssClass()  + ' .active').removeClass('active');
+            $(FP.baseCssClass()  + ' .popcorn-body > div:not(.header)').hide();
 
             _currentTab().show();
 
@@ -164,20 +160,19 @@ var exports = window.exports || {};
 
             FP[_currentTabMethod()].call();
         });
-    }
+    };
 
     FP.streamEvent = function () {
-        $.ajax($('.fatpopcorn .stream').attr('data-url')).success(FP.getStreamSuccess);
+        $.ajax($(FP.baseCssClass() + ' .stream').attr('data-url')).success(FP.getStreamSuccess);
     };
     FP.editEvent = function () {
         // should do something?
     };
     FP.historyEvent = function () {
-        $.ajax($('.fatpopcorn .history').attr('data-url')).success(FP.getHistorySuccess);
+        $.ajax($(FP.baseCssClass() + ' .history').attr('data-url')).success(FP.getHistorySuccess);
     };
-    FP.containerVisible = function () {
-        return FP.container().is(':visible');
-    };
+    FP.containerVisible = function () { return FP.container().is(':visible'); };
+
     FP.formToken = function () { return $('meta[name="csrf-token"]').attr('content'); };
 
     FP.createAttachmentButton = function (actionUrl) {
@@ -199,28 +194,19 @@ var exports = window.exports || {};
         function _stopWatching() { _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() }); }
 
         function _callWatchlistService(data) {
-            var url = $('.fatpopcorn .edit').attr('data-url');
+            var url = $(FP.baseCssClass() + ' .edit').attr('data-url');
             $.post(url, data, {dataType:'script'}).done(FP.watchingServiceSuccess).error(FP.watchingServiceFail);
         }
 
-        $('.fatpopcorn').unbind('click').click(function (e) {
-            e.stopPropagation();
-        });
-        $('.fatpopcorn #watchlist_true').unbind('click').click(function () {
-            _startWatching()
-        });
-        $('.fatpopcorn #watchlist_false').unbind('click').click(function () {
-            _stopWatching();
-        });
+        $(FP.baseCssClass()).unbind('click').click(function (e) { e.stopPropagation(); });
+        $(FP.baseCssClass() + ' #watchlist_true').unbind('click').click(function () { _startWatching() });
+        $(FP.baseCssClass() + ' #watchlist_false').unbind('click').click(function () { _stopWatching(); });
+        $(FP.baseCssClass() + ' #send_note').unbind('click').click(function () {
+            if ($(FP.baseCssClass() + ' #note_text').val() == '') return false;
 
-        $('#send_note').unbind('click').click(function () {
-            if ($('#note_text').val() == '') return false;
-
-            $.post($('form#notes_form').attr('action'), $('form#notes_form').serialize())
+            $.post($(FP.baseCssClass() + ' form#notes_form').attr('action'), $('form#notes_form').serialize())
                     .success('success.rails', FP.newNoteOrAttachmentSuccess)
-                    .fail(function () {
-                        FP.displayFailure("Si è verificato un errore.")
-                    });
+                    .fail(function () { FP.displayFailure("Si è verificato un errore.") });
         });
         $('.loader').ajaxSend(function () {
             $(this).show();
@@ -237,24 +223,18 @@ var exports = window.exports || {};
         notify:function (type, message) {
             type = type || "notice";
             this.removeBox();
-            var $messageBox = $('.fatpopcorn .info h1').after('<p class="' + type + ' messageBox">' + message + '</p>').next();
+            var $messageBox = $(FP.baseCssClass() + ' .info h1').after('<p class="' + type + ' messageBox">' + message + '</p>').next();
             var self = this;
             $messageBox.bind('click', function () {
                 self.removeBox();
             });
         },
 
-        notice:function (message) {
-            this.notify("notice", message);
-        },
+        notice: function (message) { this.notify("notice", message); },
 
-        error:function (message) {
-            this.notify("error", message);
-        },
+        error: function (message) { this.notify("error", message); },
 
-        removeBox:function () {
-            $('.fatpopcorn .info p.messageBox').remove();
-        }
+        removeBox:function () { $(FP.baseCssClass() + ' .info p.messageBox').remove(); }
     };
 
     /****************
@@ -302,31 +282,31 @@ var exports = window.exports || {};
             FP.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
             FP.item(data).siblings('.stream-items-count').empty();
         }
-        $('.fatpopcorn textarea#note_text').val('');
-        $('.fatpopcorn .active').removeClass('active');
-        $('.fatpopcorn .popcorn-body > div:not(.header)').hide();
-        $(".fatpopcorn .stream").show();
-        $(".fatpopcorn .stream-tab").addClass('active');
+        $(FP.baseCssClass() + ' textarea#note_text').val('');
+        $(FP.baseCssClass() + ' .active').removeClass('active');
+        $(FP.baseCssClass() + ' .popcorn-body > div:not(.header)').hide();
+        $(FP.baseCssClass() + ' .stream').show();
+        $(FP.baseCssClass() + ' .stream-tab').addClass('active');
         FP.getStreamSuccess(data.streamBody);
 
     };
 
     FP.getStreamSuccess = function (data) {
-        $('.fatpopcorn .stream .content').html(data);
-        $('.fatpopcorn .stream .attachment span.delete').click(FP.deleteAttachment);
-        $('.fatpopcorn .stream .note span.delete').click(FP.deleteNote);
-        $('.fatpopcorn .stream span.star').click(FP.starUnstar);
+        $(FP.baseCssClass() + ' .stream .content').html(data);
+        $(FP.baseCssClass() + ' .stream .attachment span.delete').click(FP.deleteAttachment);
+        $(FP.baseCssClass() + ' .stream .note span.delete').click(FP.deleteNote);
+        $(FP.baseCssClass() + ' .stream span.star').click(FP.starUnstar);
     };
 
     FP.deleteAttachment = function (e) {
         if (confirm("Sei sicuro?")) {
-            FP.deleteStream(e, $('.fatpopcorn .edit').attr('data-attach-url'));
+            FP.deleteStream(e, $(FP.baseCssClass() + ' .edit').attr('data-attach-url'));
         }
     };
 
     FP.deleteNote = function (e) {
         if (confirm("Sei sicuro?")) {
-            FP.deleteStream(e, $('.fatpopcorn .edit').attr('data-note-url'));
+            FP.deleteStream(e, $(FP.baseCssClass() + ' .edit').attr('data-note-url'));
         }
     };
 
@@ -336,8 +316,7 @@ var exports = window.exports || {};
         }
 
         $.post(_url(), {_method:'delete'}).
-                success('success.rails', FP.newNoteOrAttachmentSuccess).
-                fail(FP.deleteFailure);
+                success('success.rails', FP.newNoteOrAttachmentSuccess).fail(FP.deleteFailure);
     };
 
     FP.starUnstar = function (e, urlPrefix) {
@@ -350,16 +329,14 @@ var exports = window.exports || {};
                 fail(FP.deleteFailure);
     };
 
-    FP.deleteSuccess = function () {
-        $('.fatpopcorn .stream-tab').click();
-    };
+    FP.deleteSuccess = function () { $(FP.baseCssClass() + ' .stream-tab').click(); };
 
     FP.deleteFailure = function () {
     };
 
     FP.getHistorySuccess = function (data) {
-        $('.fatpopcorn .history .content').empty();
-        $('.fatpopcorn .history .content').append(data);
+        $(FP.baseCssClass() + ' .history .content').empty();
+        $(FP.baseCssClass() + ' .history .content').append(data);
     };
 
 
