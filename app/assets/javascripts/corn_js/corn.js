@@ -4,6 +4,7 @@ var Popcorn = function ($element, defaults) {
     this.defaults = defaults;
 };
 
+
 Popcorn.prototype.decorateContainerWithHtml = function () {
     if (this.positionType) {
         throw "inferPositionType must be called after decorateContainerWithHtml";
@@ -14,7 +15,6 @@ Popcorn.prototype.decorateContainerWithHtml = function () {
     }
     this.containerOf().append("<div class='popcorn-tail'></div>");
 };
-
 Popcorn.prototype.inferPositionType = function () {
     var self = this;
     this.$anchor = this.$element;
@@ -50,10 +50,10 @@ var LeftPosition = function (popcorn) {
     // this.leftOffset = function() {return popcorn.$element.offset().left + (popcorn.$element.width() - popcorn.defaults.arrowWidth) / 2; }
     this.leftOffset = function () {
         return popcorn.defaults.marginArrow;
-    }
+    };
     this.left = function () {
         return popcorn.defaults.marginBorder;
-    }
+    };
     this.top = function () {
         return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement
     };
@@ -62,10 +62,10 @@ var LeftPosition = function (popcorn) {
 var RightPosition = function (popcorn) {
     this.leftOffset = function () {
         return popcorn.containerOf().width() - (popcorn.defaults.arrowWidth + popcorn.defaults.marginArrow);
-    }
+    };
     this.left = function () {
         return $('html').width() - popcorn.defaults.marginBorder - popcorn.containerOf().width();
-    }
+    };
     this.top = function () {
         return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement
     };
@@ -74,11 +74,11 @@ var RightPosition = function (popcorn) {
 var CenterPosition = function (popcorn) {
     this.leftOffset = function () {
         return popcorn.containerOf().width() / 2 - Math.floor(popcorn.defaults.arrowWidth / 2);
-    }
+    };
     this.left = function () {
         var middleOfElement = Popcorn.calculateMiddle(popcorn.$anchor.offset().left, popcorn.$anchor.width());
         return Popcorn.calculateLeftOffset(middleOfElement, popcorn.containerOf().width());
-    }
+    };
     this.top = function () {
         return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement
     };
@@ -86,65 +86,62 @@ var CenterPosition = function (popcorn) {
 
 Popcorn.containerOf = function ($element) {
     return $element.next();
-}
+};
 
 Popcorn.prototype.containerOf = function () {
     return Popcorn.containerOf(this.$element);
-}
+};
 
 Popcorn.prototype.setContainerPosition = function () {
     this.containerOf().css('top', this.positionType.top());
     this.containerOf().css('left', this.positionType.left());
-}
+};
 
 Popcorn.prototype.collideRight = function () {
     var middleOfElement = Popcorn.calculateMiddle(this.$anchor.offset().left, this.$anchor.width());
     var rightOffset = middleOfElement + this.containerOf().width() / 2;
     return ($('html').width() - (rightOffset + this.defaults.marginBorder)) < 0;
-}
+};
 
 Popcorn.prototype.collideLeft = function () {
     return (Popcorn.calculateLeftOffset(this.middleOf(), this.containerOf().width()) - this.defaults.marginBorder) < 0;
-}
+};
 
 Popcorn.prototype.middleOf = function () {
     return Popcorn.calculateMiddle(this.$anchor.offset().left, this.$anchor.width());
-}
+};
 
 Popcorn.calculateMiddle = function (left, width) {
     return left + width / 2;
-}
-
+};
 Popcorn.calculateRightOffset = function (middlePoint, width) {
     return middlePoint + width / 2;
-}
+};
 Popcorn.calculateLeftOffset = function (middlePoint, width) {
     return middlePoint - width / 2;
-}
+};
 Popcorn.containerOf = function (element) {
     return $(element).next();
-}
+};
 Popcorn.hideAllContainers = function ($elements) {
     $elements.each(function () {
         Popcorn.containerOf(this).hide();
     });
-}
+};
 Popcorn.hideAllContainersExcept = function ($elements, element) {
     $elements.not(element).each(function () {
         Popcorn.containerOf(this).hide()
     });
 };
 
-var FatPopcorn = function ($element, defaults) {
+var FatPopcorn = function($element, defaults) {
     function _checkOptions(options) {
         if (!options.autoWrap) options.autoWrap = false;
-
         return typeof options.modelId === undefined ||
             options.token === undefined ||
             options.current_user === undefined;
     }
 
-    ;
     var self = this;
 
     if (_checkOptions(defaults)) throw("parameters [token], [current_user] are required");
@@ -179,7 +176,6 @@ FatPopcorn.prototype.setupStreamUrl = function () {
 FatPopcorn.prototype.setupEditForm = function () {
     FatPopcorn.createAttachmentButton(this.attachmentsUrl());
     $('.fatpopcorn .edit').attr('data-attach-url', this.attachmentsUrl());
-    console.log($('.on-off label.' + this.$element.attr('data-watching')));
     $('.on-off label.' + this.$element.attr('data-watching')).click();
     $('.on-off input#watchlist_' + this.$element.attr('data-watching')).click();
 };
@@ -214,34 +210,30 @@ FatPopcorn.prototype.historyUrl = function () {
 FatPopcorn.prototype.urlPrefix = function () {
     return '/active_metadata/' + this.$element.attr('data-model') + '/' + this.$element.attr('data-model-id') + '/' + this.$element.attr('data-label');
 };
-FatPopcorn.prototype.currentLabel = function () {
-    return this.$element.attr('data-label');
-};
 FatPopcorn.prototype.hasStream = function () {
     return parseInt(this.$element.attr('data-stream')) > 0;
 };
 FatPopcorn.hideContainer = function () {
     $(window).off('resize');
     return FatPopcorn.container().hide();
-}
+};
 FatPopcorn.container = function () {
     return $('.fatpopcorn').first();
-}
+};
 FatPopcorn.prototype.containerOf = function () {
     return $('.fatpopcorn').first();
-}
+};
 FatPopcorn.onCompleteUpload = function (id, fileName, response, qq) {
-    console.log('FatPopcorn.onCompleteUpload');
     if (qq.getQueue().length == 1) {
         $('.qq-upload-list').empty();
     }
     if (!response.success) {
-        console.log(response);
         FatPopcorn.displayFailure("Si è verificato un errore.");
         return;
     }
     FatPopcorn.newNoteOrAttachmentSuccess(response);
-}
+};
+
 FatPopcorn.decorateContainerWithHtml = function () {
     var self = this;
 
@@ -250,19 +242,19 @@ FatPopcorn.decorateContainerWithHtml = function () {
             '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
             '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
             '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' +
-            '<div class="note"><h1>Nota</h1><form form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
+            '<div class="note"><h1>Nota</h1><form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
             '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note">Inserisci</a></form></div><hr/>' +
             '<div class="attachment"><h1>Allegati</h1><div id="fatpopcorn_attach"></div><div id="attach_output"></div></div>' +
             '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
     }
 
-    ;
+
 
     if (FatPopcorn.container().size() == 0) {
         $('body').append(_html());
     }
     FatPopcorn.container().hide();
-}
+};
 
 FatPopcorn.prototype.addGripToElement = function ($element) {
     if (!$element.parent().is('span.fatpopcorn_grip') && this.defaults.autoWrap) {
@@ -275,24 +267,25 @@ FatPopcorn.prototype.gripOf = function ($element) {
 };
 
 FatPopcorn.activateTheClickedTab = function () {
-    $('.fatpopcorn .header > ul > li').unbind('click').click(function (e) {
+    activateTheClickedTab('.fatpopcorn');
+};
+
+function activateTheClickedTab(className) {
+    $(className + ' .header > ul > li').unbind('click').click(function (e) {
         var self = this;
 
         function _tabBodyName(tabName) {
             return tabName.split('-')[0].trim();
         }
 
-        ;
         function _currentTabName() {
             return _tabBodyName($(self).attr('class'));
         }
 
-        ;
         function _currentTab() {
             return $('.' + _currentTabName());
         }
 
-        ;
         function _currentTabMethod() {
             return _currentTabName() + "Event";
         }
@@ -300,8 +293,8 @@ FatPopcorn.activateTheClickedTab = function () {
         e.stopPropagation();
         e.preventDefault();
 
-        $('.fatpopcorn .active').removeClass('active');
-        $('.fatpopcorn .popcorn-body > div:not(.header)').hide();
+        $(className + ' .active').removeClass('active');
+        $(className + ' .popcorn-body > div:not(.header)').hide();
 
         _currentTab().show();
 
@@ -309,7 +302,7 @@ FatPopcorn.activateTheClickedTab = function () {
 
         FatPopcorn[_currentTabMethod()].call();
     });
-};
+}
 FatPopcorn.streamEvent = function () {
     $.ajax($('.fatpopcorn .stream').attr('data-url'))
         .success(FatPopcorn.getStreamSuccess);
@@ -346,18 +339,15 @@ FatPopcorn.bindRemoteEvents = function () {
         _callWatchlistService({authenticity_token:FatPopcorn.formToken() });
     }
 
-    ;
     function _stopWatching() {
         _callWatchlistService({_method:'delete', authenticity_token:FatPopcorn.formToken() });
     }
 
-    ;
     function _callWatchlistService(data) {
         var url = $('.fatpopcorn .edit').attr('data-url');
         $.post(url, data, {dataType:'script'}).done(FatPopcorn.watchingServiceSuccess).error(FatPopcorn.watchingServiceFail);
     }
 
-    ;
     $('.fatpopcorn').unbind('click').click(function (e) {
         e.stopPropagation();
     });
@@ -377,7 +367,7 @@ FatPopcorn.bindRemoteEvents = function () {
                 FatPopcorn.displayFailure("Si è verificato un errore.")
             });
     });
-    $('.loader').ajaxSend(function (e) {
+    $('.loader').ajaxSend(function () {
         $(this).show();
     });
     $('.loader').ajaxComplete(function () {
@@ -385,11 +375,10 @@ FatPopcorn.bindRemoteEvents = function () {
     });
 };
 
-/******
+/********
  Notifier
- *******/
+ ********/
 FatPopcorn.notifier = {
-
     notify: function (type, message) {
         type = type || "notice";
         this.removeBox();
@@ -411,12 +400,11 @@ FatPopcorn.notifier = {
     removeBox : function(){
         $('.fatpopcorn .info p.messageBox').remove();
     }
-
 };
 
-/*****
+/****************
  * Error Handling
- *****/
+ ****************/
 FatPopcorn.displayFailure = function (message) {
     FatPopcorn.notifier.error(message);
 };
@@ -427,23 +415,23 @@ FatPopcorn.watchingServiceSuccess = function (jqxhr) {
     //remove the error/notice messageBox
     FatPopcorn.notifier.removeBox();
     FatPopcorn.item(data).attr('data-watching', data.watching);
-}
+};
 FatPopcorn.watchingServiceFail = function (data) {
-    FatPopcorn.displayFailure("Si è verificato un errore.")
+    FatPopcorn.displayFailure("Si è verificato un errore.");
     console.log('Watchlist service request failed');
     console.log(data);
     console.log(data.state());
     console.log(data.statusCode());
     console.log(data.getAllResponseHeaders());
 
-}
+};
 
 FatPopcorn.item = function (data) {
     return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
-}
+};
 
 FatPopcorn.newNoteOrAttachmentSuccess = function (dataString) {
-    var data = eval(dataString)
+    var data = eval(dataString);
     //remove the error/notice messageBox
     FatPopcorn.notifier.removeBox();
     FatPopcorn.item(data).attr('data-stream', data.streamItemsCount);
@@ -452,9 +440,9 @@ FatPopcorn.newNoteOrAttachmentSuccess = function (dataString) {
         FatPopcorn.item(data).parents('.fatpopcorn_grip').addClass('has-stream');
         FatPopcorn.item(data).siblings('.stream-items-count').text(data.streamItemsCount);
         if (data.streamItemsCount > 9)
-            FatPopcorn.item(data).siblings('.stream-items-count').addClass('two-digits')
+            FatPopcorn.item(data).siblings('.stream-items-count').addClass('two-digits');
         else
-            FatPopcorn.item(data).siblings('.stream-items-count').removeClass('two-digits')
+            FatPopcorn.item(data).siblings('.stream-items-count').removeClass('two-digits');
     } else {
         FatPopcorn.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
         FatPopcorn.item(data).siblings('.stream-items-count').empty();
@@ -519,20 +507,23 @@ FatPopcorn.getHistorySuccess = function (data) {
     $('.fatpopcorn .history .content').append(data);
 };
 
-var StickyCorn = function($element) {    
+
+var StickyCorn = function($element, defaults) {
     this.$element = $element;
+    this.defaults = defaults;
 };
+
+//StickyCorn.prototype = FatPopcorn
 
 StickyCorn.prototype.decorateContainerWithHtml = function () {
     var self = this;
-    // console.log("pluto")
 
     function _html() {
         return '<div class="stickycorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
             '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
             '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
             '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' +
-            '<div class="note"><h1>Nota</h1><form form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
+            '<div class="note"><h1>Nota</h1><form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
             '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note">Inserisci</a></form></div><hr/>' +
             '<div class="attachment"><h1>Allegati</h1><div id="fatpopcorn_attach"></div><div id="attach_output"></div></div>' +
             '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><span class="loader"></span></div>';
@@ -542,21 +533,24 @@ StickyCorn.prototype.decorateContainerWithHtml = function () {
 };
 
 (function ($) {
-    $.fn.stickycorn = function (options) {
-        
-        var self = this, defaults ={ };
+    $.fn.stickycorn = function (defaults) {
+
+        var self = this;
+
+        StickyCorn.activateTheClickedTab();
+        StickyCorn.bindRemoteEvents();
 
         function _setUpElement() {
-            var $element = $(this), 
-                stickycorn = new StickyCorn($element);
+            var $element = $(this),
+                stickycorn = new StickyCorn($element, defaults);
 
             stickycorn.decorateContainerWithHtml();
 
             return this;
         }
 
-        return self.each(_setUpElement);        
-    }
+        return self.each(_setUpElement);
+    };
 
     $.fn.fatpopcorn = function (options) {
 
@@ -621,7 +615,7 @@ StickyCorn.prototype.decorateContainerWithHtml = function () {
         }
 
         return self.each(_setUpElement);
-    }
+    };
 
     $.fn.popcorn = function (options) {
 
