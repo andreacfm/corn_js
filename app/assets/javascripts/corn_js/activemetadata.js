@@ -245,7 +245,6 @@ var exports = window.exports || {};
         console.log(data.state());
         console.log(data.statusCode());
         console.log(data.getAllResponseHeaders());
-
     };
 
     FP.item = function (data) { return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]'); };
@@ -273,7 +272,6 @@ var exports = window.exports || {};
         $(FP.baseCssClass() + ' .stream').show();
         $(FP.baseCssClass() + ' .stream-tab').addClass('active');
         FP.getStreamSuccess(data.streamBody);
-
     };
 
     FP.getStreamSuccess = function (data) {
@@ -332,14 +330,13 @@ var exports = window.exports || {};
     SC.prototype = new FP(null, {current_user:-1});
 
     SC.baseCssClass = function() { return '.stickycorn'; };
-    SC.prototype.activateTheClickedTab = function() { Cm.activateTheClickedTab(SC); };
     SC.bindRemoteEvents = function () { Cm.bindRemoteEvents(SC); };
 
     SC.prototype.decorateContainerWithHtml = function () {
         var self = this;
 
         function _html() {
-            return '<div class="stickycorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
+            return '<div class="stickycorn fatpopcorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
                     '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
                     '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
                     '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' +

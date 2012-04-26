@@ -1,4 +1,4 @@
-describe("Popcorn", function () {
+describe("FatPopcorn", function () {
     var $first;
     var $last;
     var FatPopcorn = exports.FatPopcorn;
@@ -299,22 +299,22 @@ describe("Popcorn", function () {
             });
 
             it("should call streamEvent when clicking on stream-tab", function () {
-                spyOn(FatPopcorn, 'streamEvent');
+                spyOn(FatPopcorn.prototype, 'streamEvent');
 
                 $('.fatpopcorn_grip').first().click();
                 $('.stream-tab').click();
 
-                expect(FatPopcorn.streamEvent).toHaveBeenCalled();
-                FatPopcorn.streamEvent.reset();
+                expect(FatPopcorn.prototype.streamEvent).toHaveBeenCalled();
+                FatPopcorn.prototype.streamEvent.reset();
             });
             it("should call historyEvent when clicking on history-tab", function () {
-                spyOn(FatPopcorn, 'historyEvent');
+                spyOn(FatPopcorn.prototype, 'historyEvent');
 
                 $('.fatpopcorn_grip').first().click();
                 $('.history-tab').click();
 
-                expect(FatPopcorn.historyEvent).toHaveBeenCalled()
-                FatPopcorn.historyEvent.reset();
+                expect(FatPopcorn.prototype.historyEvent).toHaveBeenCalled()
+                FatPopcorn.prototype.historyEvent.reset();
             });
 
             it("should append the stream result after a GET has being made", function () {
