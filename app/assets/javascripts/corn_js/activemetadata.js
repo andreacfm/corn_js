@@ -4,7 +4,8 @@ var exports = window.exports || {};
 
     var Popcorn = exports.Popcorn;
 
-    var Cm = function() {};
+    var Cm = function () {
+    };
 
     var FP = exports.FatPopcorn = function ($element, defaults) {
         var self = this;
@@ -19,12 +20,15 @@ var exports = window.exports || {};
 
         self.$element = $element;
         self.defaults = defaults;
-        self.defaults.modelName = "#"
+        self.defaults.modelName = "#";
+        self.baseCssClass = ".fatpopcorn";
     };
 
     FP.prototype = new Popcorn();
 
-    FP.baseCssClass = function() { return '.fatpopcorn'; };
+    FP.baseCssClass = function () {
+        return '.fatpopcorn';
+    };
 
     FP.prototype.init = function () {
         this.setupFormAction();
@@ -34,8 +38,12 @@ var exports = window.exports || {};
         this.setupEditForm();
         this.setupWatchlistUrl();
 
-        if (this.hasStream()) { $(FP.baseCssClass() + ' .stream-tab').click(); }
-        else { $(FP.baseCssClass() + ' .edit-tab').click(); }
+        if (this.hasStream()) {
+            $(FP.baseCssClass() + ' .stream-tab').click();
+        }
+        else {
+            $(FP.baseCssClass() + ' .edit-tab').click();
+        }
     };
 
     FP.prototype.setupStreamUrl = function () {
@@ -85,8 +93,12 @@ var exports = window.exports || {};
         $(window).off('resize');
         return this.containerOf().hide();
     };
-    FP.container = function () { return $(FP.baseCssClass()).first(); };
-    FP.prototype.containerOf = function () { return FP.container(); };
+    FP.container = function () {
+        return $(FP.baseCssClass()).first();
+    };
+    FP.prototype.containerOf = function () {
+        return FP.container();
+    };
 
     FP.onCompleteUpload = function (id, fileName, response, qq) {
         if (qq.getQueue().length == 1) {
@@ -114,7 +126,9 @@ var exports = window.exports || {};
         }
 
 
-        if (self.containerOf().size() == 0) { $('body').append(_html()); }
+        if (self.containerOf().size() == 0) {
+            $('body').append(_html());
+        }
 
         self.containerOf().hide();
     };
@@ -129,30 +143,41 @@ var exports = window.exports || {};
         return $element.parent();
     };
 
-    FP.prototype.activateTheClickedTab = function() {
+    FP.prototype.activateTheClickedTab = function () {
         var self = this;
 
         $(FP.baseCssClass() + ' .header > ul > li').unbind('click').click(
-            function (e) {
-                var that = this;
+                function (e) {
+                    var that = this;
 
-                function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); }
-                function _currentTabName() { return _tabBodyName($(that).attr('class')); }
-                function _currentTab() { return $('.' + _currentTabName()); }
-                function _currentTabMethod() { return _currentTabName() + "Event"; }
+                    function _tabBodyName(tabName) {
+                        return tabName.split('-')[0].trim();
+                    }
 
-                e.stopPropagation();
-                e.preventDefault();
+                    function _currentTabName() {
+                        return _tabBodyName($(that).attr('class'));
+                    }
 
-                $(FP.baseCssClass()  + ' .active').removeClass('active');
-                $(FP.baseCssClass()  + ' .popcorn-body > div:not(.header)').hide();
+                    function _currentTab() {
+                        return $('.' + _currentTabName());
+                    }
 
-                _currentTab().show();
+                    function _currentTabMethod() {
+                        return _currentTabName() + "Event";
+                    }
 
-                $(this).addClass('active');
+                    e.stopPropagation();
+                    e.preventDefault();
 
-                self[_currentTabMethod()].call();
-    });
+                    $(FP.baseCssClass() + ' .active').removeClass('active');
+                    $(FP.baseCssClass() + ' .popcorn-body > div:not(.header)').hide();
+
+                    _currentTab().show();
+
+                    $(this).addClass('active');
+
+                    self[_currentTabMethod()].call();
+                });
     };
 
     FP.prototype.streamEvent = function () {
@@ -164,9 +189,13 @@ var exports = window.exports || {};
     FP.prototype.historyEvent = function () {
         $.ajax($(FP.baseCssClass() + ' .history').attr('data-url')).success(FP.getHistorySuccess);
     };
-    FP.prototype.containerVisible = function () { return this.containerOf().is(':visible'); };
+    FP.prototype.containerVisible = function () {
+        return this.containerOf().is(':visible');
+    };
 
-    FP.formToken = function () { return $('meta[name="csrf-token"]').attr('content'); };
+    FP.formToken = function () {
+        return $('meta[name="csrf-token"]').attr('content');
+    };
 
     FP.createAttachmentButton = function (actionUrl) {
         delete FP.uploader;
@@ -181,29 +210,49 @@ var exports = window.exports || {};
         });
     };
 
-    Cm.bindRemoteEvents = function (target) {
-        function _startWatching() { _callWatchlistService({authenticity_token:FP.formToken() }); }
-        function _stopWatching() { _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() }); }
+    FP.prototype.bindRemoteEvents = function () {
+        var self = this;
+
+        function _startWatching() {
+            _callWatchlistService({authenticity_token:FP.formToken() });
+        }
+
+        function _stopWatching() {
+            _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() });
+        }
+
         function _callWatchlistService(data) {
-            var url = $(target.baseCssClass() + ' .edit').attr('data-url');
+            var url = $(self.baseCssClass + ' .edit').attr('data-url');
             $.post(url, data, {dataType:'script'}).done(FP.watchingServiceSuccess).error(FP.watchingServiceFail);
         }
 
-        $(target.baseCssClass()).unbind('click').click(function (e) { e.stopPropagation(); });
-        $(target.baseCssClass() + ' #watchlist_true').unbind('click').click(function () { _startWatching() });
-        $(target.baseCssClass() + ' #watchlist_false').unbind('click').click(function () { _stopWatching(); });
-        $(target.baseCssClass() + ' #send_note').unbind('click').click(function () {
-            if ($(target.baseCssClass() + ' #note_text').val() == '') return false;
-
-            $.post($(target.baseCssClass() + ' form#notes_form').attr('action'), $('form#notes_form').serialize())
-                    .success('success.rails', FP.newNoteOrAttachmentSuccess)
-                    .fail(function () { FP.displayFailure("Si è verificato un errore.") });
+        $(self.baseCssClass).unbind('click').click(function (e) {
+            e.stopPropagation();
         });
-        $('.loader').ajaxSend(function () {  $(this).show(); });
-        $('.loader').ajaxComplete(function () { $(this).hide(); });
+        $(self.baseCssClass + ' #watchlist_true').unbind('click').click(function () {
+            _startWatching()
+        });
+        $(self.baseCssClass + ' #watchlist_false').unbind('click').click(function () {
+            _stopWatching();
+        });
+        $(self.baseCssClass + ' #send_note').unbind('click').click(function () {
+            if ($(self.baseCssClass + ' #note_text').val() == '') return false;
+
+            $.post($(self.baseCssClass + ' form#notes_form').attr('action'), $(self.baseCssClass + 'form#notes_form').serialize())
+                    .success('success.rails', FP.newNoteOrAttachmentSuccess)
+                    .fail(function () {
+                        FP.displayFailure("Si è verificato un errore.")
+                    });
+        });
+        $('.loader').ajaxSend(function () {
+            $(this).show();
+        });
+        $('.loader').ajaxComplete(function () {
+            $(this).hide();
+        });
     };
 
-    FP.bindRemoteEvents = function () { Cm.bindRemoteEvents(FP); };
+//    FP.bindRemoteEvents = function () { Cm.bindRemoteEvents(FP); };
 
     /********
      Notifier
@@ -219,17 +268,25 @@ var exports = window.exports || {};
             });
         },
 
-        notice: function (message) { this.notify("notice", message); },
+        notice:function (message) {
+            this.notify("notice", message);
+        },
 
-        error: function (message) { this.notify("error", message); },
+        error:function (message) {
+            this.notify("error", message);
+        },
 
-        removeBox:function () { $(FP.baseCssClass() + ' .info p.messageBox').remove(); }
+        removeBox:function () {
+            $(FP.baseCssClass() + ' .info p.messageBox').remove();
+        }
     };
 
     /****************
      * Error Handling
      ****************/
-    FP.displayFailure = function (message) { FP.notifier.error(message); };
+    FP.displayFailure = function (message) {
+        FP.notifier.error(message);
+    };
 
     /* ajax callbacks */
     FP.watchingServiceSuccess = function (jqxhr) {
@@ -247,7 +304,9 @@ var exports = window.exports || {};
         console.log(data.getAllResponseHeaders());
     };
 
-    FP.item = function (data) { return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]'); };
+    FP.item = function (data) {
+        return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
+    };
 
     FP.newNoteOrAttachmentSuccess = function (dataString) {
         var data = eval(dataString);
@@ -312,7 +371,9 @@ var exports = window.exports || {};
                 fail(FP.deleteFailure);
     };
 
-    FP.deleteSuccess = function () { $(FP.baseCssClass() + ' .stream-tab').click(); };
+    FP.deleteSuccess = function () {
+        $(FP.baseCssClass() + ' .stream-tab').click();
+    };
 
     FP.deleteFailure = function () {
     };
@@ -325,18 +386,20 @@ var exports = window.exports || {};
     var SC = exports.StickyCorn = function ($element, defaults) {
         this.$element = $element;
         this.defaults = defaults;
+        this.baseCssClass = ".stickycorn"
     };
 
     SC.prototype = new FP(null, {current_user:-1});
 
-    SC.baseCssClass = function() { return '.stickycorn'; };
-    SC.bindRemoteEvents = function () { Cm.bindRemoteEvents(SC); };
+    SC.baseCssClass = function () {
+        return '.stickycorn';
+    };
 
     SC.prototype.decorateContainerWithHtml = function () {
         var self = this;
 
         function _html() {
-            return '<div class="stickycorn fatpopcorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
+            return '<div class="stickycorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
                     '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
                     '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
                     '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' +
@@ -362,8 +425,7 @@ var exports = window.exports || {};
         function _setUpElement() {
             var $element = $(this), stickycorn = new StickyCorn($element, defaults);
             stickycorn.activateTheClickedTab();
-            StickyCorn.bindRemoteEvents();
-
+            stickycorn.bindRemoteEvents();
             stickycorn.decorateContainerWithHtml();
 
             return this;
@@ -383,19 +445,21 @@ var exports = window.exports || {};
         };
 
         // extends defaults with options provided
-        if (options) { $.extend(defaults, options); }
+        if (options) {
+            $.extend(defaults, options);
+        }
 
         function _setUpElement() {
             var $element = $(this), fatpopcorn = new FatPopcorn($element, defaults);
 
             $(window).click(function () {
-                    fatpopcorn.hideContainer();
+                fatpopcorn.hideContainer();
                 FatPopcorn.notifier.removeBox();
             });
 
             fatpopcorn.decorateContainerWithHtml();
             fatpopcorn.activateTheClickedTab();
-            FatPopcorn.bindRemoteEvents();
+            fatpopcorn.bindRemoteEvents();
             FatPopcorn.createAttachmentButton();
 
             fatpopcorn.addGripToElement($element);
