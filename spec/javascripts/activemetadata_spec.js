@@ -320,14 +320,14 @@ describe("FatPopcorn", function () {
             it("should append the stream result after a GET has being made", function () {
                 $('.fatpopcorn_grip').first().click();
                 $('.stream-tab').click();
-                FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+                new FatPopcorn($('.fatpopcorn_grip').first(),{current_user: 1}).getStreamSuccess(this.success_response.recv_stream.success.responseText);
                 expect($('.fatpopcorn .stream .content .time')).toExist();
             });
             it("should append the stream result after a GET has being made clearing the previous output", function () {
                 $('.fatpopcorn_grip').first().click();
                 $('.stream-tab').click();
                 $('.fatpopcorn .stream .content').append("<h3>pippo</h3>");
-                FatPopcorn.getStreamSuccess(this.success_response.recv_stream.success.responseText);
+                new FatPopcorn($('.fatpopcorn_grip').first(),{current_user: 1}).getStreamSuccess(this.success_response.recv_stream.success.responseText);
                 expect($('.fatpopcorn .stream .content h3')).not.toExist();
             });
             it("should append the history result after a GET has being made", function () {

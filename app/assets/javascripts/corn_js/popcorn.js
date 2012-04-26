@@ -6,14 +6,13 @@ var exports = {};
         this.$element = $element;
         this.$anchor = this.$element;
         this.defaults = defaults;
-
     };
 
     Popcorn.prototype.decorateContainerWithHtml = function () {
-        if (this.positionType) {
-            throw "inferPositionType must be called after decorateContainerWithHtml";
-        }
+        if (this.positionType) { throw "inferPositionType must be called after decorateContainerWithHtml"; }
+
         this.containerOf().hide().addClass('popcorn');
+
         if (!this.containerOf().find('.popcorn-body').length) {
             this.containerOf().contents().wrap("<div class='popcorn-body'/>");
         }

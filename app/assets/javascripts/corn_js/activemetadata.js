@@ -4,9 +4,6 @@ var exports = window.exports || {};
 
     var Popcorn = exports.Popcorn;
 
-    var Cm = function () {
-    };
-
     var FP = exports.FatPopcorn = function ($element, defaults) {
         var self = this;
 
@@ -26,47 +23,44 @@ var exports = window.exports || {};
 
     FP.prototype = new Popcorn();
 
-    FP.baseCssClass = function () {
-        return '.fatpopcorn';
-    };
+    FP.baseCssClass = function () { return '.fatpopcorn'; };
 
     FP.prototype.init = function () {
-        this.setupFormAction();
-        this.setupFormToken();
-        this.setupStreamUrl();
-        this.setupHistoryUrl();
-        this.setupEditForm();
-        this.setupWatchlistUrl();
+        var self = this;
+        self.setupFormAction();
+        self.setupFormToken();
+        self.setupStreamUrl();
+        self.setupHistoryUrl();
+        self.setupEditForm();
+        self.setupWatchlistUrl();
 
-        if (this.hasStream()) {
-            $(FP.baseCssClass() + ' .stream-tab').click();
-        }
-        else {
-            $(FP.baseCssClass() + ' .edit-tab').click();
-        }
+        if (self.hasStream()) { $(self.baseCssClass + ' .stream-tab').click(); }
+        else { $(self.baseCssClass + ' .edit-tab').click(); }
     };
 
     FP.prototype.setupStreamUrl = function () {
-        $(FP.baseCssClass() + ' .stream').attr('data-url', this.streamUrl());
+        var self = this;
+        $(self.baseCssClass + ' .stream').attr('data-url', self.streamUrl());
     };
     FP.prototype.setupEditForm = function () {
-        FP.createAttachmentButton(this.attachmentsUrl());
-        $(FP.baseCssClass() + ' .edit').attr('data-attach-url', this.attachmentsUrl());
-        $(FP.baseCssClass() + ' .on-off label.' + this.$element.attr('data-watching')).click();
-        $(FP.baseCssClass() + ' .on-off input#watchlist_' + this.$element.attr('data-watching')).click();
+        var self = this;
+        FP.createAttachmentButton(self.attachmentsUrl());
+        $(self.baseCssClass + ' .edit').attr('data-attach-url', this.attachmentsUrl());
+        $(self.baseCssClass + ' .on-off label.' + this.$element.attr('data-watching')).click();
+        $(self.baseCssClass + ' .on-off input#watchlist_' + this.$element.attr('data-watching')).click();
     };
     FP.prototype.setupWatchlistUrl = function () {
-        $(FP.baseCssClass() + ' .edit').attr('data-url', this.watchlistUrl());
+        $(this.baseCssClass + ' .edit').attr('data-url', this.watchlistUrl());
     };
     FP.prototype.setupHistoryUrl = function () {
-        $(FP.baseCssClass() + ' .history').attr('data-url', this.historyUrl());
+        $(this.baseCssClass + ' .history').attr('data-url', this.historyUrl());
     };
     FP.prototype.setupFormAction = function () {
-        $(FP.baseCssClass() + ' #notes_form').attr('action', this.actionUrl());
-        $(FP.baseCssClass() + ' .edit').attr('data-note-url', this.actionUrl());
+        $(this.baseCssClass + ' #notes_form').attr('action', this.actionUrl());
+        $(this.baseCssClass + ' .edit').attr('data-note-url', this.actionUrl());
     };
     FP.prototype.setupFormToken = function () {
-        $(FP.baseCssClass() + ' #notes_form input[name="authenticity_token"]').val(FP.formToken());
+        $(this.baseCssClass + ' #notes_form input[name="authenticity_token"]').val(FP.formToken());
     };
     FP.prototype.actionUrl = function () {
         return this.urlPrefix() + '/notes';
@@ -93,11 +87,8 @@ var exports = window.exports || {};
         $(window).off('resize');
         return this.containerOf().hide();
     };
-    FP.container = function () {
-        return $(FP.baseCssClass()).first();
-    };
     FP.prototype.containerOf = function () {
-        return FP.container();
+        return $(this.baseCssClass).first();
     };
 
     FP.onCompleteUpload = function (id, fileName, response, qq) {
@@ -145,57 +136,47 @@ var exports = window.exports || {};
 
     FP.prototype.activateTheClickedTab = function () {
         var self = this;
+        console.log(self);
+        $(self.baseCssClass + ' .header > ul > li').unbind('click').click(
+            function (e) {
+                var that = this;
 
-        $(FP.baseCssClass() + ' .header > ul > li').unbind('click').click(
-                function (e) {
-                    var that = this;
+                function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); }
+                function _currentTabName() { return _tabBodyName($(that).attr('class')); }
+                function _currentTab() { return $('.' + _currentTabName()); }
+                function _currentTabMethod() { return _currentTabName() + "Event"; }
 
-                    function _tabBodyName(tabName) {
-                        return tabName.split('-')[0].trim();
-                    }
+                e.stopPropagation();
+                e.preventDefault();
 
-                    function _currentTabName() {
-                        return _tabBodyName($(that).attr('class'));
-                    }
+                console.log(self.baseCssClass + ' .active');
+                console.log(self.baseCssClass + ' .popcorn-body > div:not(.header)');
 
-                    function _currentTab() {
-                        return $('.' + _currentTabName());
-                    }
+                $(self.baseCssClass + ' .active').removeClass('active');
+                $(self.baseCssClass + ' .popcorn-body > div:not(.header)').hide();
 
-                    function _currentTabMethod() {
-                        return _currentTabName() + "Event";
-                    }
+                _currentTab().show();
 
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    $(FP.baseCssClass() + ' .active').removeClass('active');
-                    $(FP.baseCssClass() + ' .popcorn-body > div:not(.header)').hide();
-
-                    _currentTab().show();
-
-                    $(this).addClass('active');
-
-                    self[_currentTabMethod()].call();
-                });
+                $(that).addClass('active');
+                self[_currentTabMethod()].call(self);
+            });
     };
 
     FP.prototype.streamEvent = function () {
-        $.ajax($(FP.baseCssClass() + ' .stream').attr('data-url')).success(FP.getStreamSuccess);
+        var self = this;
+        $.ajax($(self.baseCssClass + ' .stream').attr('data-url')).success(self.getStreamSuccess);
     };
     FP.prototype.editEvent = function () {
         // should do something?
     };
     FP.prototype.historyEvent = function () {
-        $.ajax($(FP.baseCssClass() + ' .history').attr('data-url')).success(FP.getHistorySuccess);
+        $.ajax($(this.baseCssClass + ' .history').attr('data-url')).success(FP.getHistorySuccess);
     };
     FP.prototype.containerVisible = function () {
         return this.containerOf().is(':visible');
     };
 
-    FP.formToken = function () {
-        return $('meta[name="csrf-token"]').attr('content');
-    };
+    FP.formToken = function () {return $('meta[name="csrf-token"]').attr('content'); };
 
     FP.createAttachmentButton = function (actionUrl) {
         delete FP.uploader;
@@ -239,7 +220,7 @@ var exports = window.exports || {};
             if ($(self.baseCssClass + ' #note_text').val() == '') return false;
 
             $.post($(self.baseCssClass + ' form#notes_form').attr('action'), $(self.baseCssClass + 'form#notes_form').serialize())
-                    .success('success.rails', FP.newNoteOrAttachmentSuccess)
+                    .success('success.rails', self.newNoteOrAttachmentSuccess)
                     .fail(function () {
                         FP.displayFailure("Si è verificato un errore.")
                     });
@@ -251,8 +232,6 @@ var exports = window.exports || {};
             $(this).hide();
         });
     };
-
-//    FP.bindRemoteEvents = function () { Cm.bindRemoteEvents(FP); };
 
     /********
      Notifier
@@ -297,11 +276,11 @@ var exports = window.exports || {};
     };
     FP.watchingServiceFail = function (data) {
         FP.displayFailure("Si è verificato un errore.");
-        console.log('Watchlist service request failed');
-        console.log(data);
-        console.log(data.state());
-        console.log(data.statusCode());
-        console.log(data.getAllResponseHeaders());
+//        console.log('Watchlist service request failed');
+//        console.log(data);
+//        console.log(data.state());
+//        console.log(data.statusCode());
+//        console.log(data.getAllResponseHeaders());
     };
 
     FP.item = function (data) {
@@ -333,11 +312,39 @@ var exports = window.exports || {};
         FP.getStreamSuccess(data.streamBody);
     };
 
-    FP.getStreamSuccess = function (data) {
-        $(FP.baseCssClass() + ' .stream .content').html(data);
-        $(FP.baseCssClass() + ' .stream .attachment span.delete').click(FP.deleteAttachment);
-        $(FP.baseCssClass() + ' .stream .note span.delete').click(FP.deleteNote);
-        $(FP.baseCssClass() + ' .stream span.star').click(FP.starUnstar);
+    FP.prototype.newNoteOrAttachmentSuccess = function (dataString) {
+        var data = eval(dataString);
+        //remove the error/notice messageBox
+        FP.notifier.removeBox();
+
+        FP.item(data).attr('data-stream', data.streamItemsCount);
+
+        if (data.streamItemsCount > 0) {
+            FP.item(data).parents('.fatpopcorn_grip').addClass('has-stream');
+            FP.item(data).siblings('.stream-items-count').text(data.streamItemsCount);
+
+            if (data.streamItemsCount > 9)
+                FP.item(data).siblings('.stream-items-count').addClass('two-digits');
+            else
+                FP.item(data).siblings('.stream-items-count').removeClass('two-digits');
+        } else {
+            FP.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
+            FP.item(data).siblings('.stream-items-count').empty();
+        }
+        $(this.baseCssClass + ' textarea#note_text').val('');
+        $(this.baseCssClass + ' .active').removeClass('active');
+        $(this.baseCssClass + ' .popcorn-body > div:not(.header)').hide();
+        $(this.baseCssClass + ' .stream').show();
+        $(this.baseCssClass + ' .stream-tab').addClass('active');
+        this.getStreamSuccess(data.streamBody);
+    };
+    FP.getStreamSuccess = function (data) {};
+
+    FP.prototype.getStreamSuccess = function (data) {
+        $(this.baseCssClass + ' .stream .content').html(data);
+        $(this.baseCssClass + ' .stream .attachment span.delete').click(FP.deleteAttachment);
+        $(this.baseCssClass + ' .stream .note span.delete').click(FP.deleteNote);
+        $(this.baseCssClass + ' .stream span.star').click(FP.starUnstar);
     };
 
     FP.deleteAttachment = function (e) {
