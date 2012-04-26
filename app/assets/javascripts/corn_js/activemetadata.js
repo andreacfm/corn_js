@@ -99,7 +99,7 @@ var exports = window.exports || {};
             FP.displayFailure("Si è verificato un errore.");
             return;
         }
-        FP.newNoteOrAttachmentSuccess(response);
+        this.newNoteOrAttachmentSuccess(response);
     };
 
     FP.prototype.decorateContainerWithHtml = function () {
@@ -136,7 +136,7 @@ var exports = window.exports || {};
 
     FP.prototype.activateTheClickedTab = function () {
         var self = this;
-        console.log(self);
+
         $(self.baseCssClass + ' .header > ul > li').unbind('click').click(
             function (e) {
                 var that = this;
@@ -148,9 +148,6 @@ var exports = window.exports || {};
 
                 e.stopPropagation();
                 e.preventDefault();
-
-                console.log(self.baseCssClass + ' .active');
-                console.log(self.baseCssClass + ' .popcorn-body > div:not(.header)');
 
                 $(self.baseCssClass + ' .active').removeClass('active');
                 $(self.baseCssClass + ' .popcorn-body > div:not(.header)').hide();
@@ -180,8 +177,8 @@ var exports = window.exports || {};
 
     FP.prototype.createAttachmentButton = function (actionUrl) {
         var self = this;
-        delete FP.uploader;
-        FP.uploader = new qq.FileUploader({
+        delete self.uploader;
+        self.uploader = new qq.FileUploader({
             element:document.getElementById('fatpopcorn_attach'),
             allowedExtensions:[],
             params:{ authenticity_token:FP.formToken(), target:"attach_output"},
@@ -277,40 +274,10 @@ var exports = window.exports || {};
     };
     FP.watchingServiceFail = function (data) {
         FP.displayFailure("Si è verificato un errore.");
-//        console.log('Watchlist service request failed');
-//        console.log(data);
-//        console.log(data.state());
-//        console.log(data.statusCode());
-//        console.log(data.getAllResponseHeaders());
     };
 
     FP.item = function (data) {
         return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
-    };
-
-    FP.newNoteOrAttachmentSuccess = function (dataString) { //TODO to be deleted!
-        var data = eval(dataString);
-        //remove the error/notice messageBox
-        FP.notifier.removeBox();
-        FP.item(data).attr('data-stream', data.streamItemsCount);
-
-        if (data.streamItemsCount > 0) {
-            FP.item(data).parents('.fatpopcorn_grip').addClass('has-stream');
-            FP.item(data).siblings('.stream-items-count').text(data.streamItemsCount);
-            if (data.streamItemsCount > 9)
-                FP.item(data).siblings('.stream-items-count').addClass('two-digits');
-            else
-                FP.item(data).siblings('.stream-items-count').removeClass('two-digits');
-        } else {
-            FP.item(data).parents('.fatpopcorn_grip').removeClass('has-stream');
-            FP.item(data).siblings('.stream-items-count').empty();
-        }
-        $(FP.baseCssClass() + ' textarea#note_text').val('');
-        $(FP.baseCssClass() + ' .active').removeClass('active');
-        $(FP.baseCssClass() + ' .popcorn-body > div:not(.header)').hide();
-        $(FP.baseCssClass() + ' .stream').show();
-        $(FP.baseCssClass() + ' .stream-tab').addClass('active');
-        FP.getStreamSuccess(data.streamBody);
     };
 
     FP.prototype.newNoteOrAttachmentSuccess = function (dataString) {
@@ -339,44 +306,39 @@ var exports = window.exports || {};
         $(this.baseCssClass + ' .stream-tab').addClass('active');
         this.getStreamSuccess(data.streamBody);
     };
-    FP.getStreamSuccess = function (data) {};
 
     FP.prototype.getStreamSuccess = function (data) {
+        var self = this;
         $(this.baseCssClass + ' .stream .content').html(data);
-        $(this.baseCssClass + ' .stream .attachment span.delete').click(FP.deleteAttachment);
-        $(this.baseCssClass + ' .stream .note span.delete').click(FP.deleteNote);
-        $(this.baseCssClass + ' .stream span.star').click(FP.starUnstar);
+        $(this.baseCssClass + ' .stream .attachment span.delete').click(function(e){self.deleteAttachment.call(self, e)});
+        $(this.baseCssClass + ' .stream .note span.delete').click(function(e){self.deleteNote.call(self, e)});
+        $(this.baseCssClass + ' .stream span.star').click(function(e){self.starUnstar.call(self, e)});
     };
 
-    FP.deleteAttachment = function (e) {
+    FP.prototype.deleteAttachment = function (e) {
         if (confirm("Sei sicuro?")) {
-            FP.deleteStream(e, $(FP.baseCssClass() + ' .edit').attr('data-attach-url'));
+            this.deleteStream(e, $(this.baseCssClass + ' .edit').attr('data-attach-url'));
         }
     };
 
-    FP.deleteNote = function (e) {
+    FP.prototype.deleteNote = function (e) {
         if (confirm("Sei sicuro?")) {
-            FP.deleteStream(e, $(FP.baseCssClass() + ' .edit').attr('data-note-url'));
+            this.deleteStream(e, $(this.baseCssClass + ' .edit').attr('data-note-url'));
         }
     };
 
-    FP.deleteStream = function (e, urlPrefix) {
-        function _url() {
-            return urlPrefix + '/' + $(e.target).parent().attr('data-id');
-        }
+    FP.prototype.deleteStream = function (e, urlPrefix) {
+        function _url() { return urlPrefix + '/' + $(e.target).parent().attr('data-id'); }
 
-        $.post(_url(), {_method:'delete'}).
-                success('success.rails', FP.newNoteOrAttachmentSuccess).fail(FP.deleteFailure);
+        $.post(_url(), {_method:'delete'}).success('success.rails', self.newNoteOrAttachmentSuccess).fail(FP.deleteFailure);
     };
 
-    FP.starUnstar = function (e, urlPrefix) {
+    FP.prototype.starUnstar = function (e, urlPrefix) {
+        var self = this;
         var url = $(e.target).attr('data-url');
+
         $.post(url, {_method:'put'}).
-                success('success.rails',
-                function (data) {
-                    FP.getStreamSuccess(data.streamBody)
-                }).
-                fail(FP.deleteFailure);
+                success('success.rails', function (data) { self.getStreamSuccess(data.streamBody); }).fail(FP.deleteFailure);
     };
 
     FP.deleteSuccess = function () {
