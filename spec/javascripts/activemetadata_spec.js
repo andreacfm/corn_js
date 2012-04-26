@@ -3,7 +3,7 @@ describe("Popcorn", function () {
     var $last;
     var FatPopcorn = exports.FatPopcorn;
 
-    describe("default fat behaviour", function () {
+    describe("fatpopcorn", function () {
 
         beforeEach(function () {
             loadFixtures('activemetadata-fixture.html');
@@ -28,29 +28,17 @@ describe("Popcorn", function () {
             });
         });
 
-        describe("fatpopcorn option", function () {
+        describe("options", function () {
             beforeEach(function () {
-                $fatpopcorn = new FatPopcorn($first, {token:'TOKEN', current_user:1});
+                $fatpopcorn = new FatPopcorn($first, {current_user:1});
             });
             it("should create a fileuploader object", function () {
                 expect(FatPopcorn.uploader).toBeDefined();
             });
-            it("should require some options", function () {
+            it("should require a current user", function () {
                 var options = {};
-                expect(
-                    function () {
-                        new FatPopcorn($first, options)
-                    }).toThrow(new Error('parameters [token], [current_user] are required'));
-            });
-            it("should require current_user", function () {
-                var options = {token:'TOKEN'};
-                expect(
-                    function () {
-                        new FatPopcorn($first, options)
-                    }).toThrow(new Error('parameters [token], [current_user] are required'));
-            });
-            it("should correctly configure token", function () {
-                expect($fatpopcorn.defaults.token).toEqual('TOKEN');
+                expect(function () { new FatPopcorn($first, options) })
+                        .toThrow(new Error('parameter [current_user] is required'));
             });
             it("should correctly configure current_user", function () {
                 expect($fatpopcorn.defaults.current_user).toEqual(1);
@@ -316,7 +304,7 @@ describe("Popcorn", function () {
                 $('.fatpopcorn_grip').first().click();
                 $('.stream-tab').click();
 
-                expect(FatPopcorn.streamEvent).toHaveBeenCalled()
+                expect(FatPopcorn.streamEvent).toHaveBeenCalled();
                 FatPopcorn.streamEvent.reset();
             });
             it("should call historyEvent when clicking on history-tab", function () {

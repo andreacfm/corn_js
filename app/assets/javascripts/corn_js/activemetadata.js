@@ -4,17 +4,18 @@ var exports = window.exports || {};
 
     var Popcorn = exports.Popcorn;
 
+    var Cm = function() {};
+
     var FP = exports.FatPopcorn = function ($element, defaults) {
         var self = this;
 
-        function _checkOptions(options) {
+        function _anOptionIsMissingIn(options) {
             if (!options.autoWrap) options.autoWrap = false;
-
-            return typeof options.modelId === undefined || options.token === undefined || options.current_user === undefined;
+            //TODO check if is the case to avoid looking for token and modelId
+            return options.current_user === undefined;
         }
 
-
-        if (_checkOptions(defaults)) throw("parameters [token], [current_user] are required");
+        if (_anOptionIsMissingIn(defaults)) throw("parameter [current_user] is required");
 
         self.$element = $element;
         self.defaults = defaults;
@@ -80,9 +81,9 @@ var exports = window.exports || {};
     FP.prototype.hasStream = function () {
         return parseInt(this.$element.attr('data-stream')) > 0;
     };
-    FP.hideContainer = function () {
+    FP.prototype.hideContainer = function () {
         $(window).off('resize');
-        return FP.container().hide();
+        return this.containerOf().hide();
     };
     FP.container = function () { return $(FP.baseCssClass()).first(); };
     FP.prototype.containerOf = function () { return FP.container(); };
@@ -98,7 +99,7 @@ var exports = window.exports || {};
         FP.newNoteOrAttachmentSuccess(response);
     };
 
-    FP.decorateContainerWithHtml = function () {
+    FP.prototype.decorateContainerWithHtml = function () {
         var self = this;
 
         function _html() {
@@ -113,9 +114,9 @@ var exports = window.exports || {};
         }
 
 
-        if (FP.container().size() == 0) { $('body').append(_html()); }
+        if (self.containerOf().size() == 0) { $('body').append(_html()); }
 
-        FP.container().hide();
+        self.containerOf().hide();
     };
 
     FP.prototype.addGripToElement = function ($element) {
@@ -128,50 +129,42 @@ var exports = window.exports || {};
         return $element.parent();
     };
 
-    FP.activateTheClickedTab = function () {
-        $(FP.baseCssClass() + ' .header > ul > li').unbind('click').click(function (e) {
-            var self = this;
+    FP.prototype.activateTheClickedTab = function() {
+        var self = this;
 
-            function _tabBodyName(tabName) {
-                return tabName.split('-')[0].trim();
-            }
+        $(FP.baseCssClass() + ' .header > ul > li').unbind('click').click(
+            function (e) {
+                var that = this;
 
-            function _currentTabName() {
-                return _tabBodyName($(self).attr('class'));
-            }
+                function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); }
+                function _currentTabName() { return _tabBodyName($(that).attr('class')); }
+                function _currentTab() { return $('.' + _currentTabName()); }
+                function _currentTabMethod() { return _currentTabName() + "Event"; }
 
-            function _currentTab() {
-                return $('.' + _currentTabName());
-            }
+                e.stopPropagation();
+                e.preventDefault();
 
-            function _currentTabMethod() {
-                return _currentTabName() + "Event";
-            }
+                $(FP.baseCssClass()  + ' .active').removeClass('active');
+                $(FP.baseCssClass()  + ' .popcorn-body > div:not(.header)').hide();
 
-            e.stopPropagation();
-            e.preventDefault();
+                _currentTab().show();
 
-            $(FP.baseCssClass()  + ' .active').removeClass('active');
-            $(FP.baseCssClass()  + ' .popcorn-body > div:not(.header)').hide();
+                $(this).addClass('active');
 
-            _currentTab().show();
-
-            $(this).addClass('active');
-
-            FP[_currentTabMethod()].call();
-        });
+                self[_currentTabMethod()].call();
+    });
     };
 
-    FP.streamEvent = function () {
+    FP.prototype.streamEvent = function () {
         $.ajax($(FP.baseCssClass() + ' .stream').attr('data-url')).success(FP.getStreamSuccess);
     };
-    FP.editEvent = function () {
+    FP.prototype.editEvent = function () {
         // should do something?
     };
-    FP.historyEvent = function () {
+    FP.prototype.historyEvent = function () {
         $.ajax($(FP.baseCssClass() + ' .history').attr('data-url')).success(FP.getHistorySuccess);
     };
-    FP.containerVisible = function () { return FP.container().is(':visible'); };
+    FP.prototype.containerVisible = function () { return this.containerOf().is(':visible'); };
 
     FP.formToken = function () { return $('meta[name="csrf-token"]').attr('content'); };
 
@@ -188,33 +181,29 @@ var exports = window.exports || {};
         });
     };
 
-    FP.bindRemoteEvents = function () {
+    Cm.bindRemoteEvents = function (target) {
         function _startWatching() { _callWatchlistService({authenticity_token:FP.formToken() }); }
-
         function _stopWatching() { _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() }); }
-
         function _callWatchlistService(data) {
-            var url = $(FP.baseCssClass() + ' .edit').attr('data-url');
+            var url = $(target.baseCssClass() + ' .edit').attr('data-url');
             $.post(url, data, {dataType:'script'}).done(FP.watchingServiceSuccess).error(FP.watchingServiceFail);
         }
 
-        $(FP.baseCssClass()).unbind('click').click(function (e) { e.stopPropagation(); });
-        $(FP.baseCssClass() + ' #watchlist_true').unbind('click').click(function () { _startWatching() });
-        $(FP.baseCssClass() + ' #watchlist_false').unbind('click').click(function () { _stopWatching(); });
-        $(FP.baseCssClass() + ' #send_note').unbind('click').click(function () {
-            if ($(FP.baseCssClass() + ' #note_text').val() == '') return false;
+        $(target.baseCssClass()).unbind('click').click(function (e) { e.stopPropagation(); });
+        $(target.baseCssClass() + ' #watchlist_true').unbind('click').click(function () { _startWatching() });
+        $(target.baseCssClass() + ' #watchlist_false').unbind('click').click(function () { _stopWatching(); });
+        $(target.baseCssClass() + ' #send_note').unbind('click').click(function () {
+            if ($(target.baseCssClass() + ' #note_text').val() == '') return false;
 
-            $.post($(FP.baseCssClass() + ' form#notes_form').attr('action'), $('form#notes_form').serialize())
+            $.post($(target.baseCssClass() + ' form#notes_form').attr('action'), $('form#notes_form').serialize())
                     .success('success.rails', FP.newNoteOrAttachmentSuccess)
                     .fail(function () { FP.displayFailure("Si è verificato un errore.") });
         });
-        $('.loader').ajaxSend(function () {
-            $(this).show();
-        });
-        $('.loader').ajaxComplete(function () {
-            $(this).hide();
-        });
+        $('.loader').ajaxSend(function () {  $(this).show(); });
+        $('.loader').ajaxComplete(function () { $(this).hide(); });
     };
+
+    FP.bindRemoteEvents = function () { Cm.bindRemoteEvents(FP); };
 
     /********
      Notifier
@@ -240,9 +229,7 @@ var exports = window.exports || {};
     /****************
      * Error Handling
      ****************/
-    FP.displayFailure = function (message) {
-        FP.notifier.error(message);
-    };
+    FP.displayFailure = function (message) { FP.notifier.error(message); };
 
     /* ajax callbacks */
     FP.watchingServiceSuccess = function (jqxhr) {
@@ -261,9 +248,7 @@ var exports = window.exports || {};
 
     };
 
-    FP.item = function (data) {
-        return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
-    };
+    FP.item = function (data) { return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]'); };
 
     FP.newNoteOrAttachmentSuccess = function (dataString) {
         var data = eval(dataString);
@@ -339,15 +324,18 @@ var exports = window.exports || {};
         $(FP.baseCssClass() + ' .history .content').append(data);
     };
 
-
-    var StickyCorn = exports.StickyCorn = function ($element, defaults) {
+    var SC = exports.StickyCorn = function ($element, defaults) {
         this.$element = $element;
         this.defaults = defaults;
     };
 
-//StickyCorn.prototype = FatPopcorn
+    SC.prototype = new FP(null, {current_user:-1});
 
-    StickyCorn.prototype.decorateContainerWithHtml = function () {
+    SC.baseCssClass = function() { return '.stickycorn'; };
+    SC.prototype.activateTheClickedTab = function() { Cm.activateTheClickedTab(SC); };
+    SC.bindRemoteEvents = function () { Cm.bindRemoteEvents(SC); };
+
+    SC.prototype.decorateContainerWithHtml = function () {
         var self = this;
 
         function _html() {
@@ -371,15 +359,13 @@ var exports = window.exports || {};
 (function ($, FatPopcorn, StickyCorn) {
     console.log("test!");
     $.fn.stickycorn = function (defaults) {
-
         var self = this;
 
-        StickyCorn.activateTheClickedTab();
-        StickyCorn.bindRemoteEvents();
 
         function _setUpElement() {
-            var $element = $(this),
-                    stickycorn = new StickyCorn($element, defaults);
+            var $element = $(this), stickycorn = new StickyCorn($element, defaults);
+            stickycorn.activateTheClickedTab();
+            StickyCorn.bindRemoteEvents();
 
             stickycorn.decorateContainerWithHtml();
 
@@ -400,22 +386,21 @@ var exports = window.exports || {};
         };
 
         // extends defaults with options provided
-        if (options) {
-            $.extend(defaults, options);
-        }
-
-        $(window).click(function () {
-            FatPopcorn.hideContainer();
-            FatPopcorn.notifier.removeBox();
-        });
-
-        FatPopcorn.decorateContainerWithHtml();
-        FatPopcorn.activateTheClickedTab();
-        FatPopcorn.bindRemoteEvents();
-        FatPopcorn.createAttachmentButton();
+        if (options) { $.extend(defaults, options); }
 
         function _setUpElement() {
             var $element = $(this), fatpopcorn = new FatPopcorn($element, defaults);
+
+            $(window).click(function () {
+                    fatpopcorn.hideContainer();
+                FatPopcorn.notifier.removeBox();
+            });
+
+            fatpopcorn.decorateContainerWithHtml();
+            fatpopcorn.activateTheClickedTab();
+            FatPopcorn.bindRemoteEvents();
+            FatPopcorn.createAttachmentButton();
+
             fatpopcorn.addGripToElement($element);
 
             fatpopcorn.gripOf($element).children().click(function (e) {
@@ -433,18 +418,18 @@ var exports = window.exports || {};
                 e.preventDefault();
                 fatpopcorn.init();
 
-                if (FatPopcorn.containerVisible()) {
-                    FatPopcorn.hideContainer();
+                if (fatpopcorn.containerVisible()) {
+                    fatpopcorn.hideContainer();
                     return;
                 }
 
                 fatpopcorn.inferPositionType();
                 fatpopcorn.setContainerPosition();
                 fatpopcorn.decorateContainerWithArrow();
-                FatPopcorn.container().show();
+                fatpopcorn.containerOf().show();
 
                 $(window).on('resize', function () {
-                    if (FatPopcorn.containerVisible()) fatpopcorn.setContainerPosition();
+                    if (fatpopcorn.containerVisible()) fatpopcorn.setContainerPosition();
                 });
             });
 
