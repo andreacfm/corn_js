@@ -44,7 +44,7 @@ var exports = window.exports || {};
     };
     FP.prototype.setupEditForm = function () {
         var self = this;
-        FP.createAttachmentButton(self.attachmentsUrl());
+        self.createAttachmentButton(self.attachmentsUrl());
         $(self.baseCssClass + ' .edit').attr('data-attach-url', this.attachmentsUrl());
         $(self.baseCssClass + ' .on-off label.' + this.$element.attr('data-watching')).click();
         $(self.baseCssClass + ' .on-off input#watchlist_' + this.$element.attr('data-watching')).click();
@@ -91,7 +91,7 @@ var exports = window.exports || {};
         return $(this.baseCssClass).first();
     };
 
-    FP.onCompleteUpload = function (id, fileName, response, qq) {
+    FP.prototype.onCompleteUpload = function (id, fileName, response, qq) {
         if (qq.getQueue().length == 1) {
             $('.qq-upload-list').empty();
         }
@@ -178,7 +178,8 @@ var exports = window.exports || {};
 
     FP.formToken = function () {return $('meta[name="csrf-token"]').attr('content'); };
 
-    FP.createAttachmentButton = function (actionUrl) {
+    FP.prototype.createAttachmentButton = function (actionUrl) {
+        var self = this;
         delete FP.uploader;
         FP.uploader = new qq.FileUploader({
             element:document.getElementById('fatpopcorn_attach'),
@@ -187,7 +188,7 @@ var exports = window.exports || {};
             uploadButtonText:'Inserisci',
             action:actionUrl,
             multiple:true,
-            onComplete:FP.onCompleteUpload
+            onComplete:self.onCompleteUpload
         });
     };
 
@@ -287,7 +288,7 @@ var exports = window.exports || {};
         return $('[data-model="' + data.modelName + '"][data-label="' + data.fieldName + '"]');
     };
 
-    FP.newNoteOrAttachmentSuccess = function (dataString) {
+    FP.newNoteOrAttachmentSuccess = function (dataString) { //TODO to be deleted!
         var data = eval(dataString);
         //remove the error/notice messageBox
         FP.notifier.removeBox();
@@ -467,7 +468,7 @@ var exports = window.exports || {};
             fatpopcorn.decorateContainerWithHtml();
             fatpopcorn.activateTheClickedTab();
             fatpopcorn.bindRemoteEvents();
-            FatPopcorn.createAttachmentButton();
+            fatpopcorn.createAttachmentButton();
 
             fatpopcorn.addGripToElement($element);
 

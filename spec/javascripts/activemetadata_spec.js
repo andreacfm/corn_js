@@ -281,7 +281,7 @@ describe("FatPopcorn", function () {
             it("should open the stream tab after uploading a file", function () {
                 $('.fatpopcorn_grip').first().click();
                 $('.edit-tab').click();
-                FatPopcorn.onCompleteUpload(0, "pippo.js", {success:true}, {getQueue:function () {
+                new FatPopcorn($('.fatpopcorn_grip').first(),{current_user: 1}).onCompleteUpload(0, "pippo.js", {success:true}, {getQueue:function () {
                     return 0
                 }});
                 expect($('.stream')).toBeVisible();
