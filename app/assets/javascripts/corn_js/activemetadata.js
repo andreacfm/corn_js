@@ -124,14 +124,15 @@ var exports = window.exports || {};
         self.containerOf().hide();
     };
 
-    FP.prototype.addGripToElement = function ($element) {
-        if (!$element.parent().is('span.fatpopcorn_grip') && this.defaults.autoWrap) {
-            $element.wrap('<span class="fatpopcorn_grip"/>')
+    FP.prototype.addGripToElement = function () {
+        var self = this;
+        if (!self.$element.parent().is('span.fatpopcorn_grip') && this.defaults.autoWrap) {
+            self.$element.wrap('<span class="fatpopcorn_grip"/>')
         }
-        return $element.parent();
+        return self.$element.parent();
     };
-    FP.prototype.gripOf = function ($element) {
-        return $element.parent();
+    FP.prototype.gripOf = function () {
+        return this.$element.parent();
     };
 
     FP.prototype.activateTheClickedTab = function () {
@@ -167,7 +168,7 @@ var exports = window.exports || {};
         // should do something?
     };
     FP.prototype.historyEvent = function () {
-        $.ajax($(this.baseCssClass + ' .history').attr('data-url')).success(FP.getHistorySuccess);
+        $.ajax($(this.baseCssClass + ' .history').attr('data-url')).success(self.getHistorySuccess);
     };
     FP.prototype.containerVisible = function () {
         return this.containerOf().is(':visible');
@@ -341,16 +342,12 @@ var exports = window.exports || {};
                 success('success.rails', function (data) { self.getStreamSuccess(data.streamBody); }).fail(FP.deleteFailure);
     };
 
-    FP.deleteSuccess = function () {
-        $(FP.baseCssClass() + ' .stream-tab').click();
-    };
-
     FP.deleteFailure = function () {
     };
 
-    FP.getHistorySuccess = function (data) {
-        $(FP.baseCssClass() + ' .history .content').empty();
-        $(FP.baseCssClass() + ' .history .content').append(data);
+    FP.prototype.getHistorySuccess = function (data) {
+        $(this.baseCssClass + ' .history .content').empty();
+        $(this.baseCssClass + ' .history .content').append(data);
     };
 
     var SC = exports.StickyCorn = function ($element, defaults) {
@@ -432,9 +429,9 @@ var exports = window.exports || {};
             fatpopcorn.bindRemoteEvents();
             fatpopcorn.createAttachmentButton();
 
-            fatpopcorn.addGripToElement($element);
+            fatpopcorn.addGripToElement();
 
-            fatpopcorn.gripOf($element).children().click(function (e) {
+            fatpopcorn.gripOf().children().click(function (e) {
                 $(e.target).data('elementMatched', true);
             });
 
@@ -442,7 +439,7 @@ var exports = window.exports || {};
                 $(e.target).data('elementMatched', false);
             });
 
-            fatpopcorn.gripOf($element).click(function (e) {
+            fatpopcorn.gripOf().click(function (e) {
                 if ($(e.target).data('elementMatched')) return;
 
                 e.stopPropagation();

@@ -334,7 +334,7 @@ describe("FatPopcorn", function () {
             it("should append the history result after a GET has being made", function () {
                 $('.fatpopcorn_grip').first().click();
                 $('.history-tab').click();
-                FatPopcorn.getHistorySuccess(this.success_response.recv_stream.success.responseText);
+                new FatPopcorn($('.fatpopcorn_grip').first(),{current_user: 1}).getHistorySuccess(this.success_response.recv_stream.success.responseText);
                 expect($('.fatpopcorn .history .content .time')).toExist();
             });
 
