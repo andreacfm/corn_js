@@ -1,4 +1,4 @@
-var exports = {};
+var exports = window.exports || {};
 
 (function (exports) {
 
@@ -167,8 +167,6 @@ var exports = {};
                 popcorn.setContainerPosition();
             });
         }
-
         return this.each(_setUpElement);
-
     };
 })(jQuery, exports);

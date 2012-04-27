@@ -9,7 +9,7 @@ var exports = window.exports || {};
 
         function _anOptionIsMissingIn(options) {
             if (!options.autoWrap) options.autoWrap = false;
-            //TODO check if is the case to avoid looking for token and modelId
+
             return options.current_user === undefined;
         }
 
@@ -34,8 +34,12 @@ var exports = window.exports || {};
         self.setupEditForm();
         self.setupWatchlistUrl();
 
-        if (self.hasStream()) { $(self.baseCssClass + ' .stream-tab').click(); }
-        else { $(self.baseCssClass + ' .edit-tab').click(); }
+        if (self.hasStream()) {
+            $(self.baseCssClass + ' .stream-tab').click();
+        }
+        else {
+            $(self.baseCssClass + ' .edit-tab').click();
+        }
     };
 
     FP.prototype.setupStreamUrl = function () {
@@ -116,10 +120,7 @@ var exports = window.exports || {};
                     '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
         }
 
-
-        if (self.containerOf().size() == 0) {
-            $('body').append(_html());
-        }
+        if (self.containerOf().size() == 0) { $('body').append(_html()); }
 
         self.containerOf().hide();
     };
@@ -131,9 +132,7 @@ var exports = window.exports || {};
         }
         return self.$element.parent();
     };
-    FP.prototype.gripOf = function () {
-        return this.$element.parent();
-    };
+    FP.prototype.gripOf = function () { return this.$element.parent(); };
 
     FP.prototype.activateTheClickedTab = function () {
         var self = this;
@@ -144,7 +143,7 @@ var exports = window.exports || {};
 
                 function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); }
                 function _currentTabName() { return _tabBodyName($(that).attr('class')); }
-                function _currentTab() { return $('.' + _currentTabName()); }
+                function _currentTab() { return $(self.baseCssClass + ' .' + _currentTabName()); }
                 function _currentTabMethod() { return _currentTabName() + "Event"; }
 
                 e.stopPropagation();
@@ -192,44 +191,27 @@ var exports = window.exports || {};
 
     FP.prototype.bindRemoteEvents = function () {
         var self = this;
-
-        function _startWatching() {
-            _callWatchlistService({authenticity_token:FP.formToken() });
-        }
-
-        function _stopWatching() {
-            _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() });
-        }
-
+        function _startWatching(e) { _callWatchlistService({authenticity_token:FP.formToken() }); }
+        function _stopWatching(e) { _callWatchlistService({_method:'delete', authenticity_token:FP.formToken() }); }
         function _callWatchlistService(data) {
             var url = $(self.baseCssClass + ' .edit').attr('data-url');
             $.post(url, data, {dataType:'script'}).done(FP.watchingServiceSuccess).error(FP.watchingServiceFail);
         }
 
-        $(self.baseCssClass).unbind('click').click(function (e) {
-            e.stopPropagation();
-        });
-        $(self.baseCssClass + ' #watchlist_true').unbind('click').click(function () {
-            _startWatching()
-        });
-        $(self.baseCssClass + ' #watchlist_false').unbind('click').click(function () {
-            _stopWatching();
-        });
+        $(self.baseCssClass).unbind('click').click(function (e) { e.stopPropagation(); });
+        $(self.baseCssClass + ' #watchlist_true').unbind('click').click(function (e) { _startWatching.call(self,e); });
+        $(self.baseCssClass + ' #watchlist_false').unbind('click').click(function (e) { _stopWatching.call(self,e); });
         $(self.baseCssClass + ' #send_note').unbind('click').click(function () {
             if ($(self.baseCssClass + ' #note_text').val() == '') return false;
 
-            $.post($(self.baseCssClass + ' form#notes_form').attr('action'), $(self.baseCssClass + 'form#notes_form').serialize())
-                    .success('success.rails', self.newNoteOrAttachmentSuccess)
+            $.post($(self.baseCssClass + ' form#notes_form').attr('action'), $(self.baseCssClass + ' form#notes_form').serialize())
+                    .success('success.rails', function(e){self.newNoteOrAttachmentSuccess.call(self,e);})
                     .fail(function () {
                         FP.displayFailure("Si è verificato un errore.")
                     });
         });
-        $('.loader').ajaxSend(function () {
-            $(this).show();
-        });
-        $('.loader').ajaxComplete(function () {
-            $(this).hide();
-        });
+        $(self.baseCssClass + '.loader').ajaxSend(function () { $(this).show(); });
+        $(self.baseCssClass + '.loader').ajaxComplete(function () { $(this).hide(); });
     };
 
     /********
@@ -329,9 +311,9 @@ var exports = window.exports || {};
     };
 
     FP.prototype.deleteStream = function (e, urlPrefix) {
+        var self = this;
         function _url() { return urlPrefix + '/' + $(e.target).parent().attr('data-id'); }
-
-        $.post(_url(), {_method:'delete'}).success('success.rails', self.newNoteOrAttachmentSuccess).fail(FP.deleteFailure);
+        $.post(_url(), {_method:'delete'}).success('success.rails', function(e){self.newNoteOrAttachmentSuccess.call(self,e);}).fail(FP.deleteFailure);
     };
 
     FP.prototype.starUnstar = function (e, urlPrefix) {
@@ -384,7 +366,7 @@ var exports = window.exports || {};
 })(window.exports);
 
 (function ($, FatPopcorn, StickyCorn) {
-    console.log("test!");
+
     $.fn.stickycorn = function (defaults) {
         var self = this;
 
@@ -418,7 +400,6 @@ var exports = window.exports || {};
 
         function _setUpElement() {
             var $element = $(this), fatpopcorn = new FatPopcorn($element, defaults);
-
             $(window).click(function () {
                 fatpopcorn.hideContainer();
                 FatPopcorn.notifier.removeBox();
