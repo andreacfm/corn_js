@@ -9,7 +9,6 @@ var exports = window.exports || {};
 
         function _anOptionIsMissingIn(options) {
             if (!options.autoWrap) options.autoWrap = false;
-
             return options.current_user === undefined;
         }
 
@@ -335,6 +334,7 @@ var exports = window.exports || {};
 
     var SC = exports.StickyCorn = function ($element, defaults) {
         this.$element = $element;
+        if (defaults.current_user === undefined) throw("parameter [current_user] is required");
         this.defaults = defaults;
         this.baseName = "stickycorn";
         this.baseCssClass = ".stickycorn";
@@ -380,6 +380,7 @@ var exports = window.exports || {};
             stickycorn.decorateContainerWithHtml();
             stickycorn.activateTheClickedTab();
             stickycorn.bindRemoteEvents();
+            stickycorn.init();
 
             return this;
         }
