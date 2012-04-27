@@ -18,6 +18,7 @@ var exports = window.exports || {};
         self.$element = $element;
         self.defaults = defaults;
         self.defaults.modelName = "#";
+        self.baseName = "fatpopcorn";
         self.baseCssClass = ".fatpopcorn";
     };
 
@@ -33,7 +34,7 @@ var exports = window.exports || {};
         self.setupHistoryUrl();
         self.setupEditForm();
         self.setupWatchlistUrl();
-
+        self.bindRemoteEvents();
         if (self.hasStream()) {
             $(self.baseCssClass + ' .stream-tab').click();
         }
@@ -95,17 +96,6 @@ var exports = window.exports || {};
         return $(this.baseCssClass).first();
     };
 
-    FP.prototype.onCompleteUpload = function (id, fileName, response, qq) {
-        if (qq.getQueue().length == 1) {
-            $('.qq-upload-list').empty();
-        }
-        if (!response.success) {
-            FP.displayFailure("Si è verificato un errore.");
-            return;
-        }
-        this.newNoteOrAttachmentSuccess(response);
-    };
-
     FP.prototype.decorateContainerWithHtml = function () {
         var self = this;
 
@@ -113,10 +103,10 @@ var exports = window.exports || {};
             return '<div class="fatpopcorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
                     '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
                     '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
-                    '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' +
+                    '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="fatpopcorn_watchlist_true" value="true" type="radio"><label class="true" for="fatpopcorn_watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="fatpopcorn_watchlist_false" value="false" type="radio"><label class="false" for="fatpopcorn_watchlist_false"><span>Off</span></label></div></div><hr/>' +
                     '<div class="note"><h1>Nota</h1><form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
                     '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note">Inserisci</a></form></div><hr/>' +
-                    '<div class="attachment"><h1>Allegati</h1><div id="fatpopcorn_attach"></div><div id="attach_output"></div></div>' +
+                    '<div class="attachment"><h1>Allegati</h1><div class="edit-attach"></div><div id="attach_output"></div></div>' +
                     '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
         }
 
@@ -136,7 +126,6 @@ var exports = window.exports || {};
 
     FP.prototype.activateTheClickedTab = function () {
         var self = this;
-        console.log(self.baseCssClass + ' .header > ul > li');
         $(self.baseCssClass + ' .header > ul > li').unbind('click').click(
             function (e) {
                 var that = this;
@@ -152,7 +141,6 @@ var exports = window.exports || {};
                 $(self.baseCssClass + ' .active').removeClass('active');
                 $(self.baseCssClass + ' .popcorn-body > div:not(.header)').hide();
 
-                console.log(_currentTab());
                 _currentTab().show();
 
                 $(that).addClass('active');
@@ -162,13 +150,14 @@ var exports = window.exports || {};
 
     FP.prototype.streamEvent = function () {
         var self = this;
-        $.ajax($(self.baseCssClass + ' .stream').attr('data-url')).success(self.getStreamSuccess);
+        $.ajax($(self.baseCssClass + ' .stream').attr('data-url')).success(function(e){self.getStreamSuccess.call(self,e)});
     };
     FP.prototype.editEvent = function () {
         // should do something?
     };
     FP.prototype.historyEvent = function () {
-        $.ajax($(this.baseCssClass + ' .history').attr('data-url')).success(self.getHistorySuccess);
+        var self = this;
+        $.ajax($(this.baseCssClass + ' .history').attr('data-url')).success(function(e){self.getHistorySuccess.call(self,e)});
     };
     FP.prototype.containerVisible = function () {
         return this.containerOf().is(':visible');
@@ -178,15 +167,28 @@ var exports = window.exports || {};
 
     FP.prototype.createAttachmentButton = function (actionUrl) {
         var self = this;
+
         delete self.uploader;
+
         self.uploader = new qq.FileUploader({
-            element:document.getElementById('fatpopcorn_attach'),
+            element:$(self.baseCssClass + ' .edit-attach').get(0),
             allowedExtensions:[],
             params:{ authenticity_token:FP.formToken(), target:"attach_output"},
             uploadButtonText:'Inserisci',
             action:actionUrl,
             multiple:true,
-            onComplete:self.onCompleteUpload
+            onComplete: function (id, fileName, response, qq) {
+                    if (qq.getQueue().length == 1) {
+                        $('.qq-upload-list').empty();
+                    }
+                    if (!response.success) {
+                        FP.displayFailure("Si è verificato un errore.");
+                        return;
+                    }
+                    self.newNoteOrAttachmentSuccess(response);
+                }
+
+
         });
     };
 
@@ -200,19 +202,17 @@ var exports = window.exports || {};
         }
 
         $(self.baseCssClass).unbind('click').click(function (e) { e.stopPropagation(); });
-        $(self.baseCssClass + ' #watchlist_true').unbind('click').click(function (e) { _startWatching.call(self,e); });
-        $(self.baseCssClass + ' #watchlist_false').unbind('click').click(function (e) { _stopWatching.call(self,e); });
+        $('#' + self.baseName + '_watchlist_true').unbind('click').click(function (e) { _startWatching.call(self,e); });
+        $('#' + self.baseName + '_watchlist_false').unbind('click').click(function (e) { _stopWatching.call(self,e); });
         $(self.baseCssClass + ' #send_note').unbind('click').click(function () {
             if ($(self.baseCssClass + ' #note_text').val() == '') return false;
 
             $.post($(self.baseCssClass + ' form#notes_form').attr('action'), $(self.baseCssClass + ' form#notes_form').serialize())
                     .success('success.rails', function(e){self.newNoteOrAttachmentSuccess.call(self,e);})
-                    .fail(function () {
-                        FP.displayFailure("Si è verificato un errore.")
-                    });
+                    .fail(function () { FP.displayFailure("Si è verificato un errore.") });
         });
-        $(self.baseCssClass + '.loader').ajaxSend(function () { $(this).show(); });
-        $(self.baseCssClass + '.loader').ajaxComplete(function () { $(this).hide(); });
+        $(self.baseCssClass + ' .loader').ajaxSend(function () { $(this).show(); });
+        $(self.baseCssClass + ' .loader').ajaxComplete(function () { $(this).hide(); });
     };
 
     /********
@@ -336,7 +336,9 @@ var exports = window.exports || {};
     var SC = exports.StickyCorn = function ($element, defaults) {
         this.$element = $element;
         this.defaults = defaults;
-        this.baseCssClass = ".stickycorn"
+        this.baseName = "stickycorn";
+        this.baseCssClass = ".stickycorn";
+
     };
 
     SC.prototype = new FP(null, {current_user:-1});
@@ -352,10 +354,10 @@ var exports = window.exports || {};
             return '<div class="stickycorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
                     '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
                     '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
-                    '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="watchlist_true" value="true" type="radio"><label class="true" for="watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="watchlist_false" value="false" type="radio"><label class="false" for="watchlist_false"><span>Off</span></label></div></div><hr/>' +
+                    '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="stickycorn_watchlist_true" value="true" type="radio"><label class="true" for="stickycorn_watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="stickycorn_watchlist_false" value="false" type="radio"><label class="false" for="stickycorn_watchlist_false"><span>Off</span></label></div></div><hr/>' +
                     '<div class="note"><h1>Nota</h1><form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
                     '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note">Inserisci</a></form></div><hr/>' +
-                    '<div class="attachment"><h1>Allegati</h1><div id="fatpopcorn_attach"></div><div id="attach_output"></div></div>' +
+                    '<div class="attachment"><h1>Allegati</h1><div class="edit-attach"></div><div id="attach_output"></div></div>' +
                     '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><span class="loader"></span></div>';
         }
 
@@ -409,9 +411,6 @@ var exports = window.exports || {};
 
             fatpopcorn.decorateContainerWithHtml();
             fatpopcorn.activateTheClickedTab();
-            fatpopcorn.bindRemoteEvents();
-            fatpopcorn.createAttachmentButton();
-
             fatpopcorn.addGripToElement();
 
             fatpopcorn.gripOf().children().click(function (e) {
@@ -428,7 +427,6 @@ var exports = window.exports || {};
                 e.stopPropagation();
                 e.preventDefault();
                 fatpopcorn.init();
-
                 if (fatpopcorn.containerVisible()) {
                     fatpopcorn.hideContainer();
                     return;

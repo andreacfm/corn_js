@@ -18,13 +18,13 @@ describe("how stickycorn", function () {
             expect($('.stickycorn .history')).not.toBeVisible();
         });
         it("hiding stream tab by default", function () {
-            expect($('.stream-tab')).toHandle('click');
+            expect($('.stickycorn .stream-tab')).toHandle('click');
         });
         it("should have a click handle on edit tab", function () {
-            expect($('.edit-tab')).toHandle('click');
+            expect($('.stickycorn .edit-tab')).toHandle('click');
         });
         it("should have a click handle on history tab", function () {
-            expect($('.history-tab')).toHandle('click');
+            expect($('.stickycorn .history-tab')).toHandle('click');
         });
         it("should make the tab active when clicking edit-tab", function () {
             $('.edit-tab').first().click();
