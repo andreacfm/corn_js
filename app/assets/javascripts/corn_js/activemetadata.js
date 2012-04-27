@@ -136,13 +136,13 @@ var exports = window.exports || {};
 
     FP.prototype.activateTheClickedTab = function () {
         var self = this;
-
+        console.log(self.baseCssClass + ' .header > ul > li');
         $(self.baseCssClass + ' .header > ul > li').unbind('click').click(
             function (e) {
                 var that = this;
 
-                function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); }
                 function _currentTabName() { return _tabBodyName($(that).attr('class')); }
+                function _tabBodyName(tabName) { return tabName.split('-')[0].trim(); }
                 function _currentTab() { return $(self.baseCssClass + ' .' + _currentTabName()); }
                 function _currentTabMethod() { return _currentTabName() + "Event"; }
 
@@ -152,6 +152,7 @@ var exports = window.exports || {};
                 $(self.baseCssClass + ' .active').removeClass('active');
                 $(self.baseCssClass + ' .popcorn-body > div:not(.header)').hide();
 
+                console.log(_currentTab());
                 _currentTab().show();
 
                 $(that).addClass('active');
@@ -373,9 +374,10 @@ var exports = window.exports || {};
 
         function _setUpElement() {
             var $element = $(this), stickycorn = new StickyCorn($element, defaults);
+
+            stickycorn.decorateContainerWithHtml();
             stickycorn.activateTheClickedTab();
             stickycorn.bindRemoteEvents();
-            stickycorn.decorateContainerWithHtml();
 
             return this;
         }
