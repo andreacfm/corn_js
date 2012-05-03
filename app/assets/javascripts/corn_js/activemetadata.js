@@ -175,11 +175,19 @@ var exports = window.exports || {};
         var self = this;
 
         delete self.uploader;
+        var params = { authenticity_token:FP.formToken(), target:"attach_output"};
+
+        if (self.defaults.group !== undefined) {
+            params.group= self.defaults.group;
+        }
+        if (self.defaults.starOnCreate) {
+            params.starred = true;
+        }
 
         self.uploader = new qq.FileUploader({
             element:$(self.baseCssClass + ' .edit-attach').get(0),
             allowedExtensions:[],
-            params:{ authenticity_token:FP.formToken(), target:"attach_output"},
+            params:params,
             uploadButtonText:'Inserisci',
             action:actionUrl,
             multiple:true,
@@ -193,8 +201,6 @@ var exports = window.exports || {};
                     }
                     self.newNoteOrAttachmentSuccess(response);
                 }
-
-
         });
     };
 
@@ -317,13 +323,14 @@ var exports = window.exports || {};
     FP.prototype.getStreamSuccess = function (data) {
         var self = this;
         $(this.baseCssClass + ' .stream .content').html(data);
+        $(this.baseCssClass + ' .stream .attachment span.delete').click(function(e){self.deleteAttachment.call(self, e)});
+        $(this.baseCssClass + ' .stream .note span.delete').click(function(e){self.deleteNote.call(self, e)});
+
         if (this.defaults.groupedStream) {
             $(this.baseCssClass + ' .stream span.star').remove();
             return;
         }
 
-        $(this.baseCssClass + ' .stream .attachment span.delete').click(function(e){self.deleteAttachment.call(self, e)});
-        $(this.baseCssClass + ' .stream .note span.delete').click(function(e){self.deleteNote.call(self, e)});
         $(this.baseCssClass + ' .stream span.star').click(function(e){self.starUnstar.call(self, e)});
     };
 
@@ -342,7 +349,10 @@ var exports = window.exports || {};
     FP.prototype.deleteStream = function (e, urlPrefix) {
         var self = this;
         function _url() { return urlPrefix + '/' + $(e.target).parent().attr('data-id'); }
-        $.post(_url(), {_method:'delete'}).success('success.rails', function(e){self.newNoteOrAttachmentSuccess.call(self,e);}).fail(FP.deleteFailure);
+        $.post(_url(), {_method:'delete'}).success('success.rails', function(e){
+            self.newNoteOrAttachmentSuccess.call(self,e);
+            $(window).trigger("active_metadata.afterDelete");
+        }).fail(FP.deleteFailure);
     };
 
     FP.prototype.starUnstar = function (e, urlPrefix) {
@@ -350,7 +360,10 @@ var exports = window.exports || {};
         var url = $(e.target).attr('data-url');
 
         $.post(url, {_method:'put'}).
-                success('success.rails', function (data) { self.getStreamSuccess(data.streamBody); }).fail(FP.deleteFailure);
+                success('success.rails', function (data) {
+                    self.getStreamSuccess(data.streamBody);
+                    $(window).trigger("active_metadata.afterStarUnstar") }
+        ).fail(FP.deleteFailure);
     };
 
     FP.deleteFailure = function () {
@@ -381,13 +394,13 @@ var exports = window.exports || {};
 
         function _html() {
             return '<div class="stickycorn"><div class="popcorn-body"><div class="header"><ul><li class="stream-tab"><div>stream</div></li>' +
-                    '<li class="edit-tab"><div>edit</div></li><li class="history-tab"><div>history</div></li></ul></div>' +
+                    '<li class="edit-tab"><div>edit</div></li></ul></div>' +
                     '<div class="stream"><div class="content"></div></div><div class="history"><div class="content"></div></div>' +
                     '<div class="edit"><div class="watchlist"><h1>Watchlist</h1><div class="on-off _23states"><input name="watchlist" id="stickycorn_watchlist_true" value="true" type="radio"><label class="true" for="stickycorn_watchlist_true"><span>On</span></label><input checked="checked" name="watchlist" id="stickycorn_watchlist_false" value="false" type="radio"><label class="false" for="stickycorn_watchlist_false"><span>Off</span></label></div></div><hr/>' +
                     '<div class="note"><h1>Nota</h1><form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
                     '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note">Inserisci</a></form></div><hr/>' +
                     '<div class="attachment"><h1>Allegati</h1><div class="edit-attach"></div><div id="attach_output"></div></div>' +
-                    '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><span class="loader"></span></div>';
+                    '</div><span class="loader"></span></div></div>';
         }
 
         self.$element.append(_html());
