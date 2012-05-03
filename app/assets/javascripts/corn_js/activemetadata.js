@@ -205,10 +205,11 @@ var exports = window.exports || {};
         $('#' + self.baseName + '_watchlist_false').unbind('click').click(function (e) { _stopWatching.call(self,e); });
         $(self.baseCssClass + ' #send_note').unbind('click').click(function () {
             function data() {
+                var qs = $(self.baseCssClass + ' form#notes_form').serialize();
                 if (self.defaults.group !== undefined) {
-                    return $(self.baseCssClass + ' form#notes_form').serialize() + "&group=" + self.defaults.group;
+                    qs = qs + "&group=" + self.defaults.group;
                 }
-                return $(self.baseCssClass + ' form#notes_form').serialize();
+                return qs;
             }
 
             if ($(self.baseCssClass + ' #note_text').val() == '') return false;

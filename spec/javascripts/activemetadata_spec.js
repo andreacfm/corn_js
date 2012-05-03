@@ -380,6 +380,28 @@ describe("FatPopcorn", function () {
                 expect(request.method).toBe("POST");
             });
 
+            it("should call a uri with group when options group is provided", function () {
+                spyOn($, 'ajax').andCallThrough();
+                $('.open_popcorn').fatpopcorn({token:'TOKEN', current_user:1, autoWrap:true, group : "my_group"});
+                $('.fatpopcorn_grip').first().click();
+                $('.edit-tab').click();
+                $('textarea#note_text').val('pippo');
+                $('#send_note').click();
+                var request = mostRecentAjaxRequest();
+                expect(request.method).toBe("POST");
+                expect(request.params).toContain("my_group");
+            });
+
+            it("should not call a uri containing a group when option is not provided", function () {
+                spyOn($, 'ajax').andCallThrough();
+                $('.fatpopcorn_grip').first().click();
+                $('.edit-tab').click();
+                $('textarea#note_text').val('pippo');
+                $('#send_note').click();
+                var request = mostRecentAjaxRequest();
+                expect(request.params).not.toContain("my_group");
+            });
+
             it("should load true or false in watchlist input accordingly to data-watcher")
 
             it("should handle click on the delete note span", function () {
