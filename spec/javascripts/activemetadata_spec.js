@@ -184,7 +184,7 @@ describe("FatPopcorn", function () {
                 $first.attr('data-watching', 'true');
                 $('.fatpopcorn_grip').first().click();
                 $('.fatpopcorn .edit-tab').click();
-                expect($('#watchlist_true')).toBeChecked();
+                expect($('#fatpopcorn_watchlist_true')).toBeChecked();
             });
 
         });
@@ -280,11 +280,7 @@ describe("FatPopcorn", function () {
 //                expect(new FatPopcorn($('.fatpopcorn_grip').first(),{current_user: 1}).uploader._options.action).toEqual('/active_metadata/modelName/1/my_label/attachments');
 //            });
             it("should open the stream tab after uploading a file", function () {
-                $('.fatpopcorn_grip').first().click();
-                $('.edit-tab').click();
-                new FatPopcorn($('.fatpopcorn_grip').first(),{current_user: 1}).onCompleteUpload(0, "pippo.js", {success:true}, {getQueue:function () {
-                    return 0
-                }});
+                new FatPopcorn($('.fatpopcorn_grip').first().click(), {current_user:1}).newNoteOrAttachmentSuccess("({fieldId:'#addr_two', streamItemCount: 0, streamBody: 'fake body', modelName: 'modelName', fieldName: 'my_label2'})");
                 expect($('.stream')).toBeVisible();
             });
 
@@ -366,8 +362,8 @@ describe("FatPopcorn", function () {
             it("watchlist labels/input should handle click", function () {
                 $('.fatpopcorn_grip').first().click();
                 $('.edit-tab').click();
-                expect($('#watchlist_false')).toHandle('click');
-                expect($('#watchlist_true')).toHandle('click');
+                expect($('#fatpopcorn_watchlist_false')).toHandle('click');
+                expect($('#fatpopcorn_watchlist_true')).toHandle('click');
             });
 
             it("should trigger an ajax request when clicking on watchlist", function () {
@@ -375,7 +371,7 @@ describe("FatPopcorn", function () {
 
                 $('.fatpopcorn_grip').first().click();
                 $('.edit-tab').click();
-                $('#watchlist_true').click();
+                $('#fatpopcorn_watchlist_true').click();
                 var request = mostRecentAjaxRequest();
 
                 request.response(this.success_response.recv_stream.success);
