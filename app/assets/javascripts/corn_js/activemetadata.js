@@ -70,7 +70,14 @@ var exports = window.exports || {};
         return this.urlPrefix() + '/notes';
     };
     FP.prototype.streamUrl = function () {
-        return this.urlPrefix() + '/stream';
+        var url = this.urlPrefix() + '/stream';
+        if(this.defaults.groupedStream){
+            url = "/active_metadata/groups/" + this.defaults.group + "/stream"
+        }
+        if(this.defaults.starredStream){
+            url += "?starred=true"
+        }
+        return url;
     };
     FP.prototype.attachmentsUrl = function () {
         return this.urlPrefix() + '/attachments';
@@ -206,8 +213,12 @@ var exports = window.exports || {};
         $(self.baseCssClass + ' #send_note').unbind('click').click(function () {
             function data() {
                 var qs = $(self.baseCssClass + ' form#notes_form').serialize();
+
                 if (self.defaults.group !== undefined) {
                     qs = qs + "&group=" + self.defaults.group;
+                }
+                if (self.defaults.starOnCreate) {
+                    qs = qs + "&starred=true";
                 }
                 return qs;
             }
@@ -295,12 +306,22 @@ var exports = window.exports || {};
         $(this.baseCssClass + ' .popcorn-body > div:not(.header)').hide();
         $(this.baseCssClass + ' .stream').show();
         $(this.baseCssClass + ' .stream-tab').addClass('active');
-        this.getStreamSuccess(data.streamBody);
+
+        if (this.defaults.groupedStream) {
+            $(this.baseCssClass + ' .stream-tab').click();
+        } else {
+            this.getStreamSuccess(data.streamBody);
+        }
     };
 
     FP.prototype.getStreamSuccess = function (data) {
         var self = this;
         $(this.baseCssClass + ' .stream .content').html(data);
+        if (this.defaults.groupedStream) {
+            $(this.baseCssClass + ' .stream span.star').remove();
+            return;
+        }
+
         $(this.baseCssClass + ' .stream .attachment span.delete').click(function(e){self.deleteAttachment.call(self, e)});
         $(this.baseCssClass + ' .stream .note span.delete').click(function(e){self.deleteNote.call(self, e)});
         $(this.baseCssClass + ' .stream span.star').click(function(e){self.starUnstar.call(self, e)});

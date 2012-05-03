@@ -237,6 +237,17 @@ describe("FatPopcorn", function () {
                 $testElementGrip.click();
                 expect($('.fatpopcorn .stream').attr('data-url')).toEqual("/active_metadata/anotherModelName/2/my_label/stream");
             });
+
+            it("should define the correct url when groupedStream is true", function () {
+                var f = new FatPopcorn($first, {current_user:1, group: "my_group", groupedStream : true});
+                expect(f.streamUrl()).toBe('/groups/my_group/stream');
+            });
+
+            it("should define the correct url when groupedStream is true and starredStream is true", function () {
+                var f = new FatPopcorn($first, {current_user:1, group: "my_group", groupedStream : true, starredStream : true});
+                expect(f.streamUrl()).toBe('/groups/my_group/stream?starred=true');
+            });
+
         });
 
         describe("ajax interactions", function () {
