@@ -204,9 +204,16 @@ var exports = window.exports || {};
         $('#' + self.baseName + '_watchlist_true').unbind('click').click(function (e) { _startWatching.call(self,e); });
         $('#' + self.baseName + '_watchlist_false').unbind('click').click(function (e) { _stopWatching.call(self,e); });
         $(self.baseCssClass + ' #send_note').unbind('click').click(function () {
+            function data() {
+                if (self.defaults.group !== undefined) {
+                    return $(self.baseCssClass + ' form#notes_form').serialize() + "&group=" + self.defaults.group;
+                }
+                return $(self.baseCssClass + ' form#notes_form').serialize();
+            }
+
             if ($(self.baseCssClass + ' #note_text').val() == '') return false;
 
-            $.post($(self.baseCssClass + ' form#notes_form').attr('action'), $(self.baseCssClass + ' form#notes_form').serialize())
+            $.post($(self.baseCssClass + ' form#notes_form').attr('action'), data())
                     .success('success.rails', function(e){self.newNoteOrAttachmentSuccess.call(self,e);})
                     .fail(function () { FP.displayFailure("Si è verificato un errore.") });
         });
