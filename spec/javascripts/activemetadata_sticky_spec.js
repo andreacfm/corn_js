@@ -23,9 +23,6 @@ describe("how stickycorn", function () {
         it("should have a click handle on edit tab", function () {
             expect($('.stickycorn .edit-tab')).toHandle('click');
         });
-        it("should have a click handle on history tab", function () {
-            expect($('.stickycorn .history-tab')).toHandle('click');
-        });
         it("should make the tab active when clicking edit-tab", function () {
             $('.edit-tab').first().click();
             expect($('.edit-tab')).toHaveClass('active');
