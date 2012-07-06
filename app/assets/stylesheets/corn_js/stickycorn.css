@@ -1,15 +1,13 @@
 .stickycorn {
-  width: 100%;
   min-height: 550px;
   position: absolute;
-  background: none repeat scroll 0 0 #FFFFFF;
   border: medium none;
-
   color: #444444;
   font-size: 11px;
   overflow: visible;
   margin-top: 4px;
   width: 160px;
+  z-index: 0;
 }
 
 /* ----------------*/
@@ -19,15 +17,11 @@
 /* generic classes */
 .stickycorn {
   min-width: 360px;
-  /*min-height: 345px;*/
-  border: 1px solid #8FA2B4;
-  border-radius: 5px 5px 5px 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .15);
 }
 .stickycorn h1 {
   font: bold 12px/14px "Segoe UI","Lucida Grande",Arial,sans-serif;
-  margin: 12px 0 4px 0;
-  padding-left: 15px;
+  margin: 12px 0 4px 0 !important;
+  padding-left: 15px !important;
   font-size: 12px;
   color: #303030;
 }
@@ -56,8 +50,8 @@
   width: 100% !important;
   height: 34px !important;
   background-color: #E4EDF5 !important;
-  border-bottom: 1px #8FA2B4 solid!important;
-  border-radius: 5px 5px 0px 0px !important;
+  border: 1px #8FA2B4 solid!important;
+  border-radius: 5px 5px 5px 5px !important;
   float: none !important;
 }
 .stickycorn .header ul {
@@ -198,7 +192,9 @@
   margin: 10px 10px 16px 10px;
 }
 .stickycorn .edit .note {
+  float: left;
   margin: 10px 10px 26px 10px;
+    width: 94% !important;
 }
 .stickycorn .edit #send_note {
   padding-right: 6px;
@@ -291,7 +287,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 810;
+  z-index: 10;
 }
 .stickycorn .qq-upload-drop-area {
     position:absolute; 
@@ -301,7 +297,7 @@
     height:100%;
     max-height: 100px;
     min-height: 50px;
-    z-index:802;
+    z-index: 2;
     background:#ffffff; 
     text-align:center; 
     border: 2px dashed #566476;
