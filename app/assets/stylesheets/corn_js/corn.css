@@ -13,7 +13,6 @@ a:hover {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.5);
   color: #444444;
   font-size: 11px;
-  width: 160px;
   min-height:20px;
   overflow: visible;
   position: absolute;
@@ -21,7 +20,7 @@ a:hover {
   margin-top: 4px;
 }
 .popcorn .popcorn-body {
-  padding: 5px;
+  padding: 0;
 }
 .popcorn .popcorn-tail {
   background: url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAKCAYAAABWiWWfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJlJREFUeNpi/P//PwM+wMjIqAKkQPgOUO0dfGqZCBikm5iYGPTmzZsZQUFBPkC+Nl6bQS7DhoEAZFDZjx8/PgL5/79+/foWaGABUFwbpx5iDIIBkIG+vr55uAzEalBMTEwJukHEGEiSQYQMJNkgLAZqoRgGBDqkGAQDX758eY1sINygb9++vf9PBkA2kAFoEBO5BqEZyAQQYAAiweCss5BeRQAAAABJRU5ErkJggg==") no-repeat scroll 0 100% transparent;
