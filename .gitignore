@@ -6,3 +6,5 @@ spec/dummy/db/
 spec/dummy/log/
 spec/dummy/tmp/
 spec/dummy/.sass-cache
+.idea
+.jhw-cache
