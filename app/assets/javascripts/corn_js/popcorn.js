@@ -3,13 +3,17 @@ var exports = window.exports || {};
 (function (exports) {
 
     var Popcorn = exports.Popcorn = function ($element, defaults) {
+
         this.$element = $element;
         this.$anchor = this.$element;
         this.defaults = defaults;
+
     };
 
     Popcorn.prototype.decorateContainerWithHtml = function () {
-        if (this.positionType) { throw "inferPositionType must be called after decorateContainerWithHtml"; }
+        if (this.positionType) {
+            throw "inferPositionType must be called after decorateContainerWithHtml";
+        }
 
         this.containerOf().hide().addClass('popcorn');
 
@@ -24,10 +28,16 @@ var exports = window.exports || {};
         this.$anchor = this.$element;
 
         function _createPositionType() {
-            if (self.$element.offset().left < 1) { self.$anchor = self.$element.parent(); }
+            if (self.$element.offset().left < 1) {
+                self.$anchor = self.$element.parent();
+            }
 
-            if (self.collideLeft()) { return new LeftPosition(self);  }
-            else if (self.collideRight()) { return new RightPosition(self); }
+            if (self.collideLeft()) {
+                return new LeftPosition(self);
+            }
+            else if (self.collideRight()) {
+                return new RightPosition(self);
+            }
             return new CenterPosition(self);
         }
 
@@ -43,10 +53,16 @@ var exports = window.exports || {};
 
     var LeftPosition = function (popcorn) {
         // TODO centrare la freccia sull'elemento puntato da fatpopcorn
-        // this.leftOffset = function() {return popcorn.$element.offset().left + (popcorn.$element.width() - popcorn.defaults.arrowWidth) / 2; }
-        this.leftOffset = function () { return popcorn.defaults.marginArrow; };
-        this.left = function () { return popcorn.defaults.marginBorder; };
-        this.top = function () { return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement; };
+        this.leftOffset = function () {
+            return popcorn.$element.offset().left + (popcorn.$element.width() - popcorn.defaults.arrowWidth) / 2;
+        };
+        // this.leftOffset = function () { return popcorn.defaults.marginArrow; };
+        this.left = function () {
+            return popcorn.defaults.marginBorder;
+        };
+        this.top = function () {
+            return popcorn.$anchor.offset().top + popcorn.defaults.verticalOffsetFromElement;
+        };
     };
 
     var RightPosition = function (popcorn) {
@@ -144,7 +160,10 @@ var exports = window.exports || {};
             $.extend(delfaults, options);
         }
 
-        $(window).unbind('click').click(function () {
+        // Namespace so to be sure do not touch any other click event
+        // Does not hide the container if the click event comes from within a popcorn container.
+        $(window).unbind('click.popcorn').bind('click.popcorn', function (e) {
+            if($(e.target).closest('.popcorn').length){ return };
             Popcorn.hideAllContainers(elements);
         });
 
@@ -167,6 +186,7 @@ var exports = window.exports || {};
                 popcorn.setContainerPosition();
             });
         }
+
         return this.each(_setUpElement);
     };
 })(jQuery, exports);
