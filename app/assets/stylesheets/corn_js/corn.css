@@ -13,7 +13,6 @@ a:hover {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.35), 0 0 1px rgba(0, 0, 0, 0.5);
   color: #444444;
   font-size: 11px;
-  width: 160px;
   min-height:20px;
   overflow: visible;
   position: absolute;
@@ -21,7 +20,7 @@ a:hover {
   margin-top: 4px;
 }
 .popcorn .popcorn-body {
-  padding: 5px;
+  padding: 0;
 }
 .popcorn .popcorn-tail {
   background: url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAKCAYAAABWiWWfAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJlJREFUeNpi/P//PwM+wMjIqAKkQPgOUO0dfGqZCBikm5iYGPTmzZsZQUFBPkC+Nl6bQS7DhoEAZFDZjx8/PgL5/79+/foWaGABUFwbpx5iDIIBkIG+vr55uAzEalBMTEwJukHEGEiSQYQMJNkgLAZqoRgGBDqkGAQDX758eY1sINygb9++vf9PBkA2kAFoEBO5BqEZyAQQYAAiweCss5BeRQAAAABJRU5ErkJggg==") no-repeat scroll 0 100% transparent;
@@ -79,7 +78,7 @@ a:hover {
 }
 .fatpopcorn h1 {
   font: bold 12px/14px "Segoe UI","Lucida Grande",Arial,sans-serif;
-  margin: 12px 0 4px 0;
+  margin: 12px 0 4px 0 !important;
   padding-left: 15px;
   font-size: 12px;
   color: #303030;
@@ -277,7 +276,9 @@ div > h1 > span.delete:hover {
   margin: 10px 10px 16px 10px;
 }
 .fatpopcorn .edit .note {
+  float: left;
   margin: 10px 10px 26px 10px;
+  width: 94%;
 }
 .fatpopcorn .edit #send_note {
   padding-right: 6px;
@@ -332,7 +333,7 @@ div > h1 > span.delete:hover {
 }
 
 .fatpopcorn .edit textarea {
-  width: 98%;
+  width: 97%;
   margin-left: 2px;
   resize: none;
   border-width: 1px;

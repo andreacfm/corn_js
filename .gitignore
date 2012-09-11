@@ -1,8 +1,10 @@
-.bundle/
-log/*.log
-pkg/
-spec/dummy/db/*.sqlite3
-spec/dummy/log/*.log
-spec/dummy/tmp/
-spec/dummy/.sass-cachei
 *.iml
+log/
+pkg/
+.bundle/
+spec/dummy/db/
+spec/dummy/log/
+spec/dummy/tmp/
+spec/dummy/.sass-cache
+.idea
+.jhw-cache
