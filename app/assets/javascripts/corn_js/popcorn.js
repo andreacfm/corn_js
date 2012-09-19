@@ -160,7 +160,10 @@ var exports = window.exports || {};
             $.extend(delfaults, options);
         }
 
-        $(window).unbind('click').click(function () {
+        // Namespace so to be sure do not touch any other click event
+        // Does not hide the container if the click event comes from within a popcorn container.
+        $(window).unbind('click.popcorn').bind('click.popcorn', function (e) {
+            if($(e.target).closest('.popcorn').length){ return };
             Popcorn.hideAllContainers(elements);
         });
 
