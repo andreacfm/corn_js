@@ -37,8 +37,10 @@ a:hover {
 .fatpopcorn_grip {
   display: inline-block  ;  
   z-index: 0;
-  width: 160px;
+  min-width: 160px;
+  width: 98%;
   margin-top: 4px;
+  height: 24px;
 }
 .fatpopcorn_grip {
   background: transparent url("data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZ1JREFUeNqkU0tLAlEUPvc6YiKChOBjNwsLZhEjuCsZ8Ae0ausigvob/Y0ioa0QSK1cKgaROK5spAfD7ESFEMHnYuyc4d4yqBzog2/uuXPv9537OJetViuQqNfr1OjII2QeuY90kffIBrJsGIYFa2Bk0Gq1vM5kMrnC5gT+QCaTeUyn0+eoqeZyuS8DFN/i+CHnHFKpFMTjcYjFYp5oNBrBYDCAYDAIqqoCalzGGK2yoojMFyQOhUKgaRpEIhEIBAKfWckoGo0Cirz+crnk3W63oOt6hdVqNQ3/PdFgNpv1Jm5Cs9mE2Wz2juEex0+RfiaTSQiHw+AHIsk2abk4bUgkEqAoii8DmiuQJ4Ndimj/frE2d4fDP0EGr+JkfYsWi4UMX7ioMu+e/WI4HMqwQQZlinq9HtXDRvF4PIZ+vy+7Nxxr28Sg5LoudDodut9fxZTAsiwQ7+cS+SYP8RRZnc/nYJomOI4DFEtMp1OwbRva7bbc/x1W69m3x4TuW8K1uGEX1yg+litiPzxnQ7zIA6Qqhp7FYZeQD+tuHwIMACccpgPnIZ+qAAAAAElFTkSuQmCC") no-repeat scroll 100% 4px;
