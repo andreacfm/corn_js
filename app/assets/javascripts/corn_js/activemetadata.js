@@ -113,7 +113,7 @@ var exports = window.exports || {};
                     '<div class="note"><h1>Nota</h1><form action="" method="post" id="notes_form"><div style="margin:0;padding:0;display:inline"><input type="hidden" value="✓" name="utf8"><input type="hidden" value="' + self['token'] + '" name="authenticity_token"></div>' +
                     '<textarea id="note_text" name="note" rows="4"></textarea><a id="send_note">Inserisci</a></form></div><hr/>' +
                     '<div class="attachment"><h1>Allegati</h1><div class="edit-attach"></div><div id="attach_output"></div></div>' +
-                    '<div class="info"><h1>Info</h1><p>Lorem ipsum...</p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
+                    '<div class="info"><h1>Info</h1><p></p></div></div></div><div class="popcorn-tail"></div><span class="loader"></span></div>';
         }
 
         if (self.containerOf().size() == 0) { $('body').append(_html()); }
